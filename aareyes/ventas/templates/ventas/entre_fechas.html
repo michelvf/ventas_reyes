@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+{% endblock css %}
+
+{% block content %}
+    <h3 class="mx-3">Ventas por Fechas</h1>
+<div>
+    <form method="POST" id="rangoDeDatos">
+        {% csrf_token %}
+        <!-- input id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%" type="text" name="fechas" />
+        <span></span -->
+        <input type="text" name="datefilter" value="" />
+
+        <button class="btn btn-outline-primary" type="submit">Subir</button>
+    </form>
+</div>
+<div class="mt-5">
+    <table id="ventas" class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Costo</th>
+                <th>Precio Venta</th>
+                <th>Cálculo</th>
+                <th>Departamento</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+    
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/daterangepicker.min.js' %}"></script>
+    <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+    <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+
+    <script type="text/javascript">
+        $(function() {
+          $('input[name="datefilter"]').daterangepicker({
+              autoUpdateInput: true,
+              showWeekNumbers: true,
+              locale: {
+                  cancelLabel: 'Clear',
+                  format: 'DD/MM/YYYY'
+              },
+              ranges: {
+                'Hoy': [moment(), moment()],
+                'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Últimos 7 Días': [moment().subtract(6, 'days'), moment()],
+                'Últimos 30 Días': [moment().subtract(30, 'days'), moment()],
+                'Este Mes': [moment().startOf('month'), moment().endOf('month')],
+                'Mes anterior': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+              },
+          });
+
+          $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+              $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+          });
+
+          $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+              $(this).val('');
+          });
+        });
+
+        $("#rangoDeDatos").on("submit", function(event){
+            event.preventDefault();
+            const form = $(this);
+            // console.log('llegó: ',  form)
+            const fechas = form.find("input[name='datefilter']").val()
+            // console.log(`fechas del input: ${fechas}`)
+            const hasta = fechas.indexOf(' -')
+            const desde = fechas.indexOf('- ', hasta) + 2
+            const final = fechas.length
+            // console.log("(1,2): " + cadena.substr(1, 2)); // '(1, 2): bc'
+
+            // console.log(`desde 0 hasta: ${hasta} y desde ${desde} hasta -1, y su tamaño: ${final}`)
+            const fecha1 = fechas.substring(0, hasta)
+            const [dia1, mes1, ano1] = fecha1.split('/')
+            const fecha1_1 = `${ano1}-${mes1}-${dia1}`
+            const fecha2 = fechas.substring(desde, final)
+            const [dia2, mes2, ano2] = fecha2.split('/')
+            const fecha2_2 = `${ano2}-${mes2}-${dia2}`
+            // console.log(`el rango es desde: ${fecha1} hasta: ${fecha2}`)
+
+            fetch('/ventas/ventasfechas/', {
+            // fetch('/api/ventas_fechas/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    start_date: fecha1_1,
+                    end_date: fecha2_2
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // document.getElementById('resultados').innerHTML = JSON.stringify(data);
+                // datos_fechas = JSON.stringify(data)
+                showDatatables(data)
+            });
+        });
+
+        // const data = datos_fechas
+        function showDatatables(data) {
+
+            $('#ventas').DataTable({
+                language: language,
+                data: data,
+                columns: [
+                    { data: 'producto.codigo' },
+                    { data: 'producto.producto' },
+                    { data: 'cantidad',
+                      'sClass': 'center',
+                      render: $.fn.dataTable.render.number( ",", ".", 2 )
+                    },
+                    { data: 'costo',
+                      'sClass': 'right',
+                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
+                    },
+                    { data: 'venta',
+                      'sClass': 'right',
+                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    },
+                    { data: 'calculo',
+                      'sClass': 'right dt-type-numeric',
+                      render: function (data, type, full, meta ) {
+                      // render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) {
+                      valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+
+                      if (data > 0) {
+                            return '<span class="positivo">' + valor + '</span>';
+                            // return data;
+                        } else if (data < 0) {
+                            return '<span class="negativo">' + valor + '</span>';
+                            // return data;
+                        } else {
+                            return '<span class="cero">' + valor + '</span>';
+                        }
+
+                      }
+                    },
+                    { data: 'departamento.departamento' },
+                    { data: 'fecha',
+                        "render": function (data, type, full) {
+                            return moment(data).format('D/M/Y');
+                        }
+                    },
+                ],
+            })
+        }
+
+
+    </script>
+{% endblock js %}

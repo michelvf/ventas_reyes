@@ -1,0 +1,9 @@
+.positivo {
+    color: rgba(39, 131, 39);
+}
+.negativo {
+    color: rgba(255,0,0,1.00);
+}
+.cero {
+    color: rgb(171, 173, 171);
+}
