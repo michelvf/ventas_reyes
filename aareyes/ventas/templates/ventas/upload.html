@@ -1,15 +1,76 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+{% endblock css %}
+
 {% block content %}
     <h2>Subir archivo Excel</h2>
     <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="mb-3">
-          <label for="formFile" class="form-label">Default file input example</label>
-          <input class="form-control" type="file" id="formFile">
-        </div>
 
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        
         <button class="btn btn-outline-primary" type="submit">Subir</button>
     </form>
 {% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
+    <script type="text/javascript">
+    const fecha = new Date();
+    
+    $('#id_datefilter').daterangepicker({
+        autoUpdateInput: true,
+        singleDatePicker: true,
+        showDropdowns: true,
+        minYear: 2020,
+        locale: {
+            "format": "YYYY/MM/DD",
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Augusto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
+        },
+        "startDate": fecha,
+        // "endDate": "11/27/2024",
+        //"minDate": "DD/MM/YYYY",
+        //"maxDate": "DD/MM/YYYY"
+}, function(start, end, label) {
+  //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+});
+
+    </script>
+{% endblock js %}

@@ -22,8 +22,9 @@ class ExcelUploadView(FormView):
 
     def form_valid(self, form):
         """
-        Obtener el fichero, y registrar sus datos en la Base de Datos
+        Obtener el fichero y fecha, y registrar sus datos en la Base de Datos
         """
+        date = form.cleaned_data['datefilter']
         file = form.cleaned_data['file']
         raw_data = file.read()
 
