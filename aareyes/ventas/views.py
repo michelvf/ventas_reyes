@@ -24,24 +24,44 @@ class ExcelUploadView(FormView):
         """
         Obtener el fichero y fecha, y registrar sus datos en la Base de Datos
         """
+        # Obteniendo los valores del formulario
         date = form.cleaned_data['datefilter']
         file = form.cleaned_data['file']
         raw_data = file.read()
 
         # Detectar codificacion
         result = chardet.detect(raw_data)
+        print(f'resultado de la codificaión del fichero es: {result}')
         encoding = result['encoding']
+        print(f'la codificación del fichero es: {encoding}')
 
+        # Leyendo el fichero enviado en el formulario
         cvs_file = raw_data.decode(encoding)
+        #cvs_file = raw_data
 
+        # Leyendo cada línea del fichero
         lines = cvs_file.split('\n')
 
+        # Con Pandas
+        # file = pd.read_excel('2024-07-15-Convertido_a_libro_excel_97-2003.xls')
+        #
+        # iterar por una sola columna
+        # for i in range(len(file['Departamento'])):
+            # print(file['Departamento'][i])
+        #
+        #
+        # Iterar por filas
+        # for i in range(len(file)):
+            # print(file.iloc[i])
+        #
         # Insertar filas en la Base de Datos
-        # for _, row in df.iterrows():
+        # Insertando los Departamentos
         for line in lines[1:]:
-            fields = line.split(';')
+            fields = line.split(',')
             departamento = fields[5].strip()
             # print(f"viene: {departamento}, a ver si existe")
+
+            # Si el Dpto no existe en la tabla Departamento, se agrega
             if not Departamentos.objects.filter(departamento=departamento).exists():
                 # print(f"no existe: {departamento}, se agrega")
                 obj = Departamentos(
@@ -50,6 +70,7 @@ class ExcelUploadView(FormView):
                 )
                 obj.save()
 
+            # Insertando los productos nuevos con su código en la tabla Productos
             producto = fields[1]
             codigo = fields[0]
             if not Productos.objects.filter(codigo=codigo).exists():
@@ -59,13 +80,16 @@ class ExcelUploadView(FormView):
                 )
                 obj.save()
 
+            # Insertando las ventas del día que se envió en el formulario
             codigo_venta = Productos.objects.get(codigo=codigo)
             cantidad = float(fields[2])
-            venta = float(fields[3].replace('$', '').replace(',', ''))
+            # patron_coma_digito = [0-9]{1,3}(\,[0-9]{3})
+            # venta = float(fields[3].replace('"', '').replace('$', '').replace(',', ''))
+            venta = float(fields[3].replace('"', '').replace('$', '').replace(',', ''))
             costo = float(fields[4].replace('$', '').replace(',', ''))
             calculo = (venta - costo) * cantidad
             departamento_venta = Departamentos.objects.get(departamento=departamento)
-            fecha = datetime.datetime.now()
+            fecha = date
 
             obj_venta = Ventas(
                 producto=codigo_venta,

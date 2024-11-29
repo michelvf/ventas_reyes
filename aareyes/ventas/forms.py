@@ -12,7 +12,7 @@ class ExcelUploadForm(forms.Form):
         )
     )
     datefilter = forms.DateField(
-        label='Escoja la fecha del fichero'
+        label='Escoja la fecha del fichero: '
     )
 
 

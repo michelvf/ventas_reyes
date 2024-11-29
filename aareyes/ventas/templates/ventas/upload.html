@@ -8,14 +8,30 @@
 
 {% block content %}
     <h2>Subir archivo Excel</h2>
-    <form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col">
+            <p>Para agregar el fichero que exporta el Abarrote, primero debe convertilo a fichero CSV, la imagen muestra cómo hacerlo en el Excel, usando: Guardar como y escogiendo el tipo de formato: CSV (delimitado por comas)</p>
+            <img alt="Convertir a CSV el fichero que exporta el Abarrote" src="{% static 'img/excel_guardar_como_2.jpg' %}" width="700px" height="500px" />
+        </div>
+    <div class="col">  
+    
+        <form method="post" enctype="multipart/form-data">
 
-        {% csrf_token %}
+            {% csrf_token %}
 
-        {{ form.as_p }}
-        
-        <button class="btn btn-outline-primary" type="submit">Subir</button>
-    </form>
+           {#  {{ form.as_p }}  #}
+
+           {% for field in form %}
+                <div class="fieldWrapper mt-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            
+            <button class="btn btn-outline-primary" type="submit">Subir</button>
+        </form>
+    </div>   
 {% endblock %}
 
 {% block js %}
@@ -31,7 +47,7 @@
         showDropdowns: true,
         minYear: 2020,
         locale: {
-            "format": "YYYY/MM/DD",
+            "format": "YYYY-MM-DD",
             "separator": " - ",
             "applyLabel": "Aplicar",
             "cancelLabel": "Cancelar",
@@ -68,9 +84,11 @@
         // "endDate": "11/27/2024",
         //"minDate": "DD/MM/YYYY",
         //"maxDate": "DD/MM/YYYY"
-}, function(start, end, label) {
-  //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-});
+        }, function(start, end, label) {
+      //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
+    $('.errorlist').css('color', 'red') 
 
     </script>
 {% endblock js %}
