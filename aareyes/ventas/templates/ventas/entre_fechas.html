@@ -17,7 +17,7 @@
         <span></span -->
         <input type="text" name="datefilter" value="" />
 
-        <button class="btn btn-outline-primary" type="submit">Subir</button>
+        <button class="btn btn-outline-primary" type="submit">Mostrar</button>
     </form>
 </div>
 <div class="mt-5">
@@ -54,9 +54,33 @@
           $('input[name="datefilter"]').daterangepicker({
               autoUpdateInput: true,
               showWeekNumbers: true,
+              autoApply: true,
               locale: {
-                  cancelLabel: 'Clear',
-                  format: 'DD/MM/YYYY'
+                  format: 'DD/MM/YYYY',
+                  "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Augusto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
               },
               ranges: {
                 'Hoy': [moment(), moment()],
@@ -66,6 +90,7 @@
                 'Este Mes': [moment().startOf('month'), moment().endOf('month')],
                 'Mes anterior': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
               },
+              "alwaysShowCalendars": true,
           });
 
           $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
@@ -76,6 +101,7 @@
               $(this).val('');
           });
         });
+
 
         $("#rangoDeDatos").on("submit", function(event){
             event.preventDefault();
@@ -119,9 +145,64 @@
         // const data = datos_fechas
         function showDatatables(data) {
 
-            $('#ventas').DataTable({
+            table = $('#ventas').DataTable({
+                // destroy: true,
                 language: language,
                 data: data,
+                paging: false,
+                //searching: false,
+                retrieve: true,
+                columns: [
+                    { data: 'producto.codigo' },
+                    { data: 'producto.producto' },
+                    { data: 'cantidad',
+                      'sClass': 'center',
+                      render: $.fn.dataTable.render.number( ",", ".", 2 )
+                    },
+                    { data: 'costo',
+                      'sClass': 'right',
+                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
+                    },
+                    { data: 'venta',
+                      'sClass': 'right',
+                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    },
+                    { data: 'calculo',
+                      'sClass': 'right dt-type-numeric',
+                      render: function (data, type, full, meta ) {
+                      // render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) {
+                      valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+
+                      if (data > 0) {
+                            return '<span class="positivo">' + valor + '</span>';
+                            // return data;
+                        } else if (data < 0) {
+                            return '<span class="negativo">' + valor + '</span>';
+                            // return data;
+                        } else {
+                            return '<span class="cero">' + valor + '</span>';
+                        }
+
+                      }
+                    },
+                    { data: 'departamento.departamento' },
+                    { data: 'fecha',
+                        "render": function (data, type, full) {
+                            return moment(data).format('D/M/Y');
+                        }
+                    },
+                ],
+            })
+
+            table.destroy();
+
+            table = $('#ventas').DataTable({
+                // destroy: true,
+                language: language,
+                data: data,
+                paging: false,
+                searching: false,
+                retrieve: true,
                 columns: [
                     { data: 'producto.codigo' },
                     { data: 'producto.producto' },
@@ -164,7 +245,6 @@
                 ],
             })
         }
-
 
     </script>
 {% endblock js %}

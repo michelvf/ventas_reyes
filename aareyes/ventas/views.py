@@ -27,70 +27,65 @@ class ExcelUploadView(FormView):
         # Obteniendo los valores del formulario
         date = form.cleaned_data['datefilter']
         file = form.cleaned_data['file']
+
+        # Leer el fichero recibido
         raw_data = file.read()
 
-        # Detectar codificacion
-        result = chardet.detect(raw_data)
-        print(f'resultado de la codificaión del fichero es: {result}')
-        encoding = result['encoding']
-        print(f'la codificación del fichero es: {encoding}')
-
-        # Leyendo el fichero enviado en el formulario
-        cvs_file = raw_data.decode(encoding)
-        #cvs_file = raw_data
-
-        # Leyendo cada línea del fichero
-        lines = cvs_file.split('\n')
-
-        # Con Pandas
-        # file = pd.read_excel('2024-07-15-Convertido_a_libro_excel_97-2003.xls')
-        #
-        # iterar por una sola columna
-        # for i in range(len(file['Departamento'])):
-            # print(file['Departamento'][i])
-        #
-        #
-        # Iterar por filas
-        # for i in range(len(file)):
-            # print(file.iloc[i])
-        #
-        # Insertar filas en la Base de Datos
+        # Con Pandas leer el fichero exel
+        excel_file = pd.read_excel(file)
+        
         # Insertando los Departamentos
-        for line in lines[1:]:
-            fields = line.split(',')
-            departamento = fields[5].strip()
-            # print(f"viene: {departamento}, a ver si existe")
+        for i in range(len(excel_file['Departamento'])):
 
-            # Si el Dpto no existe en la tabla Departamento, se agrega
+            # Tomando el valor de un departamento
+            departamento = excel_file['Departamento'][i]
+
+            # Verificando si existe en la BD e insertarlo si no existe
             if not Departamentos.objects.filter(departamento=departamento).exists():
                 # print(f"no existe: {departamento}, se agrega")
+                # Preparado para insertarlo en el modelo Departamento
                 obj = Departamentos(
-                    # campo1=row['codigo'],
                     departamento=departamento,
                 )
+                # Guardando en la BD
                 obj.save()
 
-            # Insertando los productos nuevos con su código en la tabla Productos
-            producto = fields[1]
-            codigo = fields[0]
+
+        # Insertando los Productos
+        for i in range(len(excel_file['Descripcion'])):
+
+            # Tomando el valor de un departamento
+            producto = excel_file['Descripcion'][i]
+            codigo = excel_file['Codigo'][i]
+
+            # Verificando si existe en la BD e insertarlo si no existe
             if not Productos.objects.filter(codigo=codigo).exists():
+                # Preparado para insertarlo en el modelo Departamento
                 obj = Productos(
                     codigo=codigo,
                     producto=producto
                 )
+                # Guardando en la BD
                 obj.save()
 
-            # Insertando las ventas del día que se envió en el formulario
-            codigo_venta = Productos.objects.get(codigo=codigo)
-            cantidad = float(fields[2])
-            # patron_coma_digito = [0-9]{1,3}(\,[0-9]{3})
-            # venta = float(fields[3].replace('"', '').replace('$', '').replace(',', ''))
-            venta = float(fields[3].replace('"', '').replace('$', '').replace(',', ''))
-            costo = float(fields[4].replace('$', '').replace(',', ''))
+        # Insertando las Ventas
+        for i in range(len(excel_file)):
+            # Leyendo una fila
+            fila = excel_file.iloc[i]
+            
+            # Buscando el id del producto a insertar
+            codigo_venta = Productos.objects.get(codigo=fila['Codigo'])
+            # Tomando valores del Excel
+            cantidad = fila['Cantidad']
+            venta = fila['Precio Usado']
+            costo = fila['Precio Costo']
             calculo = (venta - costo) * cantidad
-            departamento_venta = Departamentos.objects.get(departamento=departamento)
+            # Buscando el valor del id del Departamento de la venta
+            departamento_venta = Departamentos.objects.get(departamento=fila['Departamento'])
+            # Tomando la fecha que se insertó
             fecha = date
 
+            # Preparado para insertarlo en el modelo Departamento
             obj_venta = Ventas(
                 producto=codigo_venta,
                 cantidad=cantidad,
@@ -100,6 +95,7 @@ class ExcelUploadView(FormView):
                 departamento=departamento_venta,
                 fecha=fecha
             )
+            # Guardando en la BD
             obj_venta.save()
 
         return super().form_valid(form)

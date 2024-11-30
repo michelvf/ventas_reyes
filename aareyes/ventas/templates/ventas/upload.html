@@ -3,92 +3,93 @@
 {% load static %}
 
 {% block css %}
-    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+<link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
 {% endblock css %}
 
 {% block content %}
-    <h2>Subir archivo Excel</h2>
-    <div class="row">
-        <div class="col">
-            <p>Para agregar el fichero que exporta el Abarrote, primero debe convertilo a fichero CSV, la imagen muestra cómo hacerlo en el Excel, usando: Guardar como y escogiendo el tipo de formato: CSV (delimitado por comas)</p>
-            <img alt="Convertir a CSV el fichero que exporta el Abarrote" src="{% static 'img/excel_guardar_como_2.jpg' %}" width="700px" height="500px" />
-        </div>
-    <div class="col">  
-    
+<h2>Subir archivo Excel</h2>
+<div class="row">
+    <div class="col">
+        <p>Para agregar el fichero que exporta el Abarrote, primero debe abrirlo en el Excel, y "usando Guardar como",
+            guardarlo como: "Libro de Excel 97-2003. La imagen muestra cómo hacerlo</p>
+        <img alt="Convertir a CSV el fichero que exporta el Abarrote"
+            src="{% static 'img/guardar_como_xls_97-2003_.jpg' %}" width="700px" height="400px" />
+    </div>
+    <div class="col">
+
         <form method="post" enctype="multipart/form-data">
 
             {% csrf_token %}
 
-           {#  {{ form.as_p }}  #}
+            {# {{ form.as_p }} #}
 
-           {% for field in form %}
-                <div class="fieldWrapper mt-3">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {{ field.errors }}
-                </div>
+            {% for field in form %}
+            <div class="fieldWrapper mt-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </div>
             {% endfor %}
-            
+
             <button class="btn btn-outline-primary" type="submit">Subir</button>
         </form>
-    </div>   
-{% endblock %}
+    </div>
+    {% endblock %}
 
-{% block js %}
+    {% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
     <script type="text/javascript">
-    const fecha = new Date();
-    
-    $('#id_datefilter').daterangepicker({
-        autoUpdateInput: true,
-        singleDatePicker: true,
-        showDropdowns: true,
-        minYear: 2020,
-        locale: {
-            "format": "YYYY-MM-DD",
-            "separator": " - ",
-            "applyLabel": "Aplicar",
-            "cancelLabel": "Cancelar",
-            "fromLabel": "From",
-            "toLabel": "To",
-            "customRangeLabel": "Custom",
-            "weekLabel": "W",
-            "daysOfWeek": [
-                "Do",
-                "Lu",
-                "Ma",
-                "Mi",
-                "Ju",
-                "Vi",
-                "Sa"
-            ],
-            "monthNames": [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Augusto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre"
-            ],
-            "firstDay": 1
-        },
-        "startDate": fecha,
-        // "endDate": "11/27/2024",
-        //"minDate": "DD/MM/YYYY",
-        //"maxDate": "DD/MM/YYYY"
-        }, function(start, end, label) {
-      //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-    });
+        const fecha = new Date();
 
-    $('.errorlist').css('color', 'red') 
+        $('#id_datefilter').daterangepicker({
+            autoUpdateInput: true,
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2020,
+            autoApply: true,
+            locale: {
+                "format": "YYYY-MM-DD",
+                "separator": " - ",
+                "fromLabel": "From",
+                "toLabel": "To",
+                "customRangeLabel": "Custom",
+                "weekLabel": "W",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Augusto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            },
+            "startDate": fecha,
+            // "endDate": "11/27/2024",
+            //"minDate": "DD/MM/YYYY",
+            //"maxDate": "DD/MM/YYYY"
+        }, function (start, end, label) {
+            //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
+
+        $('.errorlist').css('color', 'red')
 
     </script>
-{% endblock js %}
+    {% endblock js %}
