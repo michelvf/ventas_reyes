@@ -7,8 +7,9 @@ from rest_framework import authentication
 from ventas.models import Departamentos, Productos, Ventas
 from .serializers import DepartamentoSerializer, ProductoSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer
-from .serializers import VentasPorFechasTodoSerializer
+from .serializers import VentasPorFechasTodoSerializer, SumarVentasPorFechas
 from django.db.models import Sum, Count
+from django.db.models.functions import TruncDate
 
 
 # Create your views here.
@@ -42,3 +43,26 @@ class VentasPorFechas(APIView):
             # return Response(ventas_fecha.values(), status=status.HTTP_200_OK)
             return Response(serializer_other.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SumaPorFechasAPI(APIView):
+    """
+    Api to show the sum of seld for dates
+    """
+
+    def get(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio', None)
+        fecha_fin = request.query_params.get('fecha_fin', None)
+
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Por favor, proporcione las fechas de inicio y fin"}, status=400)
+
+        sumatoria = Ventas.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin]
+        ).annotate(
+            fechas=TruncDate('fecha')
+        ).values('fecha').annotate(
+            suma=Sum('calculo')
+        ).order_by('fecha')
+
+        return Response(sumatoria)

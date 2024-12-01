@@ -54,6 +54,9 @@ class VentasPorFechasSerializer(serializers.Serializer):
 
 
 class VentasPorFechasTodoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for filter bettwen dates
+    """
     departamento=DepartamentoSerializer(
         read_only=True
     )
@@ -67,3 +70,13 @@ class VentasPorFechasTodoSerializer(serializers.ModelSerializer):
         model = Ventas
         fields = ("id", "producto", "cantidad", "costo", "venta", "calculo", "departamento", "fecha")
 
+
+class SumarVentasPorFechas(serializers.ModelSerializer):
+    """
+    Serializer for Sum calculo bettwen dates
+    """
+    suma = serializers.FloatField()
+
+    class Meta:
+        model = Ventas
+        field = ("suma", "fecha")

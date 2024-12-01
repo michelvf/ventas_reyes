@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{% url 'index' %}">
       <img src="{% static 'img/AAReyes-limpio.png' %}" alt="Logotio A&A Reyes" width="50" height="50"/>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,10 +11,10 @@
     <div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/ventas/upload/">Importar</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'upload' %}">Importar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/ventas/entrefechas/">Ventas</a>
+          <a class="nav-link" href="{% url 'showentrefechas' %}">Ventas</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -22,11 +22,11 @@
           </a>
           <ul class="dropdown-menu">
             <!-- li><a class="dropdown-item" href="/ventas/datos">Ventas</a></li -->
-            <li><a class="dropdown-item" href="/ventas/departamentos">Departamentos</a></li>
-            <li><a class="dropdown-item" href="/ventas/productos/">Productos</a></li>
-            <li><a class="dropdown-item" href="/ventas/entrefechas/">Ventas</a></li>
+            <li><a class="dropdown-item" href="{% url 'showdepartamentos' %}">Departamentos</a></li>
+            <li><a class="dropdown-item" href="{% url 'showProductos' %}">Productos</a></li>
+            <li><a class="dropdown-item" href="{% url 'showentrefechas' %}">Ventas</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Productos</a></li>
+            <li><a class="dropdown-item" href="{% url 'suma_por_fechas' %}">Suma por fechas</a></li>
           </ul>
         </li>
         <li class="nav-item">

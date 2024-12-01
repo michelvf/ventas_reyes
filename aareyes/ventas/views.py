@@ -10,6 +10,12 @@ from django.views.generic import TemplateView
 from .models import Departamentos, Productos, Ventas
 
 
+
+# Index Page
+class IndexView(TemplateView):
+    template_name = 'ventas/index.html'
+
+
 # Create your views here.
 class ExcelUploadView(FormView):
     """
@@ -127,3 +133,10 @@ class ShowEntreFechas(TemplateView):
     Show the Sales bettwen two dates
     """
     template_name = 'ventas/entre_fechas.html'
+
+
+class SumarPorFechas(TemplateView):
+    """
+    Show the Sum of sales bettewn tow dates
+    """
+    template_name = 'ventas/suma_por_fechas.html'

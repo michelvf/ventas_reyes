@@ -13,8 +13,6 @@
 <div>
     <form method="POST" id="rangoDeDatos">
         {% csrf_token %}
-        <!-- input id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%" type="text" name="fechas" />
-        <span></span -->
         <input type="text" name="datefilter" value="" />
 
         <button class="btn btn-outline-primary" type="submit">Mostrar</button>
@@ -123,7 +121,7 @@
             const fecha2_2 = `${ano2}-${mes2}-${dia2}`
             // console.log(`el rango es desde: ${fecha1} hasta: ${fecha2}`)
 
-            fetch('/ventas/ventasfechas/', {
+            fetch('/ventas/api_ventasfechas/', {
             // fetch('/api/ventas_fechas/', {
                 method: 'POST',
                 headers: {
@@ -150,7 +148,7 @@
                 language: language,
                 data: data,
                 paging: false,
-                //searching: false,
+                searching: false,
                 retrieve: true,
                 columns: [
                     { data: 'producto.codigo' },
@@ -200,8 +198,8 @@
                 // destroy: true,
                 language: language,
                 data: data,
-                paging: false,
-                searching: false,
+                paging: true,
+                searching: true,
                 retrieve: true,
                 columns: [
                     { data: 'producto.codigo' },
