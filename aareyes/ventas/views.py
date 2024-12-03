@@ -63,13 +63,15 @@ class ExcelUploadView(FormView):
             # Tomando el valor de un departamento
             producto = excel_file['Descripcion'][i]
             codigo = excel_file['Codigo'][i]
+            departamento=Departamentos.objects.get(departamento=excel_file['Departamento'][i])
 
             # Verificando si existe en la BD e insertarlo si no existe
             if not Productos.objects.filter(codigo=codigo).exists():
                 # Preparado para insertarlo en el modelo Departamento
                 obj = Productos(
                     codigo=codigo,
-                    producto=producto
+                    producto=producto,
+                    id_departamento=departamento
                 )
                 # Guardando en la BD
                 obj.save()
@@ -87,18 +89,18 @@ class ExcelUploadView(FormView):
             costo = fila['Precio Costo']
             calculo = (venta - costo) * cantidad
             # Buscando el valor del id del Departamento de la venta
-            departamento_venta = Departamentos.objects.get(departamento=fila['Departamento'])
+            # departamento_venta = Departamentos.objects.get(departamento=fila['Departamento'])
             # Tomando la fecha que se insertó
             fecha = date
 
             # Preparado para insertarlo en el modelo Departamento
             obj_venta = Ventas(
-                producto=codigo_venta,
+                id_producto=codigo_venta,
                 cantidad=cantidad,
                 venta=venta,
                 costo=costo,
                 calculo=calculo,
-                departamento=departamento_venta,
+                # departamento=departamento_venta,
                 fecha=fecha
             )
             # Guardando en la BD
@@ -140,3 +142,17 @@ class SumarPorFechas(TemplateView):
     Show the Sum of sales bettewn tow dates
     """
     template_name = 'ventas/suma_por_fechas.html'
+
+
+class ProdxDepto(TemplateView):
+    """
+    Show productos por Departamentos
+    """
+    template_name = 'ventas/productos_x_depto.html'
+
+
+class ProdMasVendido(TemplateView):
+    """
+    Show the products more sales
+    """
+    template_name = 'ventas/produtos_mas_vendido.html'

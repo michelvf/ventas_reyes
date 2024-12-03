@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'index' %}">
-      <img src="{% static 'img/AAReyes-limpio.png' %}" alt="Logotio A&A Reyes" width="50" height="50"/>
+      <img src="{% static 'img/aaReyes.jpg' %}" alt="Logotio A&A Reyes" width="50" height="50"/>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -14,7 +14,7 @@
           <a class="nav-link active" aria-current="page" href="{% url 'upload' %}">Importar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'showentrefechas' %}">Ventas</a>
+          <a class="nav-link active" href="{% url 'suma_por_fechas' %}">Suma por fechas</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,7 +26,12 @@
             <li><a class="dropdown-item" href="{% url 'showProductos' %}">Productos</a></li>
             <li><a class="dropdown-item" href="{% url 'showentrefechas' %}">Ventas</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'suma_por_fechas' %}">Suma por fechas</a></li>
+            <li>
+              <a class="dropdown-item" href="{% url 'prod_x_dpto' %}">Productos por Dpto</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'prod_mas_dpto' %}">Productos más vendidos</a>
+            </li>
           </ul>
         </li>
         <li class="nav-item">

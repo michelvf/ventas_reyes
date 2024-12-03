@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import DepartamentoApiView, ProductoApiView, VentaApiView
+from .views import DepartamentoApiView, ProductoApiView, VentaApiView, ProductXDeptoListView
 # from .views import VentasPorFechas, SumaPorFechas
 
 router = DefaultRouter()

@@ -1,13 +1,12 @@
 from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas
-# from django.db import models
+from django.db.models import Count
 
 
 class DepartamentoSerializer(serializers.ModelSerializer):
     """
     Serializer for Departamentos Model 
     """
-    # cantidad = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Departamentos
@@ -19,11 +18,14 @@ class ProductoSerializer(serializers.ModelSerializer):
     """
     Serializer for Productos Model 
     """
-    total = serializers.IntegerField(read_only=True)
+
+    id_departamento=DepartamentoSerializer(
+        read_only=True
+    )
 
     class Meta:
         model = Productos
-        fields = ("id", "codigo", "producto", "total")
+        fields = ("id", "codigo", "producto", "id_departamento")
 
 
 class VentaSerializer(serializers.ModelSerializer):
@@ -31,18 +33,14 @@ class VentaSerializer(serializers.ModelSerializer):
     Serializer for Ventas Model 
     """
 
-    departamento=DepartamentoSerializer(
-        read_only=True
-    )
-
-    producto=ProductoSerializer(
+    id_producto=ProductoSerializer(
         # many=True,
         read_only=True
     )
 
     class Meta:
         model = Ventas
-        fields = ("id", "producto", "cantidad", "costo", "venta", "calculo", "departamento", "fecha")
+        fields = ("id", "id_producto", "cantidad", "costo", "venta", "calculo", "fecha")
 
 
 class VentasPorFechasSerializer(serializers.Serializer):
@@ -57,21 +55,21 @@ class VentasPorFechasTodoSerializer(serializers.ModelSerializer):
     """
     Serializer for filter bettwen dates
     """
-    departamento=DepartamentoSerializer(
-        read_only=True
-    )
+    # departamento=DepartamentoSerializer(
+    #     read_only=True
+    # )
 
-    producto=ProductoSerializer(
+    id_producto=ProductoSerializer(
         # many=True,
         read_only=True
     )
 
     class Meta:
         model = Ventas
-        fields = ("id", "producto", "cantidad", "costo", "venta", "calculo", "departamento", "fecha")
+        fields = ("id", "id_producto", "cantidad", "costo", "venta", "calculo", "fecha")
 
 
-class SumarVentasPorFechas(serializers.ModelSerializer):
+class SumarVentasPorFechasSerializer(serializers.ModelSerializer):
     """
     Serializer for Sum calculo bettwen dates
     """
@@ -79,4 +77,38 @@ class SumarVentasPorFechas(serializers.ModelSerializer):
 
     class Meta:
         model = Ventas
-        field = ("suma", "fecha")
+        fields = ("suma", "fecha")
+
+
+class ProdxDepSerializer(serializers.ModelSerializer):
+    """
+    Products x Departament
+    """
+    num_prod = serializers.IntegerField()
+
+    class Meta:
+        model = Departamentos
+        fields = ("id", "departamento", "num_prod")
+
+class ProdMasVendidosVarSerializer(serializers.Serializer):
+    """
+    Serializer for Ventas with dates
+    """
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    depatamento = serializers.IntegerField()
+
+
+class ProdMasVendidosSerializer(serializers.ModelSerializer):
+    """
+    Products more sales
+    """
+    total_vendido = serializers.IntegerField()
+
+    id_departamento=DepartamentoSerializer(
+        read_only=True
+    )
+
+    class Meta:
+        model = Productos
+        fields  =["codigo", "producto", "total_vendido", "id_departamento"]
