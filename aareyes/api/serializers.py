@@ -96,7 +96,7 @@ class ProdMasVendidosVarSerializer(serializers.Serializer):
     """
     start_date = serializers.DateField()
     end_date = serializers.DateField()
-    depatamento = serializers.IntegerField()
+    departamento = serializers.IntegerField()
 
 
 class ProdMasVendidosSerializer(serializers.ModelSerializer):
