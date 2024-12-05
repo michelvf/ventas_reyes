@@ -110,12 +110,12 @@ class ProductMasVendidoAPI(APIView):
 
 class LacteosAPI(APIView):
     """
-    API to show lactos best selling
+    API to show the best selling dairy products
     """
     authentication_classes = [authentication.TokenAuthentication]
 
     def post(self, request, format=None):
-        serializer = VentasPorFechasSerializer(data=request.data)
+        serializer = ProdMasVendidosVarSerializer(data=request.data)
         lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
         condiciones = Q()
         for palabra in lacteos:
@@ -126,22 +126,18 @@ class LacteosAPI(APIView):
         if serializer.is_valid():
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
-            # lacteos_vendidos = Ventas.objects.filter(
-            # lacteos_vendidos = Ventas.objects.annotate(
-            #     fecha__range=[start_date, end_date]
-            # ).filter(
-            # ).annotate(
+            departamento = serializer.validated_data['departamento']
             lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
                 producto_s=Substr('id_producto__producto', 1, 20),
-            #     total_vendido=Sum('cantidad')
-            # ).filter(
-            #     condiciones
+            ).filter(
+                 id_producto__id_departamento=departamento
             ).values(
                 'producto_s'
             ).annotate(
                 total_vendido=Sum('cantidad'),
             #    codigo='id_producto__codigo',
-            ).order_by('total_vendido')
+            # ).order_by('total_vendido')
+            ).order_by('producto_s')
 
             serializer_other = LacteosSerializer(lacteos_vendidos, many=True)
             return Response(serializer_other.data, status=status.HTTP_200_OK)

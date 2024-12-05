@@ -5,6 +5,7 @@
 {% block title %} | Listado de Productos{% endblock title %}
 
 {% block css %}
+    <link href="{% static 'assets/lib/select2/css/select2.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
 {% endblock css%}
@@ -14,60 +15,67 @@
 <div class="az-dashboard-one-title">
   <div>
     <h2 class="az-dashboard-title">Lácteos más venidos</h2>
-    <p class="az-dashboard-text">Los productos más vendidos en el rango de tiempo</p>
+    <p class="az-dashboard-text">Los productos lácteos más vendidos en el rango de tiempo</p>
   </div>
   <div class="az-content-header-right">
   </div>
 </div><!-- az-dashboard-one-title -->
 
-<div class="row row-sm mg-b-20">
-    <form method="POST" id="rangoDeFechas" class="col-sm-9">
+<form method="POST" id="rangoDeFechas">
+  <div class="row row-sm mg-b-20">
       {% csrf_token %}
-      <div class="row">
-        <div class="col-9">
+        <div class="col-6">
           <div class="row mb-3">
             <label for="rangosFechas" class="col-sm-3 col-form-label">Rangos:</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="rangosFechas"  name="datefilter">
+            <div class="col-9">
+              <input type="text" class="form-control" id="rangosFechas" name="datefilter">
             </div  >
-            <div class="col-sm-3">
-              <button class="btn btn-primary">Mostrar</button>
-            </div>
           </div>
         </div>
-      </form>
-    <div class="col-lg-12 ht-lg-100p">
-        <div class="card card-dashboard-one">
+        <div class="col-3">
+          <select class="form-control select2-no-search" id="depart" name="departamento">
+          </select>
+        </div>
+        <div class="col-3">
+          <button class="btn btn-primary">Mostrar</button>
+        </div>
+  </div>
+</form>
+<div class="row row-sm mg-b-20">
+    <div class="col-5">
+        <table id="tablaLacteos" class="display table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <!-- th>Código</th -->
+                    <th>Producto</th>
+                    <th>Cantidad Vendida</th>
+                    <!-- th>Departamento</th -->
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <!-- tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot -->
+        </table>
+    </div>
+    <div class="col-7">
+        <h2 class="az-dashboard-title">Gráfico</h2>
+        <div class="ht-200 ht-lg-250" style="width: 100%;">
+            <canvas id="grafico" height="250px"></canvas>
         </div>
     </div>
-  </div>
 </div>
-
-<table id="tablaLacteos" class="display table table-striped table-hover table-bordered" >
-    <thead>
-        <tr>
-            <th>Código</th>
-            <th>Producto</th>
-            <th>Cantidad Vendida</th>
-            <!-- th>Departamento</th -->
-        </tr>
-    </thead>
-    <tbody>
-        
-    </tbody>
-    <tfoot>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
 
 {% endblock content %}
 
 {% block js %}
 
+<script src="{% static 'assets/lib/select2/js/select2.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
 <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
@@ -76,6 +84,41 @@
 <script>
 // Tomar la fecha de hoy
 const fecha = new Date();
+
+$.ajax({
+    url: '/api/departamentos/',
+    type: 'get',
+    //data: data,
+    dataType: 'json',
+    success: function(response) {
+
+        var len = response.length;
+
+        $("#depart").empty();
+        for( var i = 0; i<len; i++){
+            var id = response[i]['id'];
+            var name = response[i]['departamento'];
+            if (id == 1) {
+                $("#depart").append("<option value='"+id+"' selected>"+name+"</option>");
+            } else {
+                $("#depart").append("<option value='"+id+"'>"+name+"</option>");
+            }
+        }
+    }
+});
+
+$(document).ready(function(){
+  $('.select2').select2({
+    placeholder: 'Escoja uno',
+    searchInputPlaceholder: 'Buscar'
+  });
+
+  $('.select2-no-search').select2({
+    minimumResultsForSearch: Infinity,
+    placeholder: 'Escoja uno'
+  });
+});
+
 
 // Formar los calendarios para las entre fechas
 $('input[name="datefilter"]').daterangepicker({
@@ -141,6 +184,7 @@ $("#rangoDeFechas").submit(function (e){
     const final = fechas.length
     const fecha1 = fechas.substring(0, hasta)
     const fecha2 = fechas.substring(desde, final)
+    const departamento = $('#depart').val()
     // console.log('las fechas: ', fecha1, ' y fecha 2: ', fecha2)
     fetch('/ventas/api_lacteos/', {
         method: 'POST',
@@ -149,14 +193,15 @@ $("#rangoDeFechas").submit(function (e){
         },
         body: JSON.stringify({
             start_date: fecha1,
-            end_date: fecha2
+            end_date: fecha2,
+            departamento: departamento
         }),
     })
     .then(response => response.json())
     .then(data => {
         console.log("lo que llega del POST: ", data)
         tablaDatos(data)
-        //Grafico(data)
+        Grafico(data)
     });
 });
 
@@ -169,7 +214,7 @@ function tablaDatos(data) {
     language: language,
     data: data,
     columns: [
-        { data: 'id_producto.codigo' },
+        // { data: 'id_producto.codigo' },
         // { data: 'id_producto.producto' },
         { data: 'producto_s' },
         { data: 'total_vendido' },
@@ -177,7 +222,56 @@ function tablaDatos(data) {
     ],
     order: [[2, 'desc']]
     })
-}    
+}
+
+function Grafico(data) {
+
+  const ctx = document.getElementById('grafico').getContext('2d');
+
+  if(this.graf) {
+       this.graf.destroy()
+  }
+
+  if(data) {
+      graf = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(label => label.producto_s),
+          datasets: [{
+            data: data.map(value => value.total_vendido),
+            backgroundColor: '#2458b9',
+            label: "Lácteos"
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          legend: {
+            display: false,
+              labels: {
+                display: false
+              }
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero:true,
+                fontSize: 10,
+                //max: 2000
+              }
+            }],
+            xAxes: [{
+              barPercentage: 0.6,
+              ticks: {
+                beginAtZero:true,
+                fontSize: 8
+              }
+            }]
+          }
+        }
+    });
+  }
+}
 </script>
     
 {% endblock js %}

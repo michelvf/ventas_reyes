@@ -111,7 +111,7 @@ class ProdMasVendidosSerializer(serializers.ModelSerializer):
 
 
 class LacteosSerializer(serializers.ModelSerializer):
-    """docstring for LacteosSerializer("""
+    """docstring for LacteosSerializer"""
     
     total_vendido = serializers.IntegerField()
     producto_s = serializers.CharField()

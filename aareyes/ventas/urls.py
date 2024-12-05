@@ -25,6 +25,6 @@ urlpatterns = [
     path('api_suma_fechas/', SumaPorFechasAPI.as_view(), name="suma_por_fechas_api"),
     path('api_prod_x_depto/', ProductXDeptoListView.as_view(), name="prod_x_depto_api"),
     path('api_prod_mas_vendidos/', ProductMasVendidoAPI.as_view(), name="prod_mas_vendidos"),
-    path('api_lacteos/', LacteosAPI.as_view(), name="lacteos")
+    path('api_lacteos/', LacteosAPI.as_view(), name="api_lacteos")
 ]
 
