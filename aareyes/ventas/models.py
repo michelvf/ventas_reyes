@@ -1,6 +1,23 @@
 from django.db import models
 
 
+class fileUpdate(models.Model):
+    """
+    Modelo para saber la fecha de los ficheros que se han subido
+    """
+    fecha = models.DateTimeField()
+
+    class Meta:
+        ordering = ['fecha']
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["fecha"]),
+        ]
+
+    def __str__(self):
+        return self.fecha
+
+
 class Departamentos(models.Model):
     """
     Modelo para los Departamentos
@@ -68,14 +85,6 @@ class Ventas(models.Model):
     venta = models.FloatField(null=False)
     costo = models.FloatField(null=False)
     calculo = models.FloatField(null=False)
-    # id_departamento = models.ForeignKey(
-    # departamento = models.ForeignKey(
-    #     Departamentos,
-    #     related_name='departamentos',
-    #     on_delete=models.PROTECT,
-    #     blank=False,
-    #     null=False,
-    # )
     fecha = models.DateTimeField()
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)

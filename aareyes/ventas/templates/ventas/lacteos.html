@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %} | Listado de Productos{% endblock title %}
+
+{% block css %}
+    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+{% endblock css%}
+
+{% block content %}
+
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">Lácteos más venidos</h2>
+    <p class="az-dashboard-text">Los productos más vendidos en el rango de tiempo</p>
+  </div>
+  <div class="az-content-header-right">
+  </div>
+</div><!-- az-dashboard-one-title -->
+
+<div class="row row-sm mg-b-20">
+    <form method="POST" id="rangoDeFechas" class="col-sm-9">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-9">
+          <div class="row mb-3">
+            <label for="rangosFechas" class="col-sm-3 col-form-label">Rangos:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="rangosFechas"  name="datefilter">
+            </div  >
+            <div class="col-sm-3">
+              <button class="btn btn-primary">Mostrar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    <div class="col-lg-12 ht-lg-100p">
+        <div class="card card-dashboard-one">
+        </div>
+    </div>
+  </div>
+</div>
+
+<table id="tablaLacteos" class="display table table-striped table-hover table-bordered" >
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Cantidad Vendida</th>
+            <!-- th>Departamento</th -->
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+{% endblock content %}
+
+{% block js %}
+
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+
+<script>
+// Tomar la fecha de hoy
+const fecha = new Date();
+
+// Formar los calendarios para las entre fechas
+$('input[name="datefilter"]').daterangepicker({
+    autoUpdateInput: true,
+    singleDatePicker: false,
+    showDropdowns: true,
+    minYear: 2020,
+    autoApply: true,
+    locale: {
+        "format": "YYYY-MM-DD",
+        "separator": " - ",
+        "fromLabel": "From",
+        "toLabel": "To",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": [
+            "Do",
+            "Lu",
+            "Ma",
+            "Mi",
+            "Ju",
+            "Vi",
+            "Sa"
+        ],
+        "monthNames": [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Augusto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        ],
+        "firstDay": 1
+    },
+    ranges: {
+      'Hoy': [moment(), moment()],
+      'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Últimos 7 Días': [moment().subtract(6, 'days'), moment()],
+      'Últimos 30 Días': [moment().subtract(30, 'days'), moment()],
+      'Este Mes': [moment().startOf('month'), moment().endOf('month')],
+      'Mes anterior': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    },
+    "alwaysShowCalendars": true,
+    "startDate": fecha,
+    // "endDate": "11/27/2024",
+    //"minDate": "DD/MM/YYYY",
+    //"maxDate": "DD/MM/YYYY"
+    }, function (start, end, label) {
+    //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+});
+
+$("#rangoDeFechas").submit(function (e){
+    e.preventDefault();
+    const fechas = this.datefilter.value
+    const hasta = fechas.indexOf(' -')
+    const desde = fechas.indexOf('- ', hasta) + 2
+    const final = fechas.length
+    const fecha1 = fechas.substring(0, hasta)
+    const fecha2 = fechas.substring(desde, final)
+    // console.log('las fechas: ', fecha1, ' y fecha 2: ', fecha2)
+    fetch('/ventas/api_lacteos/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            start_date: fecha1,
+            end_date: fecha2
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("lo que llega del POST: ", data)
+        tablaDatos(data)
+        //Grafico(data)
+    });
+});
+
+function tablaDatos(data) {
+
+    tabla = $('#tablaLacteos').DataTable();
+    tabla.destroy();
+
+    tabla = $('#tablaLacteos').DataTable({
+    language: language,
+    data: data,
+    columns: [
+        { data: 'id_producto.codigo' },
+        // { data: 'id_producto.producto' },
+        { data: 'producto_s' },
+        { data: 'total_vendido' },
+        // { data: 'id_departamento.departamento' }
+    ],
+    order: [[2, 'desc']]
+    })
+}    
+</script>
+    
+{% endblock js %}

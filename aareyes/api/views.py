@@ -9,9 +9,9 @@ from .serializers import DepartamentoSerializer, ProductoSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
-from .serializers import ProdMasVendidosVarSerializer
-from django.db.models import Sum, Count
-from django.db.models.functions import TruncDate
+from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
+from django.db.models import Sum, Count, Q
+from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
 from datetime import timedelta
 
@@ -106,3 +106,44 @@ class ProductMasVendidoAPI(APIView):
             serializer_other = ProdMasVendidosSerializer(produ_mas_vendido, many=True)
             return Response(serializer_other.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LacteosAPI(APIView):
+    """
+    API to show lactos best selling
+    """
+    authentication_classes = [authentication.TokenAuthentication]
+
+    def post(self, request, format=None):
+        serializer = VentasPorFechasSerializer(data=request.data)
+        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        condiciones = Q()
+        for palabra in lacteos:
+            condiciones |= Q(id_producto__producto__istartswith=palabra)
+            # condiciones |= Q(id_producto__producto__startswith=palabra)
+            # condiciones |= Q(id_producto__producto__icontains=palabra)
+            # condiciones |= Q(id_producto__producto__contains=palabra)
+        if serializer.is_valid():
+            start_date = serializer.validated_data['start_date']
+            end_date = serializer.validated_data['end_date']
+            # lacteos_vendidos = Ventas.objects.filter(
+            # lacteos_vendidos = Ventas.objects.annotate(
+            #     fecha__range=[start_date, end_date]
+            # ).filter(
+            # ).annotate(
+            lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
+                producto_s=Substr('id_producto__producto', 1, 20),
+            #     total_vendido=Sum('cantidad')
+            # ).filter(
+            #     condiciones
+            ).values(
+                'producto_s'
+            ).annotate(
+                total_vendido=Sum('cantidad'),
+            #    codigo='id_producto__codigo',
+            ).order_by('total_vendido')
+
+            serializer_other = LacteosSerializer(lacteos_vendidos, many=True)
+            return Response(serializer_other.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

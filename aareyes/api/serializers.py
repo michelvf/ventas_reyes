@@ -55,10 +55,6 @@ class VentasPorFechasTodoSerializer(serializers.ModelSerializer):
     """
     Serializer for filter bettwen dates
     """
-    # departamento=DepartamentoSerializer(
-    #     read_only=True
-    # )
-
     id_producto=ProductoSerializer(
         # many=True,
         read_only=True
@@ -112,3 +108,20 @@ class ProdMasVendidosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Productos
         fields  =["codigo", "producto", "total_vendido", "id_departamento"]
+
+
+class LacteosSerializer(serializers.ModelSerializer):
+    """docstring for LacteosSerializer("""
+    
+    total_vendido = serializers.IntegerField()
+    producto_s = serializers.CharField()
+
+    id_producto=ProductoSerializer(
+        # many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model = Ventas
+        fields = ["id_producto", "total_vendido", "producto_s"]
+

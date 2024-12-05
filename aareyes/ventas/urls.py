@@ -1,10 +1,10 @@
 from django.urls import path
 from .views import ExcelUploadView, ShowVentas, SumarPorFechas, ProdxDepto
-from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas, ProdMasVendido
+from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
+from .views import LacreosVendidos, ProdMasVendido 
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
-from api.views import ProductMasVendidoAPI
+from api.views import ProductMasVendidoAPI, LacteosAPI
 from django.views.generic import TemplateView
-
 
 
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('suma_fechas/', SumarPorFechas.as_view(), name="suma_por_fechas"),
     path('prod_x_dpto/', ProdxDepto.as_view(), name="prod_x_dpto"),
     path('prod_mas_vendido/', ProdMasVendido.as_view(), name="prod_mas_dpto"),
+    path('lacteos/', LacreosVendidos.as_view(), name='lacteos'),
     
 
     # Las API
@@ -24,5 +25,6 @@ urlpatterns = [
     path('api_suma_fechas/', SumaPorFechasAPI.as_view(), name="suma_por_fechas_api"),
     path('api_prod_x_depto/', ProductXDeptoListView.as_view(), name="prod_x_depto_api"),
     path('api_prod_mas_vendidos/', ProductMasVendidoAPI.as_view(), name="prod_mas_vendidos"),
+    path('api_lacteos/', LacteosAPI.as_view(), name="lacteos")
 ]
 

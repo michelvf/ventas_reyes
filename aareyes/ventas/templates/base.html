@@ -1,20 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A&A Reyes {% block title %}{% endblock title %}</title>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-    {% block css %}{% endblock css %}
-</head>
-<body>
-    <div class="container">
-        {% include 'menu.html' %}
-        {% block content %}{% endblock %}
-    </div>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-{% block js %}{% endblock js%}
-</body>
+  {% include "head.html" %}
+  {% block css %}{% endblock css %}
+  <body>
+
+    {% include 'menu.html' %}
+
+    <div class="az-content az-content-dashboard">
+      <div class="container">
+        <div class="az-content-body">
+          {% block content %}
+          {% endblock content %}
+        </div><!-- az-content-body -->
+      </div>
+    </div><!-- az-content -->
+
+    {% include "footer.html" %}
+
+    {% include "js.html" %}
+    {% block js %}{% endblock js %}
+    
+  </body>
 </html>

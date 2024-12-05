@@ -14,6 +14,7 @@ from .models import Departamentos, Productos, Ventas
 # Index Page
 class IndexView(TemplateView):
     template_name = 'ventas/index.html'
+    # template_name = 'ventas/index2.html'
 
 
 # Create your views here.
@@ -156,3 +157,10 @@ class ProdMasVendido(TemplateView):
     Show the products more sales
     """
     template_name = 'ventas/produtos_mas_vendido.html'
+
+
+class LacreosVendidos(TemplateView):
+    """
+    Show the lacteos more sales
+    """
+    template_name = 'ventas/lacteos.html'
