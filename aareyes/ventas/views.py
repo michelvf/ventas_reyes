@@ -33,6 +33,9 @@ class ExcelUploadView(FormView):
 
         # Con Pandas leer el fichero exel
         excel_file = pd.read_excel(file)
+        # excel_file = pd.read_excel(file, encoding='ISO-8859-1')
+        # wb = xlrd.open_workbook(file, encoding_override='CORRECT_ENCODING')
+        # excel_file = pd.read_excel(file, engine='calamine')
         
         # Insertando los Departamentos
         for i in range(len(excel_file['Departamento'])):
@@ -76,9 +79,9 @@ class ExcelUploadView(FormView):
             # Buscando el id del producto a insertar
             codigo_venta = Productos.objects.get(codigo=fila['Codigo'])
             # Tomando valores del Excel
-            cantidad = fila['Cantidad']
-            venta = fila['Precio Usado']
-            costo = fila['Precio Costo']
+            cantidad = float(fila['Cantidad'])
+            venta = float(fila['Precio Usado'])
+            costo = float(fila['Precio Costo'])
             calculo = (venta - costo) * cantidad
             # Buscando el valor del id del Departamento de la venta
             departamento_venta = Departamentos.objects.get(departamento=fila['Departamento'])
