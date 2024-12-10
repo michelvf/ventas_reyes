@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% block title %} | Ventas por fechas{% endblock title %}
+
 {% block css %}
     <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
@@ -13,11 +15,14 @@
 <div>
     <form method="POST" id="rangoDeDatos">
         {% csrf_token %}
-        <!-- input id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%" type="text" name="fechas" />
-        <span></span -->
-        <input type="text" name="datefilter" value="" />
-
-        <button class="btn btn-outline-primary" type="submit">Mostrar</button>
+        <div class="row">
+            <div class="col-4">
+                <input type="text" name="datefilter" value="" class="form-control" />
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
+            </div>
+        </div>
     </form>
 </div>
 <div class="mt-5">
@@ -112,9 +117,6 @@
             const hasta = fechas.indexOf(' -')
             const desde = fechas.indexOf('- ', hasta) + 2
             const final = fechas.length
-            // console.log("(1,2): " + cadena.substr(1, 2)); // '(1, 2): bc'
-
-            // console.log(`desde 0 hasta: ${hasta} y desde ${desde} hasta -1, y su tamaño: ${final}`)
             const fecha1 = fechas.substring(0, hasta)
             const [dia1, mes1, ano1] = fecha1.split('/')
             const fecha1_1 = `${ano1}-${mes1}-${dia1}`
@@ -123,8 +125,7 @@
             const fecha2_2 = `${ano2}-${mes2}-${dia2}`
             // console.log(`el rango es desde: ${fecha1} hasta: ${fecha2}`)
 
-            fetch('/ventas/ventasfechas/', {
-            // fetch('/api/ventas_fechas/', {
+            fetch('/ventas/api_ventasfechas/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,8 +137,6 @@
             })
             .then(response => response.json())
             .then(data => {
-                // document.getElementById('resultados').innerHTML = JSON.stringify(data);
-                // datos_fechas = JSON.stringify(data)
                 showDatatables(data)
             });
         });
@@ -150,11 +149,11 @@
                 language: language,
                 data: data,
                 paging: false,
-                //searching: false,
+                searching: false,
                 retrieve: true,
                 columns: [
-                    { data: 'producto.codigo' },
-                    { data: 'producto.producto' },
+                    { data: 'id_producto.codigo' },
+                    { data: 'id_producto.producto' },
                     { data: 'cantidad',
                       'sClass': 'center',
                       render: $.fn.dataTable.render.number( ",", ".", 2 )
@@ -185,13 +184,14 @@
 
                       }
                     },
-                    { data: 'departamento.departamento' },
+                    { data: 'id_producto.id_departamento.departamento' },
                     { data: 'fecha',
                         "render": function (data, type, full) {
                             return moment(data).format('D/M/Y');
                         }
                     },
                 ],
+                order: [[7, 'desc']],
             })
 
             table.destroy();
@@ -200,12 +200,12 @@
                 // destroy: true,
                 language: language,
                 data: data,
-                paging: false,
-                searching: false,
+                paging: true,
+                searching: true,
                 retrieve: true,
                 columns: [
-                    { data: 'producto.codigo' },
-                    { data: 'producto.producto' },
+                    { data: 'id_producto.codigo' },
+                    { data: 'id_producto.producto' },
                     { data: 'cantidad',
                       'sClass': 'center',
                       render: $.fn.dataTable.render.number( ",", ".", 2 )
@@ -236,15 +236,18 @@
 
                       }
                     },
-                    { data: 'departamento.departamento' },
+                    { data: 'id_producto.id_departamento.departamento' },
                     { data: 'fecha',
                         "render": function (data, type, full) {
                             return moment(data).format('D/M/Y');
                         }
                     },
                 ],
+                order: [[7, 'asc']],
             })
+
         }
+
 
     </script>
 {% endblock js %}

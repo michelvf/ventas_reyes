@@ -14,6 +14,11 @@ class ExcelUploadForm(forms.Form):
     datefilter = forms.DateField(
         label='Escoja la fecha del fichero: '
     )
+    actualizar = forms.BooleanField(
+        label='',
+        widget=forms.HiddenInput(),
+        required=False,
+    )
 
 
 class DateRangeForm(forms.Form):

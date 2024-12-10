@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} | Suma por fechas{% endblock title %}
+
+{% block css %}
+    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+{% endblock css %}
+
+{% block content %}
+    <h3 class="mx-3">Suma por Fechas</h1>
+    <div>
+        <form method="GET" id="rangoDeDatos">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-3">
+                    <input type="text" name="datefilter" value="" class="form-control"/>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="no_datos" class="invisible mt-3">No hay datos para esta(s) fecha(s)</div>
+    <div class="row invisible" id="mostrar_datos">
+        <div class="col-5">
+            <table class="table table-striped" id="sumas">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="col-7">
+            <div class="h4">
+                <b>Total: </b><span id='total' class=""></span>
+            </div>
+            <div class="h4">
+                <b>Promedio: </b><span id='promedio' class=''></span>
+            </div>
+            <hr />
+            <div>
+                <h4>Gráfico</h4>
+                <div class="ht-200 ht-lg-250" style="width: 800px;">
+                    <canvas id="grafico"></canvas>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/chart.js' %}"></script>
+
+    <script type="text/javascript" >
+    $('input[name="datefilter"]').daterangepicker({
+          autoUpdateInput: true,
+          showWeekNumbers: true,
+          autoApply: true,
+          locale: {
+              format: 'DD/MM/YYYY',
+              "daysOfWeek": [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Augusto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
+          },
+          ranges: {
+            'Hoy': [moment(), moment()],
+            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 Días': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 Días': [moment().subtract(30, 'days'), moment()],
+            'Este Mes': [moment().startOf('month'), moment().endOf('month')],
+            'Mes anterior': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          "alwaysShowCalendars": true,
+      });
+
+    // Para la fecha
+    function padLeft(n){
+        return ("00" + n).slice(-2);
+    }
+
+    // función para dale formato a la valor de moneda
+    function formar_moneda(data) {
+        valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+        if (data > 0) {
+            return '<span class="positivo">' + valor + '</span>';
+            // return data;
+        } else if (data < 0) {
+            return '<span class="negativo">' + valor + '</span>';
+            // return data;
+        } else {
+            return '<span class="cero">' + valor + '</span>';
+        }
+    }
+
+    function formatDate(d){
+        return moment(d).utc().format('DD/MM/YYYY') 
+    }
+
+    $("#rangoDeDatos").on("submit", function(event){
+            event.preventDefault();
+            const form = $(this);
+            // console.log('llegó: ',  form)
+            const fechas = form.find("input[name='datefilter']").val()
+            // console.log(`fechas del input: ${fechas}`)
+            const hasta = fechas.indexOf(' -')
+            const desde = fechas.indexOf('- ', hasta) + 2
+            const final = fechas.length
+            // console.log("(1,2): " + cadena.substr(1, 2)); // '(1, 2): bc'
+
+            // console.log(`desde 0 hasta: ${hasta} y desde ${desde} hasta -1, y su tamaño: ${final}`)
+            const fecha1 = fechas.substring(0, hasta)
+            const [dia1, mes1, ano1] = fecha1.split('/')
+            const fecha1_1 = `${ano1}-${mes1}-${dia1}`
+            const fecha2 = fechas.substring(desde, final)
+            const [dia2, mes2, ano2] = fecha2.split('/')
+            const fecha2_2 = `${ano2}-${mes2}-${dia2}`
+            // console.log(`el rango es desde: ${fecha1} hasta: ${fecha2}`)
+
+            url = '/ventas/api_suma_fechas/' + '?fecha_inicio=' + fecha1_1 + '&fecha_fin=' + fecha2_2
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // console.log('dentro del Fetch (Object): ', Object.keys(data).length)
+                // console.log('dentro del Fetch: (costructor) ', data.constructor)
+                // if (Object.keys(data).length === 0 && data.constructor === Object) {
+                let los_datos = document.getElementById("mostrar_datos");
+                let no_datos = document.getElementById("no_datos");
+                if (Object.keys(data).length != 0) {
+                    los_datos.classList.remove("invisible");
+                    no_datos.classList.add("invisible");
+                    showDatatables(data)
+                    SumarPromedio(data)
+                    Grafico(data)
+                } else {
+                    los_datos.classList.add("invisible");
+                    no_datos.classList.remove("invisible");
+                }
+            });
+     });
+
+    // const data = datos_fechas
+    function showDatatables(data) {
+
+        table = $('#sumas').DataTable({
+            // destroy: true,
+            language: language,
+            data: data,
+            paging: false,
+            searching: false,
+            retrieve: true,
+            columns: [
+                { data: 'fecha',
+                  render: function(data, type, full, meta) {
+                    return formatDate(data);
+                  }
+                },  
+                { data: 'suma',
+                  'sClass': 'right dt-type-numeric',
+                  render: function (data, type, full, meta ) {
+                  //valor = formar_moneda(data)
+                  return formar_moneda(data)
+                  // if (data > 0) {
+                  //       return '<span class="positivo">' + valor + '</span>';
+                  //       // return data;
+                  //   } else if (data < 0) {
+                  //       return '<span class="negativo">' + valor + '</span>';
+                  //       // return data;
+                  //   } else {
+                  //       return '<span class="cero">' + valor + '</span>';
+                  //   }
+
+                  }
+                },
+            ],
+        })
+
+        table.destroy();
+
+        table = $('#sumas').DataTable({
+            // destroy: true,
+            language: language,
+            data: data,
+            paging: true,
+            searching: true,
+            retrieve: true,
+            columns: [
+                { data: 'fecha',
+                  render: function(data, type, full, meta) {
+                    return formatDate(data);
+                  }
+                },  
+                { data: 'suma',
+                  'sClass': 'right dt-type-numeric',
+                  render: function (data, type, full, meta ) {
+                  valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+
+                  if (data > 0) {
+                        return '<span class="positivo">' + valor + '</span>';
+                        // return data;
+                    } else if (data < 0) {
+                        return '<span class="negativo">' + valor + '</span>';
+                        // return data;
+                    } else {
+                        return '<span class="cero">' + valor + '</span>';
+                    }
+
+                  }
+                },
+            ],
+        })
+    };
+
+    // función para sumar los valores del array
+    function Sumar(suma, valor) {
+        return suma + valor;
+    }
+
+    // Función para Sumar los valores del array, calcular el promedio
+    // y mostrarlos
+    function SumarPromedio(data) {
+        let sumar = 0
+        //console.log('A la función SumarPromedio le llegó: ', data)
+        sum = data.forEach(valor => {
+            sumar = Sumar(sumar, valor.suma)
+            // console.log('dentro del forEach, sumar va por: ', sumar, 'y valor es: ', valor.suma)
+        })
+        // console.log('terminó la sumatoria y da: ', sum, 'ahora a divirlo por: ', data.length)
+        promedio = sumar / data.length
+        // console.log('la suma da: ', sumar, ' y el promedio: ', promedio)
+        etiq_suma = document.getElementById('total')
+        etiq_promedio = document.getElementById('promedio')
+        etiq_suma.innerHTML = formar_moneda(sumar)
+        etiq_promedio.innerHTML = formar_moneda(promedio) + ' en ' + data.length + ' fechas'
+    }
+
+    // función para hacer el gráfico con los datos
+    function Grafico(data) {
+    // function Grafico() {
+      const ctx = document.getElementById('grafico').getContext('2d');
+      // const ctx = document.getElementById('grafico');
+
+      if(this.graf) {
+           this.graf.destroy()
+      }
+
+      var gradient2 = ctx.createLinearGradient(0, 280, 0, 0);
+      gradient2.addColorStop(0, 'rgba(0,123,255,0)');
+      gradient2.addColorStop(1, 'rgba(0,123,255,.3)');
+
+      if(data) {
+          graf = new Chart(ctx, {
+            type: 'line',
+            data: {
+              // labels: ['algo', 'algo', 'algo', 'algo', 'algo', 'algo', 'algo'],
+              labels: data.map(label => formatDate(label.fecha)),
+              datasets: [{
+                // label: 'Ventas',
+                data: data.map(value => value.suma),
+                //fill: false,
+                borderColor: 'rgb(49, 107, 201)',
+                //borderColor: '#43d5aa',
+                tension: 0.4,
+                borderWidth: 2,
+                // backgroundColor: gradient2
+                fill: {
+                    target: 'origin', // Sombrea desde el valor 0
+                    below: 'rgba(255, 0, 0, 0.2)', // Sombra roja debajo de la línea
+                    above: 'rgba(0, 123, 255, 0.2)' // Sombra azul encima de la línea
+                }, 
+                tension: 0.4 // Hace que la línea sea un poco más suave
+              }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: function(context) {
+                                return context.tick.value === 0 ? 'black' : 'rgba(0, 0, 0, 0.1)'; // Línea horizontal de valor 0 en negro
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: false,
+                    },
+                    legend: false,
+                },
+            } 
+        });
+      }
+    }
+    </script>
+{% endblock js %}

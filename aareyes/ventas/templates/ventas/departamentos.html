@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %} | Departamentos{% endblock title %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
@@ -47,6 +49,7 @@
         { data: 'departamento' },
         //{ data: 'cantidad' }
     ],
+    pageLength: 20,
 });
 </script>
 {% endblock %}

@@ -1,6 +1,23 @@
 from django.db import models
 
 
+class fileUpdate(models.Model):
+    """
+    Modelo para saber la fecha de los ficheros que se han subido
+    """
+    fecha = models.DateTimeField()
+
+    class Meta:
+        ordering = ['fecha']
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["fecha"]),
+        ]
+
+    def __str__(self):
+        return str(self.fecha.strftime("%Y-%m-%d"))
+
+
 class Departamentos(models.Model):
     """
     Modelo para los Departamentos
@@ -10,7 +27,7 @@ class Departamentos(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["departamento"]
+        ordering = ["id"]
         verbose_name = "departmento"
         verbose_name_plural = "departmentos"
         indexes = [
@@ -28,6 +45,13 @@ class Productos(models.Model):
     """
     codigo = models.IntegerField(null=False)
     producto = models.CharField(max_length=200, null=False)
+    id_departamento = models.ForeignKey(
+        Departamentos,
+        related_name="productos",
+        on_delete=models.PROTECT,
+        blank=False,
+        null=False
+    )
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
@@ -49,7 +73,8 @@ class Ventas(models.Model):
     """
     Modelo para las Ventas
     """
-    producto = models.ForeignKey(
+    id_producto = models.ForeignKey(
+    # producto = models.ForeignKey(
         Productos,
         related_name='productos',
         on_delete=models.PROTECT,
@@ -60,13 +85,6 @@ class Ventas(models.Model):
     venta = models.FloatField(null=False)
     costo = models.FloatField(null=False)
     calculo = models.FloatField(null=False)
-    departamento = models.ForeignKey(
-        Departamentos,
-        related_name='departamentos',
-        on_delete=models.PROTECT,
-        blank=False,
-        null=False,
-    )
     fecha = models.DateTimeField()
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
@@ -78,9 +96,17 @@ class Ventas(models.Model):
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["fecha"]),
-            models.Index(fields=["producto"]),
+            models.Index(fields=["id_producto"]),
             models.Index(fields=["calculo"]),
         ]
 
     def __str__(self):
-        return self.producto.producto
+        return self.id_producto.producto
+
+"""
+Notas:
+02/12/24 4:13
+El agregar el id_departamento al modelo Producto, hace que no haga falta en
+modelo Ventas, y toda la relación se hace a través de producto, esto cambia
+las consultas en las vistas, tantos en la app Ventas como en la API.
+"""
