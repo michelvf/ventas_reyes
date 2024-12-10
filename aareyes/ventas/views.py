@@ -7,7 +7,8 @@ from .forms import ExcelUploadForm
 from django.views.generic.edit import FormView
 from rest_framework.views import APIView
 from django.views.generic import TemplateView
-from .models import Departamentos, Productos, Ventas
+from .models import Departamentos, Productos, Ventas, fileUpdate
+from django.http import JsonResponse
 
 
 
@@ -34,6 +35,8 @@ class ExcelUploadView(FormView):
         # Obteniendo los valores del formulario
         date = form.cleaned_data['datefilter']
         file = form.cleaned_data['file']
+        actualizar = form.cleaned_data['actualizar']
+        print(f"Llegó del forumario: date: ", date, ", file: ", file, ", actualizar: ", actualizar)
 
         # Leer el fichero recibido
         raw_data = file.read()
@@ -77,6 +80,14 @@ class ExcelUploadView(FormView):
                 # Guardando en la BD
                 obj.save()
 
+        # Borrar los que se van a actualizar
+        if actualizar:
+            ventas = Ventas.objects.filter(fecha=date).delete()
+            # print(f"se van a borrar: {ventas}")
+        else:
+            fileUp = fileUpdate(fecha=date)
+            fileUp.save()
+
         # Insertando las Ventas
         for i in range(len(excel_file)):
             # Leyendo una fila
@@ -105,9 +116,14 @@ class ExcelUploadView(FormView):
                 fecha=fecha
             )
             # Guardando en la BD
+            # print(f"Se va a guardar: {obj_venta}")
             obj_venta.save()
 
-        return super().form_valid(form)
+            return JsonResponse({'mensaje': 'Datos recibidos correctamente!'})
+
+        # return super().form_valid(form)
+    def form_invalid(self, form):
+        return JsonResponse({'error': 'Datos no válidos'}, status=400) 
 
 
 class ShowVentas(TemplateView):

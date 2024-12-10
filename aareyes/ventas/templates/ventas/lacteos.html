@@ -8,6 +8,7 @@
     <link href="{% static 'assets/lib/select2/css/select2.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <!-- link href="{% static 'assets/lib/pickerjs/picker.min.css' %}" rel="stylesheet" -->
 {% endblock css%}
 
 {% block content %}
@@ -33,15 +34,16 @@
           </div>
         </div>
         <div class="col-3">
-          <select class="form-control select2-no-search" id="depart" name="departamento">
+          <select class="form-control" id="depart" name="departamento">
           </select>
         </div>
         <div class="col-3">
-          <button class="btn btn-primary">Mostrar</button>
+          <button class="btn btn-primary btn-block">Mostrar</button>
         </div>
   </div>
 </form>
-<div class="row row-sm mg-b-20">
+<div id="no_datos" class="invisible mt-3">No hay datos para esta(s) fecha(s)</div>
+<div class="row row-sm mg-b-20 invisible" id="mostrar_datos">
     <div class="col-5">
         <table id="tablaLacteos" class="display table table-striped table-hover table-bordered" >
             <thead>
@@ -53,18 +55,10 @@
                 </tr>
             </thead>
             <tbody>
-                
             </tbody>
-            <!-- tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot -->
         </table>
     </div>
     <div class="col-7">
-        <h2 class="az-dashboard-title">Gráfico</h2>
         <div class="ht-200 ht-lg-250" style="width: 100%;">
             <canvas id="grafico" height="250px"></canvas>
         </div>
@@ -80,6 +74,7 @@
 <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
 <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+<!-- script src="{% static 'assets/lib/pickerjs/picker.min.js' %}"></script -->
 
 <script>
 // Tomar la fecha de hoy
@@ -124,16 +119,16 @@ $(document).ready(function(){
 $('input[name="datefilter"]').daterangepicker({
     autoUpdateInput: true,
     singleDatePicker: false,
-    showDropdowns: true,
-    minYear: 2020,
+    //showDropdowns: true,
+    // minYear: 2020,
     autoApply: true,
     locale: {
         "format": "YYYY-MM-DD",
-        "separator": " - ",
-        "fromLabel": "From",
-        "toLabel": "To",
-        "customRangeLabel": "Custom",
-        "weekLabel": "W",
+        // "separator": " - ",
+        // "fromLabel": "From",
+        // "toLabel": "To",
+        // "customRangeLabel": "Custom",
+        // "weekLabel": "W",
         "daysOfWeek": [
             "Do",
             "Lu",
@@ -199,9 +194,18 @@ $("#rangoDeFechas").submit(function (e){
     })
     .then(response => response.json())
     .then(data => {
-        console.log("lo que llega del POST: ", data)
-        tablaDatos(data)
-        Grafico(data)
+        //console.log("lo que llega del POST: ", data)
+        let los_datos = document.getElementById("mostrar_datos");
+        let no_datos = document.getElementById("no_datos");
+        if (Object.keys(data).length != 0) {
+            los_datos.classList.remove("invisible");
+            no_datos.classList.add("invisible");
+            tablaDatos(data)
+            Grafico(data)
+        } else {
+            los_datos.classList.add("invisible");
+            no_datos.classList.remove("invisible");
+        }
     });
 });
 
@@ -220,7 +224,7 @@ function tablaDatos(data) {
         { data: 'total_vendido' },
         // { data: 'id_departamento.departamento' }
     ],
-    order: [[2, 'desc']]
+    order: [[1, 'desc']]
     })
 }
 

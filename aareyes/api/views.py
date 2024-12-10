@@ -2,34 +2,50 @@ import datetime
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework import authentication
-from ventas.models import Departamentos, Productos, Ventas
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate
 from .serializers import DepartamentoSerializer, ProductoSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
-from django.db.models import Sum, Count, Q
+from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
+from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 # Create your views here.
-class ProductoApiView(ModelViewSet):
+class ProductoApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Products
+    """
     queryset = Productos.objects.all()
-    # queryset = Productos.objects.values("codigo", "producto", "productos__cantidad")
     serializer_class = ProductoSerializer
 
 
-class DepartamentoApiView(ModelViewSet):
+class DepartamentoApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Departament
+    """
     queryset = Departamentos.objects.all()
-    # queryset = Departamentos.objects.values('departamento').annotate(cantidad=Count('departamentos__id'))
     serializer_class = DepartamentoSerializer
 
 
-class VentaApiView(ModelViewSet):
+class FicherosSubidosApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    Date of the files Up
+    """
+    queryset = fileUpdate.objects.all()
+    serializer_class = FicherosSubidosSerializer
+
+
+class VentaApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API to show the Sellings
+    """
     queryset = Ventas.objects.all()
     serializer_class = VentaSerializer
 
@@ -38,11 +54,11 @@ class VentasPorFechas(APIView):
     authentication_classes = [authentication.TokenAuthentication]
 
     def post(self, request, format=None):
-        serializer = ProdMasVendidosVarSerializer(data=request.data)
+        serializer = VentasPorFechasSerializer(data=request.data)
         if serializer.is_valid():
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
-            departamento = serializer.validated_data['departamento']
+            # departamento = serializer.validated_data['departamento']
             ventas_fecha = Ventas.objects.filter(fecha__range=[start_date, end_date])
             serializer_other = VentasPorFechasTodoSerializer(ventas_fecha, many=True)
             # return Response(ventas_fecha.values(), status=status.HTTP_200_OK)
@@ -130,7 +146,8 @@ class LacteosAPI(APIView):
             lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
                 producto_s=Substr('id_producto__producto', 1, 20),
             ).filter(
-                 id_producto__id_departamento=departamento
+                 id_producto__id_departamento=departamento,
+                 fecha__range=[start_date, end_date],
             ).values(
                 'producto_s'
             ).annotate(
@@ -143,3 +160,24 @@ class LacteosAPI(APIView):
             return Response(serializer_other.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class VentaSemanalAPI(APIView):
+    """
+    Ventas en la semana
+    """
+    def get(self, request):
+        a_week = datetime.now() + timedelta(days=-36)
+
+        week_sales = Ventas.objects.filter(
+                fecha__gte=a_week
+            ).annotate(
+                fecha_agregada=TruncDate('fecha', output_field=DateField())
+            ).values(
+                'fecha_agregada'
+            ).annotate(
+                total_vendido=Sum('calculo')
+            ).order_by('fecha_agregada')
+            
+        serializer = VentaSemanalSerializer(week_sales, many=True)
+        
+        return Response(serializer.data)

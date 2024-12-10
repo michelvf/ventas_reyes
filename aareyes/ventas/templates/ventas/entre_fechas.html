@@ -15,8 +15,14 @@
 <div>
     <form method="POST" id="rangoDeDatos">
         {% csrf_token %}
-        <input type="text" name="datefilter" value="" />
-        <button class="btn btn-outline-primary" type="submit">Mostrar</button>
+        <div class="row">
+            <div class="col-4">
+                <input type="text" name="datefilter" value="" class="form-control" />
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
+            </div>
+        </div>
     </form>
 </div>
 <div class="mt-5">

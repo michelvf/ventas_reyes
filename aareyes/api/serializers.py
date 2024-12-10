@@ -1,6 +1,15 @@
 from rest_framework import serializers
-from ventas.models import Departamentos, Productos, Ventas
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate
 from django.db.models import Count
+
+
+class FicherosSubidosSerializer(serializers.ModelSerializer):
+    """
+    Serializer for fileUpdate Model
+    """
+    class Meta:
+        model = fileUpdate
+        fields = ('id', 'fecha')
 
 
 class DepartamentoSerializer(serializers.ModelSerializer):
@@ -10,7 +19,6 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Departamentos
-        # fields = ("id", "departamento", "cantidad")
         fields = ("id", "departamento")
 
 
@@ -18,7 +26,6 @@ class ProductoSerializer(serializers.ModelSerializer):
     """
     Serializer for Productos Model 
     """
-
     id_departamento=DepartamentoSerializer(
         read_only=True
     )
@@ -124,4 +131,20 @@ class LacteosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ventas
         fields = ["id_producto", "total_vendido", "producto_s"]
+
+
+class VentaSemanalSerializer(serializers.Serializer): 
+    """
+    Product selling in a week
+    """
+    fecha_agregada = serializers.DateField()
+    total_vendido = serializers.DecimalField(max_digits=10, decimal_places=2) 
+    
+    # id_producto = ProductoSerializer(
+    #     read_only=True
+    # )
+
+    # class Meta:
+    #     model = Ventas
+    #     fields = ["fecha", "total_vendido"]
 

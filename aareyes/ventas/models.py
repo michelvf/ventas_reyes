@@ -15,7 +15,7 @@ class fileUpdate(models.Model):
         ]
 
     def __str__(self):
-        return self.fecha
+        return str(self.fecha.strftime("%Y-%m-%d"))
 
 
 class Departamentos(models.Model):

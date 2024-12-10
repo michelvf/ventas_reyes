@@ -15,12 +15,18 @@
     <div>
         <form method="GET" id="rangoDeDatos">
             {% csrf_token %}
-            <input type="text" name="datefilter" value="" />
+            <div class="row">
+                <div class="col-3">
+                    <input type="text" name="datefilter" value="" class="form-control"/>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
+                </div>
+            </div>
 
-            <button class="btn btn-outline-primary" type="submit">Mostrar</button>
         </form>
     </div>
-    <div id="no_datos" class="invisible">No hay datos para esta(s) fecha(s)</div>
+    <div id="no_datos" class="invisible mt-3">No hay datos para esta(s) fecha(s)</div>
     <div class="row invisible" id="mostrar_datos">
         <div class="col-5">
             <table class="table table-striped" id="sumas">

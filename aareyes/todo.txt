@@ -1,0 +1,11 @@
+hacer:
+- ventas en la semana.
+- terminar dashboard:
+  - todas las API que tributan información al Dashboard
+  - editar el Theme para que vea bien
+
+hecho:
+- upload, validar la fecha que se está ingresando no se ha ingresado antes
+- Arreglar el title
+- corregir visualidad de Ventas (/ventas/entrefechas/)
+- Arreglar ocultar la tabla y gráfico en /ventas/prod_mas_vendido/

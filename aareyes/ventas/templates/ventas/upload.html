@@ -9,36 +9,42 @@
 {% endblock css %}
 
 {% block content %}
-<h2>Subir archivo Excel</h2>
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">Subir archivo Excel</h2>
+    <p class="az-dashboard-text">Para agregar el fichero que exporta el Abarrote, primero debe abrirlo en el Excel, y "usando Guardar como", guardarlo como: "Libro de Excel 97-2003. La imagen muestra cómo hacerlo</p>
+  </div>
+  <div class="az-content-header-right">
+  </div>
+</div><!-- az-dashboard-one-title -->
 <div class="row">
     <div class="col">
-        <p>Para agregar el fichero que exporta el Abarrote, primero debe abrirlo en el Excel, y "usando Guardar como",
-            guardarlo como: "Libro de Excel 97-2003. La imagen muestra cómo hacerlo</p>
+        <p></p>
         <img alt="Convertir a CSV el fichero que exporta el Abarrote"
             src="{% static 'img/guardar_como_xls_97-2003_.jpg' %}" width="700px" height="400px" />
     </div>
     <div class="col">
-
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="formulario">
 
             {% csrf_token %}
 
-            {# {{ form.as_p }} #}
-
             {% for field in form %}
-            <div class="fieldWrapper mt-3">
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </div>
+                <div class="fieldWrapper mt-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
             {% endfor %}
-
-            <button class="btn btn-outline-primary" type="submit">Subir</button>
+            <br />
+            <div class="col-12 d-flex flex-row-reverse">
+                <button class="btn btn-primary btn-block w-25" type="submit">Subir</button>
+            </div>
         </form>
     </div>
-    {% endblock %}
+</div>
+ {% endblock %}
 
-    {% block js %}
+{% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
@@ -93,5 +99,77 @@
 
         $('.errorlist').css('color', 'red')
 
+        function comparar_fecha(fec) {
+            f = new Date(fec)
+            dateFormatter = Intl.DateTimeFormat('sv-SE')
+            return dateFormatter.format(f)
+        }
+
+        // function fetchPost(fecha, fichero, actualizar) {
+        function fetchPost(formData) {
+
+            // let formData = new FormData();
+            // formData.append('datefilter', fecha);
+            // formData.append('file', fichero);
+            // formData.append('actualizar', actualizar);
+
+            fetch('/ventas/upload/', {
+                method: 'POST',
+                //headers: {
+                    // 'Content-Type': 'application/json',
+                    //'X-CSRFToken': '{{ csrf_token }}',
+                    //'Content-Type': 'multipart/form-data',
+                    // 
+                    //'Content-Type': 'form-data',
+                //},
+                body: formData, 
+                // JSON.stringify({
+                //     datefilter: fecha,
+                //     file: fichero,
+                //     actualizar: actualizar,
+                    //csrfmiddlewaretoken: token,
+                //}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("lo que llega de Django: ", data)
+            })
+            .catch(err => console.log('Error de la función Fetch: ', err))
+        }
+
+        $("#formulario").submit(function (e){
+            e.preventDefault();
+
+            let formData = new FormData(this);
+            // const fecha = $('#id_datefilter').val();
+            // const fichero = $('#id_file').val();
+            // const csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+
+            fetch('/api/ficherosubidos/')
+            .then(res => res.json())
+            .then(dat => {
+                // const fecha = $('#id_datefilter').val();
+                //console.log(`lo que llega del fetch de la api ficherosubidos: ${dat}`)
+                
+                //fecha_map = comparar_fecha(formData.get("datefilter"))
+                fecha_map = formData.get("datefilter")
+                // console.log('la fecha a comparar: ', fecha_map, ', la que llega del formulario: ', formData.get("datefilter"))
+                coincide = dat.filter(d => fecha_map === comparar_fecha(d.fecha))
+                console.log('viendo si las fechas coinciden: ', coincide.lenght)
+                if (coincide.length > 0) {
+                    if (window.confirm(`ya se registró la venta del día ${fecha_map}, ¿desea actualizar?`)) {
+                        // fetchPost(fecha, fichero, true)
+
+                        formData.append('actualizar', true);
+                        fetchPost(formData)
+                    };
+                } else {
+                    // fetchPost(fecha, fichero, false)
+                    fetchPost(formData);
+                }
+            })
+            .catch(error => console.log('Error de captar los datos del for y ver si las fechas coinciden: ', error))
+        });
     </script>
-    {% endblock js %}
+{% endblock js %}
