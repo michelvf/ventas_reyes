@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Almacén</th>
+            <th>Producto</th>
+            <th>Total Comprado</th>
+            <th>Gasto Total</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in resumen %}
+        <tr>
+            <td>{{ item.producto__almacen__nombre }}</td>
+            <td>{{ item.producto__nombre }}</td>
+            <td>{{ item.total_comprado }}</td>
+            <td>{{ item.gasto_total }}</td>
+            <td>{{ item.fecha }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -25,4 +25,5 @@ urlpatterns = [
     path("", IndexView.as_view(), name='index'),
     path("ventas/", include('ventas.urls')),
     path("api/", include(router.urls)),
+    path("compras/", include('compras.urls')),
 ]

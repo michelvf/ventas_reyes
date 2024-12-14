@@ -1,8 +1,11 @@
 hacer:
+- upload, validar que el fichero no da error, y si lo da, mostrar el error
 - ventas en la semana.
 - terminar dashboard:
   - todas las API que tributan información al Dashboard
   - editar el Theme para que vea bien
+
+- Compras
 
 hecho:
 - upload, validar la fecha que se está ingresando no se ha ingresado antes

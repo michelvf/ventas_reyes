@@ -38,6 +38,16 @@
                 <a href="{% url 'lacteos' %}" class="nav-link">Lácteos vendidos</a>
               </nav>
             </li>
+            <li class="nav-item">
+              <a href="" class="nav-link with-sub">Compras</a>
+              <nav class="az-menu-sub">
+                <a href="{% url 'registrar_almacen' %}" class="nav-link">Almacén</a>
+                <a href="{% url 'registrar_producto' %}" class="nav-link">Productos</a>
+                <a href="{% url 'registrar_precio_producto' %}" class="nav-link">Precios - Productos</a>
+                <a href="{% url 'registrar_compra' %}" class="nav-link">Compra</a>
+                <a href="{% url 'resumen_semanal' %}" class="nav-link">Resumen Semanal</a>
+              </nav>
+            </li>
             <!--li class="nav-item">
               <a href="" class="nav-link with-sub"><i class="typcn typcn-document"></i> Pages</a>
               <nav class="az-menu-sub">

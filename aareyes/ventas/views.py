@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from django.views.generic import TemplateView
 from .models import Departamentos, Productos, Ventas, fileUpdate
 from django.http import JsonResponse
+from django.contrib import messages
+from django.urls import reverse_lazy
 
 
 
@@ -25,7 +27,8 @@ class ExcelUploadView(FormView):
     """
     template_name = 'ventas/upload.html'
     form_class = ExcelUploadForm
-    success_url = '/ventas/success/'
+    # success_url = '/ventas/success/'
+    success_url = reverse_lazy('success')
 
 
     def form_valid(self, form):
@@ -38,14 +41,18 @@ class ExcelUploadView(FormView):
         actualizar = form.cleaned_data['actualizar']
         print(f"Llegó del forumario: date: ", date, ", file: ", file, ", actualizar: ", actualizar)
 
-        # Leer el fichero recibido
-        raw_data = file.read()
+        try:
+            # Leer el fichero recibido
+            raw_data = file.read()
 
-        # Con Pandas leer el fichero exel
-        excel_file = pd.read_excel(file)
-        # excel_file = pd.read_excel(file, encoding='ISO-8859-1')
-        # wb = xlrd.open_workbook(file, encoding_override='CORRECT_ENCODING')
-        # excel_file = pd.read_excel(file, engine='calamine')
+            # Con Pandas leer el fichero exel
+            excel_file = pd.read_excel(file)
+            # excel_file = pd.read_excel(file, encoding='ISO-8859-1')
+            # wb = xlrd.open_workbook(file, encoding_override='CORRECT_ENCODING')
+            # excel_file = pd.read_excel(file, engine='calamine')
+        except Exception as e:
+            form.add_error('file', 'Error al leer el fichero: {}'.format(e))
+            return self.form_invalid(form)
         
         # Insertando los Departamentos
         for i in range(len(excel_file['Departamento'])):
@@ -122,11 +129,20 @@ class ExcelUploadView(FormView):
             # print(f"Se va a guardar: {obj_venta}")
             obj_venta.save()
 
-            return JsonResponse({'mensaje': 'Datos recibidos correctamente!'})
+        # return JsonResponse({'mensaje': 'Datos recibidos correctamente!'})
+        messages.success(self.request, 'Fichero subido y leído correctamente')
+        return super().form_valid(form)
 
         # return super().form_valid(form)
     def form_invalid(self, form):
-        return JsonResponse({'error': 'Datos no válidos'}, status=400) 
+        # return JsonResponse({'error': 'Datos no válidos'}, status=400) 
+        messages.error(self.request, 'Fichero ha dando error al leerlo.')
+        response = super().form_invalid(form)
+
+        if self.request.accepts("text/html"):
+            return response
+        else:
+            return JsonResponse(form.errors, status=400)
 
 
 class ShowVentas(TemplateView):

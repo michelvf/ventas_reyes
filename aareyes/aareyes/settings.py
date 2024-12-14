@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "ventas.apps.VentasConfig",
     "rest_framework",
+    "compras.apps.ComprasConfig",
 ]
 
 MIDDLEWARE = [
