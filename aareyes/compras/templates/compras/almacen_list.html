@@ -7,10 +7,11 @@
 {% endblock css %}
 
 {% block content %}
+
 <div class="az-dashboard-one-title">
   <div>
-    <h2 class="az-dashboard-title">Compras</h2>
-    <p class="az-dashboard-text">Compras realizadas por la entidad</p>
+    <h2 class="az-dashboard-title">Almacenes</h2>
+    <p class="az-dashboard-text">Los diferentes almacenes de la entidad</p>
   </div>
   <div class="az-content-header-right">
   </div>
@@ -18,25 +19,18 @@
 <table class="table" id="table">
     <thead>
         <tr>
-            <th>Producto</th>
-            <th>Canidad</th>
-            <th>Precio</th>
-            <th>Fecha</th>
+            <th>Almacén</th>
         </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
         <tr>
-            <td>{{ item.producto }}</td>
-            <td>{{ item.cantidad }}</td>
-            <td>{{ item.precio_compra }}</td>
-            <td>{{ item.fecha }}</td>
+            <td>{{ item.nombre }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% endblock %}
-
 {% block js %}
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
 

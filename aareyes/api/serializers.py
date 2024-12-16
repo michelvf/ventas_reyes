@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate
+from compras.models import Almacen, Producto, PrecioProducto, Compra 
 from django.db.models import Count
 
 
@@ -22,7 +23,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
         fields = ("id", "departamento")
 
 
-class ProductoSerializer(serializers.ModelSerializer):
+class ProductosSerializer(serializers.ModelSerializer):
     """
     Serializer for Productos Model 
     """
@@ -40,7 +41,7 @@ class VentaSerializer(serializers.ModelSerializer):
     Serializer for Ventas Model 
     """
 
-    id_producto=ProductoSerializer(
+    id_producto=ProductosSerializer(
         # many=True,
         read_only=True
     )
@@ -62,7 +63,7 @@ class VentasPorFechasTodoSerializer(serializers.ModelSerializer):
     """
     Serializer for filter bettwen dates
     """
-    id_producto=ProductoSerializer(
+    id_producto=ProductosSerializer(
         # many=True,
         read_only=True
     )
@@ -123,10 +124,11 @@ class LacteosSerializer(serializers.ModelSerializer):
     total_vendido = serializers.IntegerField()
     producto_s = serializers.CharField()
 
-    id_producto=ProductoSerializer(
+    id_producto=ProductosSerializer(
         # many=True,
         read_only=True
     )
+    
 
     class Meta:
         model = Ventas
@@ -148,3 +150,38 @@ class VentaSemanalSerializer(serializers.Serializer):
     #     model = Ventas
     #     fields = ["fecha", "total_vendido"]
 
+######### Compra ############################
+class AlmacenSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Almacen Model
+    """
+    class Meta:
+        model = Almacen
+        fields = ('id', 'nombre')
+
+
+class ProductoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Producto Model
+    """
+    class Meta:
+        model = Producto
+        fields = ('id', 'nombre', 'almacen')
+
+
+class PrecioProductoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for PrecioProducto Model
+    """
+    class Meta:
+        model = PrecioProducto
+        fields = ('id', 'producto', 'precio', 'fecha')
+
+
+class CompraSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Compra Model
+    """
+    class Meta:
+        model = Compra
+        fields = ('id', 'producto', 'cantidad', 'precio_compra', 'fecha')

@@ -4,7 +4,7 @@ from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
 from .views import LacreosVendidos, ProdMasVendido 
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
-from api.views import VentaSemanalAPI
+from api.views import VentaSemanalAPI, LacteosSemanaAPI
 from django.views.generic import TemplateView
 
 
@@ -27,5 +27,7 @@ urlpatterns = [
     path('api_prod_x_depto/', ProductXDeptoListView.as_view(), name="prod_x_depto_api"),
     path('api_prod_mas_vendidos/', ProductMasVendidoAPI.as_view(), name="prod_mas_vendidos"),
     path('api_ventasemanal/', VentaSemanalAPI.as_view(), name="api_ventasemanal"),
+    path('api_lacteossemanal/', LacteosSemanaAPI.as_view(), name="api_lacteossemanal"),
+    
 ]
 

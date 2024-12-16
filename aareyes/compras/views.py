@@ -40,6 +40,26 @@ class RegistrarCompraView(CreateView):
     success_url = '/compras/resumen_semanal/'
 
 
+class AlmacenListView(ListView):
+    model = Almacen
+    template_name = 'compras/almacen_list.html'
+
+
+class ProductosListView(ListView):
+    model = Producto
+    template_name = 'compras/productos_list.html'
+
+
+class PrecioProductoListView(ListView):
+    model = PrecioProducto
+    template_name = 'compras/precio_producto_list.html'
+
+
+class CompraListView(ListView):
+    model = Compra
+    template_name = 'compra/compra_list.html'
+
+
 class ResumeSemanalView(ListView):
     model = Compra
     template_name =  'compras/resumen_semanal.html'

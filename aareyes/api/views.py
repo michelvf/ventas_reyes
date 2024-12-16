@@ -5,12 +5,15 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework import authentication
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate
-from .serializers import DepartamentoSerializer, ProductoSerializer
+from .serializers import DepartamentoSerializer, ProductosSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
 from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
+from compras.models import Almacen, Producto, PrecioProducto, Compra
+from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
+from .serializers import PrecioProductoSerializer
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
@@ -18,12 +21,12 @@ from datetime import timedelta, datetime
 
 
 # Create your views here.
-class ProductoApiView(viewsets.ReadOnlyModelViewSet):
+class ProductosApiView(viewsets.ReadOnlyModelViewSet):
     """
     API for show the Products
     """
     queryset = Productos.objects.all()
-    serializer_class = ProductoSerializer
+    serializer_class = ProductosSerializer
 
 
 class DepartamentoApiView(viewsets.ReadOnlyModelViewSet):
@@ -161,6 +164,35 @@ class LacteosAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class LacteosSemanaAPI(APIView):
+    """
+    API to show the best selling weekly products
+    """
+    def get(self, request):
+        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        condiciones = Q()
+        to_day = datetime.now()
+        a_week = datetime.now() + timedelta(days=-36)
+        departamento = 1
+        for palabra in lacteos:
+            condiciones |= Q(id_producto__producto__istartswith=palabra)
+        lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
+            producto_s=Substr('id_producto__producto', 1, 20),
+        ).filter(
+             id_producto__id_departamento=departamento,
+             fecha__range=[a_week, to_day],
+        ).values(
+            'producto_s'
+        ).annotate(
+            total_vendido=Sum('cantidad')
+        #    codigo='id_producto__codigo',
+        ).order_by('-total_vendido')
+        #).order_by('-cantidad')
+
+        serializer_other = LacteosSerializer(lacteos_vendidos, many=True)
+        return Response(serializer_other.data, status=status.HTTP_200_OK)
+
+
 class VentaSemanalAPI(APIView):
     """
     Ventas en la semana
@@ -181,3 +213,42 @@ class VentaSemanalAPI(APIView):
         serializer = VentaSemanalSerializer(week_sales, many=True)
         
         return Response(serializer.data)
+
+
+
+############### Compra ##############
+
+# Create your views here.
+class AlmacenApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Products
+    """
+    queryset = Almacen.objects.all()
+    serializer_class = AlmacenSerializer
+
+
+# Create your views here.
+class ProductoApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Products
+    """
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
+
+
+# Create your views here.
+class PrecioProductoApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Products
+    """
+    queryset = PrecioProducto.objects.all()
+    serializer_class = PrecioProductoSerializer
+
+
+# Create your views here.
+class CompraApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Products
+    """
+    queryset = Compra.objects.all()
+    serializer_class = CompraSerializer

@@ -12,37 +12,37 @@
 
 {% block content %}
     <h3 class="mx-3">Ventas por Fechas</h1>
-<div>
-    <form method="POST" id="rangoDeDatos">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-4">
-                <input type="text" name="datefilter" value="" class="form-control" />
+    <div>
+        <form method="POST" id="rangoDeDatos">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-4">
+                    <input type="text" name="datefilter" value="" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
+                </div>
             </div>
-            <div class="col-2">
-                <button class="btn btn-primary btn-block" type="submit">Mostrar</button>
-            </div>
-        </div>
-    </form>
-</div>
-<div class="mt-5">
-    <table id="ventas" class="table">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Costo</th>
-                <th>Precio Venta</th>
-                <th>Cálculo</th>
-                <th>Departamento</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+        </form>
+    </div>
+    <div class="mt-5">
+        <table id="ventas" class="table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Costo</th>
+                    <th>Precio Venta</th>
+                    <th>Cálculo</th>
+                    <th>Departamento</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     
 {% endblock content %}
 

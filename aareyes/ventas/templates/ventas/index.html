@@ -71,6 +71,7 @@
           </div><!-- card-body-top -->
           <div class="flot-chart-wrapper">
             <div id="flotChart" class="flot-chart"></div>
+            <!-- canvas id="flotChart" class="flot-chart"></canvas -->
           </div><!-- flot-chart-wrapper -->
         </div><!-- card-body -->
       </div><!-- card -->
@@ -243,67 +244,8 @@
     </div><!-- row -->
 
     <div class="row row-sm mg-b-20 mg-lg-b-0">
-    <div class="col-lg-5 col-xl-4">
-      <div class="row row-sm">
-        <div class="col-md-6 col-lg-12 mg-b-20 mg-md-b-0 mg-lg-b-20">
-          <div class="card card-dashboard-five">
-            <div class="card-header">
-              <h6 class="card-title">Acquisition</h6>
-              <span class="card-text">Tells you where your visitors originated from, such as search engines, social networks or website referrals.</span>
-            </div><!-- card-header -->
-            <div class="card-body row row-sm">
-              <div class="col-6 d-sm-flex align-items-center">
-                <div class="card-chart bg-primary">
-                  <span class="peity-bar" data-peity='{"fill": ["#fff"], "width": 20, "height": 20 }'>6,4,7,5,7</span>
-                </div>
-                <div>
-                  <label>Bounce Rate</label>
-                  <h4>33.50%</h4>
-                </div>
-              </div><!-- col -->
-              <div class="col-6 d-sm-flex align-items-center">
-                <div class="card-chart bg-purple">
-                  <span class="peity-bar" data-peity='{"fill": ["#fff"], "width": 21, "height": 20 }'>7,4,5,7,2</span>
-                </div>
-                <div>
-                  <label>Sessions</label>
-                  <h4>9,065</h4>
-                </div>
-              </div><!-- col -->
-            </div><!-- card-body -->
-          </div><!-- card-dashboard-five -->
-        </div><!-- col -->
-        <div class="col-md-6 col-lg-12">
-          <div class="card card-dashboard-five">
-            <div class="card-header">
-              <h6 class="card-title">Sessions</h6>
-              <span class="card-text"> A session is the period time a user is actively engaged with your website, app, etc.</span>
-            </div><!-- card-header -->
-            <div class="card-body row row-sm">
-              <div class="col-6 d-sm-flex align-items-center">
-                <div class="mg-b-10 mg-sm-b-0 mg-sm-r-10">
-                  <span class="peity-donut" data-peity='{ "fill": ["#007bff", "#cad0e8"],  "innerRadius": 14, "radius": 20 }'>4/7</span>
-                </div>
-                <div>
-                  <label>% New Sessions</label>
-                  <h4>26.80%</h4>
-                </div>
-              </div><!-- col -->
-              <div class="col-6 d-sm-flex align-items-center">
-                <div class="mg-b-10 mg-sm-b-0 mg-sm-r-10">
-                  <span class="peity-donut" data-peity='{ "fill": ["#00cccc", "#cad0e8"],  "innerRadius": 14, "radius": 20 }'>2/7</span>
-                </div>
-                <div>
-                  <label>Pages/Session</label>
-                  <h4>1,005</h4>
-                </div>
-              </div><!-- col -->
-            </div><!-- card-body -->
-          </div><!-- card-dashboard-five -->
-        </div><!-- col -->
-      </div><!-- row -->
-    </div><!-- col-lg-3 -->
-    <div class="col-lg-7 col-xl-8 mg-t-20 mg-lg-t-0">
+    
+    <div class="col-12 mg-t-20 mg-lg-t-0">
       <div class="card card-table-one">
         <h6 class="card-title">What pages do your users visit</h6>
         <p class="az-content-text mg-b-20">Part of this date range occurs before the new users metric had been calculated, so the old users metric is displayed.</p>
@@ -378,76 +320,126 @@
 
   $(function(){
     'use strict'
-
     
     fetch('/api/ficherosubidos/')
     .then(res => res.json())
     .then(da => {
       document.getElementById('actualizado').innerHTML = moment(da[da.length - 1].fecha).format('D/M/Y')
-    }) 
+    })
 
-        var plot = $.plot('#flotChart', [{
-      data: flotSampleData3,
-      color: '#007bff',
-      lines: {
-        fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
+    // API datos semanales
+    var datos = [];
+    const url_semana = 'http://localhost:8000/ventas/api_ventasemanal/';
+    
+    fetch(url_semana, {
+      'mode': 'cors',
+      'headers': {
+          'Access-Control-Allow-Origin': '*',
       }
-    },{
-      data: flotSampleData4,
-      color: '#560bd0',
-      lines: {
-        fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
-      }
-    }], {
-            series: {
-                shadowSize: 0,
+    })
+    .then(response => response.json())
+    .then(data => {
+      graifco1(data)
+    })
+
+    function graifco1(valores) {
+      // const data = {
+      //   labels: valores.map(dat => dat.fecha_agregada),
+      //   datasets: [{
+      //     // label: 'My First Dataset',
+      //     // data: [65, 59, 80, 81, 56, 55, 40],
+      //     data: valores.map(dat => dat.total_vendido),
+      //     fill: false,
+      //     borderColor: 'rgb(75, 192, 192)',
+      //     tension: 0.1
+      //   }]
+      // };
+      // const config = {
+      //   type: 'line',
+      //   data: data,
+      //   options: {
+      //     plugins: {
+      //       legend: {
+      //         display: false
+      //       }
+      //     }
+      //   }
+      // };
+
+      // var ctx1 = document.getElementById('flotChart').getContext('2d');
+      // new Chart(ctx1, config)
+
+      let val = valores.map(dat => [dat.fecha_agregada, dat.total_vendido])
+
+      console.log('valores: ', val)
+
+      var plot = $.plot('#flotChart', [{
+        // data: flotSampleData3,
+        data: val,
+        color: '#007bff',
         lines: {
-          show: true,
-          lineWidth: 2,
-          fill: true
+          fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
         }
-            },
-      grid: {
-        borderWidth: 0,
-        labelMargin: 8
       },
-            yaxis: {
-        show: true,
-                min: 0,
-                max: 100,
-        ticks: [[0,''],[20,'20K'],[40,'40K'],[60,'60K'],[80,'80K']],
-        tickColor: '#eee'
-            },
-            xaxis: {
-        show: true,
-        color: '#fff',
-        ticks: [[25,'OCT 21'],[75,'OCT 22'],[100,'OCT 23'],[125,'OCT 24']],
-      }
-    });
+      /* {
+        data: flotSampleData4,
+        color: '#560bd0',
+        lines: {
+          fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
+        }
+      } */], 
+      {
+        series: {
+          shadowSize: 0,
+            lines: {
+              show: true,
+              lineWidth: 2,
+              fill: true
+            }
+        },
+        grid: {
+          borderWidth: 0,
+          labelMargin: 8
+        },
+        yaxis: {
+          show: true,
+           // min: 0,
+           // max: 100,
+           // ticks: [[0,''],[20,'20K'],[40,'40K'],[60,'60K'],[80,'80K']],
+            tickColor: '#eee'
+        },
+        xaxis: {
+          show: true,
+          color: '#fff',
+          ticks: [datos.map(dat => dat.fecha_agregada)],
+        }
+      });
+    };
+
 
     $.plot('#flotChart1', [{
       data: dashData2,
       color: '#00cccc'
-    }], {
-            series: {
-                shadowSize: 0,
+      }], {
+      series: {
+        shadowSize: 0,
         lines: {
           show: true,
           lineWidth: 2,
           fill: true,
           fillColor: { colors: [ { opacity: 0.2 }, { opacity: 0.2 } ] }
         }
-            },
+      },
       grid: {
         borderWidth: 0,
         labelMargin: 0
       },
-            yaxis: {
+      yaxis: {
         show: false,
         min: 0,
         max: 35
       },
-            xaxis: {
+      xaxis: {
         show: false,
         max: 50
       }
@@ -456,16 +448,16 @@
     $.plot('#flotChart2', [{
       data: dashData2,
       color: '#007bff'
-    }], {
-            series: {
-                shadowSize: 0,
+      }], {
+        series: {
+        shadowSize: 0,
         bars: {
           show: true,
           lineWidth: 0,
           fill: 1,
           barWidth: .5
         }
-            },
+      },
       grid: {
         borderWidth: 0,
         labelMargin: 0
@@ -479,7 +471,7 @@
         show: false,
         max: 20
       }
-        });
+    });
 
 
     //-------------------------------------------------------------//
