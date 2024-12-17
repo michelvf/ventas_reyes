@@ -3,6 +3,8 @@
 {% load static %}
 
 {% block content %}
+<h3 class="">{{ texto1 }}</h1>
+<p>{{ texto2 }}</p>
 <form class="form-class" method="post">
     {% csrf_token %}
     {{ form.as_p }}

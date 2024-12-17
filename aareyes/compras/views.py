@@ -17,12 +17,26 @@ class RegistrarAlmacenView(CreateView):
     success_url = '/compras/resumen_semanal/'
     # context_object_name = 'almacen'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Almacen"
+        context["texto2"] = "Se agrega un nuevo almacén que contendrá varios productos y así ir organizando los productos."
+        
+        return context
+
 
 class RegistrarProductoView(CreateView):
     model = Producto
     form_class = ProductoForm
     template_name = 'compras/registrar_compra.html'
     success_url = '/compras/resumen_semanal/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Producto"
+        context["texto2"] = "Escriba el nombre del producto y después escoja un Almacén, si el almacén no esta listado, debe agregarlo"
+        
+        return context
 
 
 class RegistrarPrecioProductoView(CreateView):
@@ -31,6 +45,13 @@ class RegistrarPrecioProductoView(CreateView):
     template_name = 'compras/registrar_compra.html'
     success_url = '/compras/resumen_semanal/'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Producto y su precio"
+        context["texto2"] = "Escoja el producto y después, escriba el precio"
+        
+        return context
+
 
 class RegistrarCompraView(CreateView):
     model = Compra
@@ -38,6 +59,13 @@ class RegistrarCompraView(CreateView):
     template_name =  'compras/registrar_compra.html'
     context_object_name = 'resumen'
     success_url = '/compras/resumen_semanal/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar una Compra"
+        context["texto2"] = "Escoja un producto, después escriba la cantidad comprada, y después el precio"
+        
+        return context
 
 
 class AlmacenListView(ListView):
