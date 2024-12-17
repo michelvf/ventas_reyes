@@ -12,6 +12,9 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.urls import reverse_lazy
 
+from django.views import View
+from django.http import HttpResponse
+
 
 
 # Index Page
@@ -26,9 +29,28 @@ class ExcelUploadView(FormView):
     Vista para subir los ficheros Excel e insertarlos en al Base de Datos
     """
     template_name = 'ventas/upload.html'
+    # template_name = 'ventas/subir.html'
     form_class = ExcelUploadForm
-    # success_url = '/ventas/success/'
-    success_url = reverse_lazy('success')
+    success_url = '/ventas/success/'
+    # success_url = reverse_lazy('success')
+
+    # def get(self, request):
+    #     form = self.form_class()
+    #     return render(request, self.template_name, {'form': form})
+
+    # def post(self, request):
+    #     form = self.form_class(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         excel_file = request.FILES['file']
+    #         try:
+    #             df = pd.read_excel(excel_file)
+    #             # Aquí puedes realizar más validaciones o procedimientos con el DataFrame
+    #             return HttResponse("Archivo leído correctamante")
+    #         except Exception as e:
+    #             error_message = f"Error al leer el fichero: {e}"
+    #             return render(request, self.template_name, {'form': form, 'error': error_message})
+    #     return render(request, self.template_name, {'form': form})
+
 
 
     def form_valid(self, form):
@@ -51,7 +73,7 @@ class ExcelUploadView(FormView):
             # wb = xlrd.open_workbook(file, encoding_override='CORRECT_ENCODING')
             # excel_file = pd.read_excel(file, engine='calamine')
         except Exception as e:
-            form.add_error('file', 'Error al leer el fichero: {}'.format(e))
+            form.add_error('file', 'Error al leer el fichero, debe convertirlo a fichero de excel como indica la figura: {}'.format(e))
             return self.form_invalid(form)
         
         # Insertando los Departamentos
@@ -133,7 +155,7 @@ class ExcelUploadView(FormView):
         messages.success(self.request, 'Fichero subido y leído correctamente')
         return super().form_valid(form)
 
-        # return super().form_valid(form)
+
     def form_invalid(self, form):
         # return JsonResponse({'error': 'Datos no válidos'}, status=400) 
         messages.error(self.request, 'Fichero ha dando error al leerlo.')
@@ -194,8 +216,16 @@ class ProdMasVendido(TemplateView):
     template_name = 'ventas/produtos_mas_vendido.html'
 
 
-class LacreosVendidos(TemplateView):
+class LacteosVendidos(TemplateView):
     """
     Show the lacteos more sales
     """
     template_name = 'ventas/lacteos.html'
+
+
+class ListadoFicherosSubidos(TemplateView):
+    """
+    Show the files uploaded
+    """
+    template_name = 'ventas/ficherosSubidos.html'
+

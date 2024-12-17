@@ -24,41 +24,42 @@
             src="{% static 'img/guardar_como_xls_97-2003_.jpg' %}" width="700px" height="400px" />
     </div>
     <div class="col">
-        <div class="row">
-            <div class="col">
-                <form method="post" enctype="multipart/form-data" id="formulario">
-
-                    {% csrf_token %}
-
-                    {% for field in form %}
-                        <div class="fieldWrapper mt-3">
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {{ field.errors }}
-                        </div>
-                    {% endfor %}
-                    <br />
-                    <div class="col-12 d-flex flex-row-reverse">
-                        <button class="btn btn-primary btn-block w-25" type="submit">Subir</button>
-                    </div>
-                </form>
+      <div class="row">
+        <div class="col">
+          <form method="post" enctype="multipart/form-data" id="formulario">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="fieldWrapper mt-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+              </div>
+            {% endfor %}
+            <br />
+            <div class="col-12 d-flex flex-row-reverse">
+              <button class="btn btn-primary btn-block w-25" type="submit">Subir</button>
             </div>
+          </form>
         </div>
-        <div class="row">
-            <div class="col">
-                {% if form.non_field_errors %}
-                    <ul> 
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul> 
-                {% endif %}
-                {% for message in messages %}
-                    <div>{{ message }}</div>
-                {% endfor %}
-            </div>
-            
-        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          {% if error %}
+            <p style="color: red">{{ error }}</p>
+          {% endif %}
+          {% if form.non_field_errors %}
+            <ul> 
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul> 
+          {% endif %}
+          {% for message in messages %}
+            <div>{{ message }}</div>
+          {% endfor %}
+           <div id="errorContainer" class="text-danger font-weight-bold"></div> <!-- Contenedor para mostrar errores -->
+        </div>    
+      </div>
     </div>
 </div>
  {% endblock %}
@@ -126,6 +127,7 @@
 
         // function fetchPost(fecha, fichero, actualizar) {
         function fetchPost(formData) {
+            console.log('Dentro de la función fetchData, llega:', formData)
 
             // let formData = new FormData();
             // formData.append('datefilter', fecha);
@@ -134,13 +136,14 @@
 
             fetch('/ventas/upload/', {
                 method: 'POST',
-                //headers: {
+                headers: {
+                    'Accept': 'application/json'
                     // 'Content-Type': 'application/json',
-                    //'X-CSRFToken': '{{ csrf_token }}',
-                    //'Content-Type': 'multipart/form-data',
-                    // 
+                    // 'X-CSRFToken': '{{ csrf_token }}',
+                    // 'Content-Type': 'multipart/form-data',
+                    
                     //'Content-Type': 'form-data',
-                //},
+                },
                 body: formData, 
                 // JSON.stringify({
                 //     datefilter: fecha,
@@ -149,11 +152,26 @@
                     //csrfmiddlewaretoken: token,
                 //}),
             })
-            .then(response => response.json())
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(errorData => {
+                  throw errorData; // Lanza los datos de error para ser manejados en el catch
+                 });
+              }
+              return response.json(); // Intentar parsear la respuesta como JSON
+            }) // Intentar parsear la respuesta como JSON })
             .then(data => {
-                console.log("lo que llega de Django: ", data)
+                console.log("En la función Fetch: lo que llega de Django: ", data)
             })
-            .catch(err => console.log('Error de la función Fetch: ', err))
+            .catch(error => {
+              console.error('Error:', error); // Mostrar los errores en la página web
+              const errorContainer = document.getElementById('errorContainer'); errorContainer.innerHTML = ''; // Limpiar cualquier error previo
+              Object.entries(error).forEach(([key, value]) => {
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = `${key}: ${value}`;
+                errorContainer.appendChild(errorMessage);
+              });
+            });
         }
 
         $("#formulario").submit(function (e){

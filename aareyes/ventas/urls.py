@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import ExcelUploadView, ShowVentas, SumarPorFechas, ProdxDepto
 from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
-from .views import LacreosVendidos, ProdMasVendido 
+from .views import LacteosVendidos, ProdMasVendido, ListadoFicherosSubidos
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI
@@ -18,7 +18,8 @@ urlpatterns = [
     path('suma_fechas/', SumarPorFechas.as_view(), name="suma_por_fechas"),
     path('prod_x_dpto/', ProdxDepto.as_view(), name="prod_x_dpto"),
     path('prod_mas_vendido/', ProdMasVendido.as_view(), name="prod_mas_dpto"),
-    path('lacteos/', LacreosVendidos.as_view(), name='lacteos'),
+    path('lacteos/', LacteosVendidos.as_view(), name='lacteos'),
+    path('ficherosSubidos/', ListadoFicherosSubidos.as_view(), name='ficherosSubidos'),
     
 
     # Las API
@@ -27,6 +28,7 @@ urlpatterns = [
     path('api_prod_x_depto/', ProductXDeptoListView.as_view(), name="prod_x_depto_api"),
     path('api_prod_mas_vendidos/', ProductMasVendidoAPI.as_view(), name="prod_mas_vendidos"),
     path('api_ventasemanal/', VentaSemanalAPI.as_view(), name="api_ventasemanal"),
+    path('api_lacteos/', LacteosAPI.as_view(), name="api_lacteos"),
     path('api_lacteossemanal/', LacteosSemanaAPI.as_view(), name="api_lacteossemanal"),
     
 ]

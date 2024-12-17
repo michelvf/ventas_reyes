@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Departamentos{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+{% endblock css%}
+
+{% block content %}
+<h3 class="my-3" style="width: 100%;">Listado de las fechas de los ficheros subidos</h3>
+
+<div class="row">
+    <div class="col-5">
+        <table id="venta" class="display table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <th>Fecha de los fichero</th>
+                    <!-- th>Cant de Productos</th -->
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+<script>
+    new DataTable('#venta', {
+    language: language,
+    ajax: {
+        url: '/api/ficherosubidos/',
+        dataSrc: ''
+    },
+    columns: [
+        { data: 'fecha',
+            "render": function (data, type, full) {
+                return moment(data).format('D/M/Y');
+            }
+        },
+        //{ data: 'cantidad' }
+    ],
+    pageLength: 20,
+});
+</script>
+{% endblock %}
