@@ -45,6 +45,7 @@ class Productos(models.Model):
     """
     codigo = models.IntegerField(null=False)
     producto = models.CharField(max_length=200, null=False)
+    imagen = models.ImageField(upload_to='ventas/', null=True, blank=True, default='ventas/defecto.jpg')
     id_departamento = models.ForeignKey(
         Departamentos,
         related_name="productos",

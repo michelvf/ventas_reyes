@@ -1,8 +1,10 @@
 from django.urls import path
 
-from .views import RegistrarCompraView, ResumeSemanalView, RegistrarAlmacenView
-from .views import RegistrarProductoView, RegistrarPrecioProductoView, AlmacenListView
-from .views import ProductosListView, PrecioProductoListView, CompraListView
+from .views import RegistrarPrecioProductoView, RegistrarCompraView, RegistrarProductoView, RegistrarAlmacenView
+from .views import ProductosListView, PrecioProductoListView, CompraListView, AlmacenListView
+from .views import ActualizarAlmacen, ActualizarProducto
+from .views import BorrarAlmacen
+from .views import ResumeSemanalView
 
 
 urlpatterns = [
@@ -10,9 +12,16 @@ urlpatterns = [
     path('productos/', ProductosListView.as_view(), name='list_productos'),
     path('precio_productos/', PrecioProductoListView.as_view(), name='list_precio_productos'),
     path('compra/', CompraListView.as_view(), name='list_compra'),
+    #
     path('registrar_almacen/', RegistrarAlmacenView.as_view(), name='registrar_almacen'),
     path('registrar_producto/', RegistrarProductoView.as_view(), name='registrar_producto'),
     path('registrar_precio_producto/', RegistrarPrecioProductoView.as_view(), name='registrar_precio_producto'),
+    #
+    path('editar_almacen/<int:pk>/', ActualizarAlmacen.as_view(), name='editar_almacen'),
+    path('editar_producto/<int:pk>/', ActualizarProducto.as_view(), name='editar_producto'),
+    #
+    path('borrar_almacen/<int:pk>/', BorrarAlmacen.as_view(), name='borrar_almacen'),
+    #
     path('registrar_compra/', RegistrarCompraView.as_view(), name='registrar_compra'),
     path('resumen_semanal/', ResumeSemanalView.as_view(), name='resumen_semanal' ),
 ]

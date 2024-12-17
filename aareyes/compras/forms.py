@@ -25,7 +25,7 @@ class ProductoForm(forms.ModelForm):
     """
     class Meta:
         model = Producto
-        fields = ['nombre', 'almacen']
+        fields = ['nombre', 'almacen', 'imagen']
 
     nombre = forms.CharField(
         max_length=255,
@@ -42,6 +42,13 @@ class ProductoForm(forms.ModelForm):
         ),
         queryset=Almacen.objects.all(),
         empty_label="--- Escoger ---",
+    )
+
+    imagen = forms.FileField(
+        label='Imagen:',
+        widget=forms.ClearableFileInput(
+            attrs={'class': 'form-control col-2'}
+        )
     )
 
     # widgets = {

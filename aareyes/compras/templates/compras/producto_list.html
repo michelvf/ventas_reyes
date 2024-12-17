@@ -22,15 +22,28 @@
 <table class="table" id="table">
     <thead>
         <tr>
+            <th>Imagen</th>
             <th>Producto</th>
             <th>Almacén</th>
+            <th>Acción</th>
         </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
         <tr>
+            <td><img src="{{ item.imagen }}" width="50px" height="50px"/></td>
             <td>{{ item.nombre }}</td>
             <td>{{ item.almacen }}</td>
+            <td>
+              <a href="{% url 'editar_producto' item.id %}">
+                <button class="btn btn-success">Editar</button>
+              </a>
+              {% comment %}
+               <a href="{% url 'borrar_producto' item.id %}" class="ml-1"> 
+                <button class="btn btn-danger">Borrar</button>
+              </a>
+              {% endcomment %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

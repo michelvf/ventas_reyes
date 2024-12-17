@@ -23,12 +23,21 @@
     <thead>
         <tr>
             <th>Almacén</th>
+            <th>Acción</th>
         </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
         <tr>
             <td>{{ item.nombre }}</td>
+            <td>
+              <a href="{% url 'editar_almacen' item.id %}">
+                <button class="btn btn-success">Editar</button>
+              </a>
+              <!-- a href="{% url 'borrar_almacen' item.id %}" class="ml-1">
+                <button class="btn btn-danger">Borrar</button>
+              </!-->
+            </td>
         </tr>
         {% endfor %}
     </tbody>

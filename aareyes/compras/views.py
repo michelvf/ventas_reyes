@@ -1,10 +1,11 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.urls import reverse_lazy
 from datetime import timedelta
 from .models import Almacen, Producto, Compra, PrecioProducto
 from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
@@ -14,7 +15,7 @@ class RegistrarAlmacenView(CreateView):
     model = Almacen
     form_class = AlmacenForm
     template_name = 'compras/registrar_compra.html'
-    success_url = '/compras/resumen_semanal/'
+    success_url = '/compras/almacen/'
     # context_object_name = 'almacen'
 
     def get_context_data(self, **kwargs):
@@ -29,7 +30,7 @@ class RegistrarProductoView(CreateView):
     model = Producto
     form_class = ProductoForm
     template_name = 'compras/registrar_compra.html'
-    success_url = '/compras/resumen_semanal/'
+    success_url = '/compras/productos/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,6 +67,40 @@ class RegistrarCompraView(CreateView):
         context["texto2"] = "Escoja un producto, después escriba la cantidad comprada, y después el precio"
         
         return context
+
+########## Actualizar ##############
+class ActualizarAlmacen(UpdateView):
+    """
+    Update the records
+    """
+    model = Almacen
+    fields = ["nombre"]
+    # template_name_suffix = "_update"
+    template_name = 'compras/editar_compra.html'
+    success_url = reverse_lazy('list_almacen')
+
+
+class ActualizarProducto(UpdateView):
+    """
+    Update the records
+    """
+    model = Producto
+    fields = ["nombre", "imagen", "almacen"]
+    # template_name_suffix = "_update"
+    template_name = 'compras/editar_compra.html'
+    success_url = reverse_lazy('list_productos')
+
+
+######## Borrar ################
+class BorrarAlmacen(DeleteView):
+    """
+    Delete the records
+    """
+    model = Almacen
+    # template_name_suffix = "_update"
+    template_name = 'compras/borrar_compra.html'
+    success_url = reverse_lazy('list_almacen')
+
 
 
 class AlmacenListView(ListView):

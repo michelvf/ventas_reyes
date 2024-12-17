@@ -9,7 +9,7 @@ class DepatoAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["codigo", "producto", "id_departamento"]
+    list_display = ["codigo", "producto", "id_departamento", "imagen"]
     # list_filter = ["codigo", "producto"]
     search_fields = ["codigo", "producto"]
 

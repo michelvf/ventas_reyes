@@ -9,6 +9,8 @@ class Almacen(models.Model):
     Modelo para el Almacén
     """
     nombre = models.CharField(max_length=100)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['nombre']
@@ -29,6 +31,9 @@ class Producto(models.Model):
     """
     nombre = models.CharField(max_length=100)
     almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='compras/', null=True, blank=True, default='/static/media/compras/defecto.jpg')
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['nombre']
@@ -50,6 +55,8 @@ class PrecioProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField(default=timezone.now)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['producto']
@@ -74,6 +81,8 @@ class Compra(models.Model):
     cantidad = models.IntegerField()
     fecha = models.DateField(default=timezone.now)
     precio_compra = models.DecimalField(max_digits=10, decimal_places=2)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['producto']

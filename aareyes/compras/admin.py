@@ -13,7 +13,7 @@ class PrecioProductoAdmin(admin.ModelAdmin):
 
 
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'almacen']
+    list_display = ['id', 'nombre', 'almacen', 'imagen']
     search_fields = ['nombre']
 
 
