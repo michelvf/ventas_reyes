@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Almacen, Producto, Compra, PrecioProducto
+from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
 
 # Register your models here.
 class CompraAdmin(admin.ModelAdmin):
@@ -13,7 +13,7 @@ class PrecioProductoAdmin(admin.ModelAdmin):
 
 
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'almacen', 'imagen']
+    list_display = ['id', 'nombre', 'medida', 'almacen', 'imagen']
     search_fields = ['nombre']
 
 
@@ -22,7 +22,13 @@ class AlmacenAdmin(admin.ModelAdmin):
     search_fields = ['nombre']
 
 
+class UnidadMedidaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'nombre', 'sigla']
+    search_fields = ['nombre', 'sigla']
+
+
 admin.site.register(Almacen, AlmacenAdmin)
 admin.site.register(Compra, CompraAdmin)
 admin.site.register(Producto, ProductoAdmin)
 admin.site.register(PrecioProducto, PrecioProductoAdmin)
+admin.site.register(UnidadMedida, UnidadMedidaAdmin)

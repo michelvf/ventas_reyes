@@ -24,6 +24,7 @@
         <tr>
             <th>Imagen</th>
             <th>Producto</th>
+            <th>Unidad Medida</th>
             <th>Almacén</th>
             <th>Acción</th>
         </tr>
@@ -33,9 +34,10 @@
         <tr>
             <td><img src="{{ item.imagen }}" width="50px" height="50px"/></td>
             <td>{{ item.nombre }}</td>
+            <td>{{ item.medida }}</td>
             <td>{{ item.almacen }}</td>
             <td>
-              <a href="{% url 'editar_producto' item.id %}">
+              <a href="{% url 'editar_producto' item.id     
                 <button class="btn btn-success">Editar</button>
               </a>
               {% comment %}

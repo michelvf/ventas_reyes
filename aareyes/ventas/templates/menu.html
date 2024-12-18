@@ -3,12 +3,12 @@
   <div class="container">
     <div class="az-header-left">
       <a href="{% url 'index' %}" class="az-logo" style="text-transform: none; !important">
-      <img src="{% static 'img/aaReyes1.png' %}" alt="Logotio A&A Reyes" width="80" height="50" class="mr-2" /><span>A & A Reyes</span></a>
+      <img src="{% static 'img/aaReyes1.png' %}" alt="Logotio A&A Reyes" width="110" height="60" class="mr-2" /><span></span></a>
       <a href="" id="azMenuShow" class="az-header-menu-icon d-lg-none"><span></span></a>
     </div><!-- az-header-left -->
     <div class="az-header-menu" style="z-index: 10000; !important">
       <div class="az-header-menu-header">
-        <a href="index.html" class="az-logo"><img src="{% static 'img/aaReyes1.png' %}" alt="Logotio A&A Reyes" width="80" height="50"/></a>
+        <a href="index.html" class="az-logo"><img src="{% static 'img/aaReyes1.png' %}" alt="Logotio A&A Reyes" width="110" height="60"/></a>
         <a href="" class="close">&times;</a>
       </div><!-- az-header-menu-header -->
       <ul class="nav">
@@ -45,8 +45,10 @@
             <a href="{% url 'list_almacen' %}" class="nav-link">Almacén</a>
             <a href="{% url 'list_productos' %}" class="nav-link">Productos</a>
             <a href="{% url 'list_precio_productos' %}" class="nav-link">Precios - Productos</a>
-            <a href="{% url 'list_compra' %}" class="nav-link">Compra</a>
+            <a href="{% url 'list_compra' %}" class="nav-link">Compras</a>
             <a href="{% url 'resumen_semanal' %}" class="nav-link">Resumen Semanal</a>
+            <a href="{% url 'resumen_productosemanal' %}" class="nav-link">Resumen Productos Semanal</a>
+            
           </nav>
         </li>
         <!--li class="nav-item">

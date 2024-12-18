@@ -1,6 +1,6 @@
 from django import forms
-from .models import Compra, Almacen, Producto, PrecioProducto
-
+from .models import Compra, Almacen, Producto, PrecioProducto, UnidadMedida
+from django.utils import timezone
 
 class AlmacenForm(forms.ModelForm):
     """
@@ -25,7 +25,7 @@ class ProductoForm(forms.ModelForm):
     """
     class Meta:
         model = Producto
-        fields = ['nombre', 'almacen', 'imagen']
+        fields = ['nombre', 'medida', 'almacen', 'imagen']
 
     nombre = forms.CharField(
         max_length=255,
@@ -33,6 +33,15 @@ class ProductoForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={'class': 'form-control col-2'}
         )
+    )
+
+    medida = forms.ModelChoiceField(
+        label='Unidad de Medida:',
+        widget=forms.Select(
+            attrs={'class': 'form-control col-2'}
+        ),
+        queryset = UnidadMedida.objects.all(),
+        empty_label="--- Escoger ---",
     )
 
     almacen = forms.ModelChoiceField(
@@ -48,7 +57,8 @@ class ProductoForm(forms.ModelForm):
         label='Imagen:',
         widget=forms.ClearableFileInput(
             attrs={'class': 'form-control col-2'}
-        )
+        ),
+        required=False
     )
 
     # widgets = {
@@ -94,9 +104,10 @@ class CompraForm(forms.ModelForm):
     """
     Formulario para las Compras
     """
+
     class Meta:
         model = Compra
-        fields = ['producto', 'cantidad' , 'precio_compra']
+        fields = ['producto', 'cantidad' , 'precio_compra', 'fecha']
 
     producto = forms.ModelChoiceField(
         label='Producto',
@@ -121,4 +132,13 @@ class CompraForm(forms.ModelForm):
         )
     )
 
+    fecha = forms.DateTimeField(
+        #initial=timezone.now(),
+        label='Fecha:',
+        input_formats=["%Y/%m/%d %H:%M"],
+        widget=forms.DateTimeInput( 
+            attrs={'class': 'form-control col-2', 'type': 'datetime-local'},
+            format="%Y/%m/%d %H:%M"
+        )
+    )
 

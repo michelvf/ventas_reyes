@@ -59,7 +59,7 @@ class RegistrarCompraView(CreateView):
     form_class = CompraForm
     template_name =  'compras/registrar_compra.html'
     context_object_name = 'resumen'
-    success_url = '/compras/resumen_semanal/'
+    success_url = '/compras/compra/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,7 +68,8 @@ class RegistrarCompraView(CreateView):
         
         return context
 
-########## Actualizar ##############
+
+##########  Actualizar  ##############
 class ActualizarAlmacen(UpdateView):
     """
     Update the records
@@ -85,13 +86,35 @@ class ActualizarProducto(UpdateView):
     Update the records
     """
     model = Producto
-    fields = ["nombre", "imagen", "almacen"]
+    fields = ["nombre", "medida", "imagen", "almacen"]
     # template_name_suffix = "_update"
     template_name = 'compras/editar_compra.html'
     success_url = reverse_lazy('list_productos')
 
 
-######## Borrar ################
+class ActualizarCompra(UpdateView):
+    """
+    Update the records
+    """
+    model = Compra
+    #fields = ["producto", "cantidad", "precio_compra", "fecha"]
+    # template_name_suffix = "_update"
+    template_name = 'compras/editar_compra.html'
+    success_url = reverse_lazy('list_compra')
+    form_class = CompraForm
+
+
+class ActualizarPrecioProducto(UpdateView):
+    """
+    Update the records
+    """
+    model = PrecioProducto
+    fields = ["producto", "precio", "fecha"]
+    # template_name_suffix = "_update"
+    template_name = 'compras/editar_compra.html'
+    success_url = reverse_lazy('list_precio_productos')
+
+########  Borrar  ################
 class BorrarAlmacen(DeleteView):
     """
     Delete the records
@@ -102,7 +125,17 @@ class BorrarAlmacen(DeleteView):
     success_url = reverse_lazy('list_almacen')
 
 
+class BorrarCompra(DeleteView):
+    """
+    Delete the records
+    """
+    model = Compra
+    # template_name_suffix = "_update"
+    template_name = 'compras/borrar_compra.html'
+    success_url = reverse_lazy('list_compra')
 
+
+######  Listar  ########
 class AlmacenListView(ListView):
     model = Almacen
     template_name = 'compras/almacen_list.html'
@@ -123,6 +156,7 @@ class CompraListView(ListView):
     template_name = 'compra/compra_list.html'
 
 
+########## Resumenes ########
 class ResumeSemanalView(ListView):
     model = Compra
     template_name =  'compras/resumen_semanal.html'
@@ -132,6 +166,22 @@ class ResumeSemanalView(ListView):
         hace_una_semana = timezone.now() - timedelta(days=7)
         return (Compra.objects.filter(fecha__gte=hace_una_semana)
             .values('producto__almacen__nombre', 'producto__nombre', 'fecha')
+            .annotate(
+                total_comprado=Sum('cantidad'),
+                gasto_total=Sum(F('cantidad') * F('precio_compra'))
+            )
+            .order_by('producto__almacen__nombre'))
+
+
+class ResumenProductoSemanalView(ListView):
+    model = Compra
+    template_name = 'compras/resumen_productosSemanal.html'
+    context_object_name = 'resumen'
+
+    def get_queryset(self):
+        hace_una_semana = timezone.now() - timedelta(days=7)
+        return (Compra.objects.filter(fecha__gte=hace_una_semana)
+            .values('producto__almacen__nombre', 'fecha')
             .annotate(
                 total_comprado=Sum('cantidad'),
                 gasto_total=Sum(F('cantidad') * F('precio_compra'))

@@ -25,6 +25,7 @@
             <th>Canidad</th>
             <th>Precio</th>
             <th>Fecha</th>
+            <th>Acción</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +35,9 @@
             <td>{{ item.cantidad }}</td>
             <td>{{ item.precio_compra }}</td>
             <td>{{ item.fecha }}</td>
+            <td>
+              <a href="{% url 'editar_compra' item.id %}" style="text-decoration:none;"><button class="btn btn-outline-success btn-rounded">Editar</button></a>&nbsp;<a href="{% url 'borrar_compra' item.id %}"><button class="btn btn-outline-danger btn-rounded">Borrar</button></a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -42,8 +46,6 @@
 
 {% block js %}
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
-
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
     <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
-
 {% endblock js %}

@@ -4,6 +4,29 @@ from django.db import models
 from django.utils import timezone
 
 
+class UnidadMedida(models.Model):
+    """
+    Modelo para las Unidades de medida
+    """
+    nombre =  models.CharField(max_length=100)
+    sigla = models.CharField(max_length=100)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "unidad_medida"
+        verbose_name_plural = "unidades_medidas"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["nombre"]),
+            # models.Index(fields=["sigla "]),
+        ]
+
+    def __str__(self):
+        return self.nombre
+
+
 class Almacen(models.Model):
     """
     Modelo para el Almacén
@@ -30,6 +53,7 @@ class Producto(models.Model):
     Modelo para los Productos
     """
     nombre = models.CharField(max_length=100)
+    medida = models.ForeignKey(UnidadMedida, on_delete=models.CASCADE)
     almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to='compras/', null=True, blank=True, default='/static/media/compras/defecto.jpg')
     create_at = models.DateTimeField(auto_now_add=True)

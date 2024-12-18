@@ -24,6 +24,7 @@
             <th>Producto</th>
             <th>Precio</th>
             <th>Fecha</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +33,17 @@
             <td>{{ item.producto }}</td>
             <td>{{ item.precio }}</td>
             <td>{{ item.fecha }}</td>
+            <td>
+              <a href="{% url 'editar_precioproducto' item.id %}">
+                <button class="btn btn-success">Editar</button>
+              </a>
+              {% comment %}
+               <a href="{% url 'borrar_producto' item.id %}" class="ml-1"> 
+                <button class="btn btn-danger">Borrar</button>
+              </a>
+              {% endcomment %}
+            </td>
+            
         </tr>
         {% endfor %}
     </tbody>
@@ -40,7 +52,6 @@
 
 {% block js %}
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
-
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
     <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
 
