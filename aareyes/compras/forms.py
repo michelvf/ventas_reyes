@@ -135,10 +135,10 @@ class CompraForm(forms.ModelForm):
     fecha = forms.DateTimeField(
         #initial=timezone.now(),
         label='Fecha:',
-        input_formats=["%Y/%m/%d %H:%M"],
-        widget=forms.DateTimeInput( 
-            attrs={'class': 'form-control col-2', 'type': 'datetime-local'},
-            format="%Y/%m/%d %H:%M"
+        input_formats=["%Y-%m-%d"],
+        widget=forms.DateInput( 
+            attrs={'class': 'form-control col-2', 'type': 'date'},
+            format="%Y-%m-%d"
         )
     )
 

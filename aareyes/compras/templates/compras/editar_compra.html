@@ -13,6 +13,11 @@
 <form class="form-class" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input class="btn btn-primary" type="submit" value="Actualizar" />
+    <input class="btn btn-outline-primary btn-rounded" type="submit" value="Actualizar" />
+    <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
+    {% comment %} <a href="javascript: history.back(-1)">
+        <button class="btn btn-outline-danger btn-rounded" type="cancel">Cancelar</button>
+    </a> {% endcomment %}
+    <input class="btn btn-outline-danger btn-rounded" type="button" value="Cancelar" onClick="history.go(-1);" />
 </form>
 {% endblock %}

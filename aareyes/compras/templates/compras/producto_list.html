@@ -10,7 +10,7 @@
 
 <div class="az-dashboard-one-title">
   <div>
-    <h2 class="az-dashboard-title">Produtos</h2>
+    <h2 class="az-dashboard-title">Productos</h2>
     <p class="az-dashboard-text">Los diferentes productos en sus almacenes</p>
   </div>
   <div class="az-content-header-right">
@@ -37,8 +37,8 @@
             <td>{{ item.medida }}</td>
             <td>{{ item.almacen }}</td>
             <td>
-              <a href="{% url 'editar_producto' item.id     
-                <button class="btn btn-success">Editar</button>
+              <a href="{% url 'editar_producto' item.id %}">
+                <button class="btn btn-outline-success btn-rounded">Editar</button>
               </a>
               {% comment %}
                <a href="{% url 'borrar_producto' item.id %}" class="ml-1"> 

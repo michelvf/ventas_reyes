@@ -8,8 +8,10 @@
 <form class="form-class" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Registrar Compra</button>
-    <button class="btn btn-warning" type="reset">Limpiar</button>
-    <button class="btn btn-danger" type="cancel">Cancelar</button>
+    <button class="btn btn-outline-primary btn-rounded" type="submit">Registrar Compra</button>
+    <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
+    <a href="javascript: history.back(-1)">
+        <button class="btn btn-outline-danger btn-rounded" type="cancel">Cancelar</button>
+    </a>
 </form>
 {% endblock %}

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "compras.apps.ComprasConfig",
     "django.contrib.humanize",
+    "nomina.apps.NominaConfig",
 ]
 
 MIDDLEWARE = [

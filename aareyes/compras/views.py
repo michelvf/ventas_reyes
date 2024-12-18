@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.db.models import Sum, F
 from django.urls import reverse_lazy
 from datetime import timedelta
-from .models import Almacen, Producto, Compra, PrecioProducto
+from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
 from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
 
 
@@ -175,11 +175,11 @@ class ResumeSemanalView(ListView):
 
 class ResumenProductoSemanalView(ListView):
     model = Compra
-    template_name = 'compras/resumen_productosSemanal.html'
+    template_name = 'compras/resumen_productossemanal.html'
     context_object_name = 'resumen'
 
     def get_queryset(self):
-        hace_una_semana = timezone.now() - timedelta(days=7)
+        hace_una_semana = timezone.now() - timedelta(days=60)
         return (Compra.objects.filter(fecha__gte=hace_una_semana)
             .values('producto__almacen__nombre', 'fecha')
             .annotate(
