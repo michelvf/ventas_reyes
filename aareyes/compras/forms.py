@@ -112,7 +112,10 @@ class CompraForm(forms.ModelForm):
     producto = forms.ModelChoiceField(
         label='Producto',
         widget=forms.Select(
-            attrs={'class': 'form-control col-2',}
+            attrs={
+                'class': 'form-control col-12 col-md-6',
+                'onChange': 'select(this.value)'
+            }
         ),
         queryset=Producto.objects.all(),
         empty_label='--- Escoger ---',
@@ -121,14 +124,14 @@ class CompraForm(forms.ModelForm):
     cantidad = forms.IntegerField(
         label='Cantidad',
         widget=forms.NumberInput(
-            attrs={'class': 'form-control col-2',}
+            attrs={'class': 'form-control col-12 col-md-6',}
         )
     )
 
     precio_compra = forms.IntegerField(
         label='Precio de compra',
         widget=forms.NumberInput(
-            attrs={'class': 'form-control col-2'}
+            attrs={'class': 'form-control col-12 col-md-6'}
         )
     )
 
@@ -137,7 +140,7 @@ class CompraForm(forms.ModelForm):
         label='Fecha:',
         input_formats=["%Y-%m-%d"],
         widget=forms.DateInput( 
-            attrs={'class': 'form-control col-2', 'type': 'date'},
+            attrs={'class': 'form-control col-12 col-md-6', 'type': 'date'},
             format="%Y-%m-%d"
         )
     )

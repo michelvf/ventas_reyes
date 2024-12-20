@@ -12249,7 +12249,7 @@ body {
         display: flex; } }
 
 .az-content-header-right {
-  display: none; }
+  display: show; }
   @media (min-width: 992px) {
     .az-content-header-right {
       display: flex;

@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% block title %}| Listado de las compras{% endblock title %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
 {% endblock css %}
@@ -18,7 +20,9 @@
     </a>
   </div>
 </div><!-- az-dashboard-one-title -->
-<table class="table" id="table">
+<div class="">
+    
+<table class="table table-striped" id="table">
     <thead>
         <tr>
             <th>Producto</th>
@@ -36,12 +40,13 @@
             <td>{{ item.precio_compra }}</td>
             <td>{{ item.fecha }}</td>
             <td>
-              <a href="{% url 'editar_compra' item.id %}" style="text-decoration:none;"><button class="btn btn-outline-success btn-rounded">Editar</button></a>&nbsp;<a href="{% url 'borrar_compra' item.id %}"><button class="btn btn-outline-danger btn-rounded">Borrar</button></a>
+              <a href="{% url 'editar_compra' item.id %}" style="text-decoration:none;"><button class="btn btn-outline-success btn-rounded"><i class="typcn typcn-edit"></i>Editar</button></a>&nbsp;<a href="{% url 'borrar_compra' item.id %}"><button class="btn btn-outline-danger btn-rounded"><i class="typcn typcn-trash"></i>Borrar</button></a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}
 
 {% block js %}

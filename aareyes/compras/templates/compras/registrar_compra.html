@@ -2,12 +2,15 @@
 
 {% load static %}
 
+{% block title %}| Registrar compra{% endblock title %}
+
 {% block content %}
 <h3 class="">{{ texto1 }}</h1>
 <p>{{ texto2 }}</p>
 <form class="form-class" method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    
     <button class="btn btn-outline-primary btn-rounded" type="submit">Registrar Compra</button>
     <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
     <a href="javascript: history.back(-1)">
@@ -15,3 +18,37 @@
     </a>
 </form>
 {% endblock %}
+
+{% block js %}
+<script>
+    // var myEle = document.getElementById("compras");
+
+    // if(myEle) {    
+    //     console.log('vas a registrar una compra')
+    // }
+
+    async function select(value) {
+        await fetch('/compras/api_ultimoprecio/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                producto: value,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            //console.log('lo que llega del POST: ', data[0]['precio_compra'])
+            precioCompra = data[0]['precio_compra']
+            if (precioCompra) {
+                document.getElementById('id_precio_compra').value = data[0]['precio_compra']    
+            }
+            // document.getElementById('id_precio_compra').value = data[0]['precio_compra']
+            // precio_compra.innerHTML = data.precio_compra
+        });
+    }
+
+</script>
+    
+{% endblock js %}

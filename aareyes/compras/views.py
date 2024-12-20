@@ -65,6 +65,7 @@ class RegistrarCompraView(CreateView):
         context = super().get_context_data(**kwargs)
         context["texto1"] = "Agregar una Compra"
         context["texto2"] = "Escoja un producto, después escriba la cantidad comprada, y después el precio"
+        # context["compras"] = "onChange='select(this.value)'"
         
         return context
 
@@ -186,4 +187,4 @@ class ResumenProductoSemanalView(ListView):
                 total_comprado=Sum('cantidad'),
                 gasto_total=Sum(F('cantidad') * F('precio_compra'))
             )
-            .order_by('producto__almacen__nombre'))
+            .order_by('fecha'))

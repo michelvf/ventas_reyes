@@ -11,7 +11,7 @@ from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
 from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
-from compras.models import Almacen, Producto, PrecioProducto, Compra
+from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer
 from django.db.models import Sum, Count, Q, DateField
@@ -252,3 +252,22 @@ class CompraApiView(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Compra.objects.all()
     serializer_class = CompraSerializer
+
+
+class UltimoPrecio(APIView):
+    """
+    Úlitmo percio según el producto
+    """
+    authentication_classes = [authentication.TokenAuthentication]
+    
+    def post(self, request):
+        prod = request.data['producto']
+        # print(f"lo que llega del formulario, del select: {prod}")
+        rep = (Compra.objects.filter(producto__id=prod)
+            .values('precio_compra')
+            .order_by('-fecha')[:1])
+
+        # rep = 1
+
+        return Response(rep, status=status.HTTP_200_OK)
+    
