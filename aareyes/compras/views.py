@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.utils import timezone
 from django.db.models import Sum, F
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from datetime import timedelta
 from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
 from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
@@ -59,7 +59,13 @@ class RegistrarCompraView(CreateView):
     form_class = CompraForm
     template_name =  'compras/registrar_compra.html'
     context_object_name = 'resumen'
-    success_url = '/compras/compra/'
+    # success_url = '/compras/compra/'
+
+    def get_success_url(self):
+        if 'guardar_y_seguir' in self.request.POST:
+            return reverse('registrar_compra')
+        else:
+            return reverse('list_compra')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,6 +74,7 @@ class RegistrarCompraView(CreateView):
         # context["compras"] = "onChange='select(this.value)'"
         
         return context
+
 
 
 ##########  Actualizar  ##############
