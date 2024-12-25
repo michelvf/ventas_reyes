@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title%}| Transacciones{% endblock title%}
+
+{% block content %}
+    <h1>Transacciones</h1>
+    
+    <a href="{% url 'transaccion_create' %}">
+        <button id="transaccion" class="btn btn-outline-primary btn-rounded mb-3">
+            Nueva Transacción
+        </button>
+    </a>
+
+    <form method="get">
+        <label for="tipo">Filtrar por tipo:</label>
+        <select name="tipo" id="tipo">
+            <option value="">Todos</option>
+            <option value="entrada">Entrada</option>
+            <option value="venta">Venta</option>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Transacción</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaccion in transacciones %}
+                <tr>
+                    <td>{{ transaccion.tipo }}</td>
+                    <td>{{ transaccion.producto.nombre }}</td>
+                    <td>{{ transaccion.cantidad }}</td>
+                    <td>{{ transaccion.fecha|date:"d/M/Y" }}</td>
+                </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    </ul>
+{% endblock %}

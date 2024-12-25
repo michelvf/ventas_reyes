@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Productos</h1>
+    <a href="{% url 'producto_create' %}">Nuevo Producto</a>
+    {% if productos %}
+        <ul>
+            {% for producto in productos %}
+            <li>{{ producto.nombre }} - <a href="{% url 'producto_update' producto.pk %}">Editar</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay productos</p>
+        {% endif %}
+{% endblock content %}

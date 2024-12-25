@@ -1,9 +1,9 @@
 hacer:
-- instalar pip install gunicornd
-
 - Compras
 
+
 hecho:
+- instalar pip install gunicornd
 - ventas en la semana.
 - upload, validar que el fichero no da error, y si lo da, mostrar el error
 - upload, validar la fecha que se está ingresando no se ha ingresado antes

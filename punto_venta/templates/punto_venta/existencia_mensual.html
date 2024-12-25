@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Existencia Mensual de Productos
+{% endblock %}
+
+{% block content %}
+    <h1>Existencia de Productos en {{ mes }}/{{ año }}</h1>
+    <form method="get">
+        <label for="año">Año:</label>
+        <input type="number" name="año" id="año" value="{{ año }}">
+        <label for="mes">Mes:</label>
+        <input type="number" name="mes" id="mes" value="{{ mes }}">
+        <button type="submit">Filtrar</button>
+    </form>
+    <ul>
+        {% for producto, cantidad in existencia.items %}
+        <li>{{ producto.nombre }}: {{ cantidad }} unidades</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

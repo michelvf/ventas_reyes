@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "compras.apps.ComprasConfig",
     "django.contrib.humanize",
     "nomina.apps.NominaConfig",
+    "punto_venta.apps.PuntoVentaConfig",
 ]
 
 MIDDLEWARE = [

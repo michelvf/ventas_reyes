@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %} | Ventas{% endblock title %}
+
+{% block content %}
+    <h1>Listado de Detalle de Ventas</h1>
+    <ul>
+        {% for venta in detalle_ventas %}
+                <li>{{ venta.venta }} - {{ venta.producto }}  -  {{ venta.cantidad }}</li>
+        {% endfor %}
+    </ul>
+{% endblock content %}
