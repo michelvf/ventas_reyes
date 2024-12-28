@@ -59,7 +59,7 @@
         <tbody>
             {% for f in listado %}
             <tr>
-                <td>{{ forloop.counter }}</td>
+                <td class="text-center">{{ forloop.counter }}</td>
                 <td>{{ f.nombre }}</td>
                 {% for c in f.cantidad  %}
                     <td class="text-center">{{ c }}</td>    
@@ -80,6 +80,24 @@
             {% endfor %}
          {% endcomment %}
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                {% for l in total_litros_dias %}
+                    <td class="text-center">{{ l.total_comprado }} </td>
+                {% endfor %}
+                <td class="text-center">{{ total_litros }}</td>
+                <td></td>
+                <td class="text-right">$ {{ totales_apagar }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                {% for l in total_litros_dias %}
+                    <td class="text-center">$ {{ l.gasto_total }} </td>
+                {% endfor %}
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
     </table>
 {% else %}
 <p>Escoja un rango de fechas para ver los gastos</p>

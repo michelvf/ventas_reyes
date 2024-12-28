@@ -277,6 +277,8 @@ class ResumenSemanalLecheView(View):
             canti = []
             nombre = []
             comparar = True
+            total_litros = 0
+            totales_apagar = 0 
             # print("listado el resumen")
             for l in resumen:
                 # fila['no'] = a
@@ -288,15 +290,15 @@ class ResumenSemanalLecheView(View):
                         if l.producto == p.producto:
                             # print('voy dentro del While')
                             while comparar:
-                                print(f"Comparando {p.producto} si fechas[f] {fechas[f]} == p.fecha: {p.fecha}")
+                                # print(f"Comparando {p.producto} si fechas[f] {fechas[f]} == p.fecha: {p.fecha}")
                                 if fechas[f] == p.fecha:
                                     canti.append(p.cantidad)
                                     cant += p.cantidad
-                                    print("coinciden")
+                                    # print("coinciden")
                                     comparar = False
                                 else:
                                     canti.append(0)
-                                    print("no coinciden")
+                                    # print("no coinciden")
                                     f += 1
                             f += 1
                             comparar = True
@@ -305,29 +307,48 @@ class ResumenSemanalLecheView(View):
                     if len(fechas) != f:
                         canti.append(0)
                     fila['cantidad'] = canti
-                    print(f" f se quedó en: {f} y tamaño fechas {len(fechas)}")
+                    # print(f" f se quedó en: {f} y tamaño fechas {len(fechas)}")
                     canti = []
                     if cant != 0:
                         fila['cant'] = cant
                         fila['precio'] = l.precio_compra
                         fila['apagar'] = cant * l.precio_compra
                         listado.append(fila)
+                        total_litros += fila['cant']
+                        totales_apagar += fila['apagar']
                 a += 1
                 fila = {}
                 cant = 0
 
+            total_litros_dias = (Compra.objects.filter(fecha__range=[desde, hasta])
+                .values('producto__almacen__nombre', 'fecha')
+                .annotate(
+                    total_comprado=Sum('cantidad'),
+                    gasto_total=Sum(F('cantidad') * F('precio_compra'))
+                )
+                .order_by('fecha'))
+
             # print(f"resultado de la búsquda: {resumen}, largo de la búsquda: {largo}")
-            print(f"las fechas en el arreglo: {fechas}")
+            # print(f"las fechas en el arreglo: {fechas}")
             # print("resume sale así: ", resumen)
             # print("resume sale así: ")
-            print("El listado está: ")
-            print(np.matrix(listado))
+            # print("El listado está: ")
+            # print(np.matrix(listado))
             # print(np.matrix(resumen))
+            # print(f"total litros dias: {total_litros_dias}")
+
 
         return render(
             request,
             'compras/resumen_productolechessemanal.html', 
-            {'resumen': resumen, 'fechas': fechas, 'listado': listado}
+            {
+                'resumen': resumen,
+                'fechas': fechas,
+                'listado': listado,
+                'totales_apagar': totales_apagar,
+                'total_litros': total_litros,
+                'total_litros_dias': total_litros_dias,
+            }
         )
 
 
