@@ -61,7 +61,7 @@ class ExcelUploadView(FormView):
         date = form.cleaned_data['datefilter']
         file = form.cleaned_data['file']
         actualizar = form.cleaned_data['actualizar']
-        print(f"Llegó del forumario: date: ", date, ", file: ", file, ", actualizar: ", actualizar)
+        # print(f"Llegó del forumario: date: ", date, ", file: ", file, ", actualizar: ", actualizar)
 
         try:
             # Leer el fichero recibido

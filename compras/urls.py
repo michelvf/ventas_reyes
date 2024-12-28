@@ -4,8 +4,8 @@ from .views import RegistrarPrecioProductoView, RegistrarCompraView, RegistrarPr
 from .views import ProductosListView, PrecioProductoListView, CompraListView, AlmacenListView
 from .views import ActualizarAlmacen, ActualizarProducto, ActualizarPrecioProducto, ActualizarCompra
 from .views import BorrarAlmacen, BorrarCompra
-from .views import ResumeSemanalView, ResumenProductoSemanalView
-from api.views import UltimoPrecio
+from .views import ResumeSemanalView, ResumenProductoSemanalView, ResumenSemanalLecheView
+from api.views import UltimoPrecio, CompraLecheSemana
 
 
 urlpatterns = [
@@ -30,7 +30,9 @@ urlpatterns = [
     # Consultas
     path('resumen_semanal/', ResumeSemanalView.as_view(), name='resumen_semanal' ),
     path('resumen_productosemanal/', ResumenProductoSemanalView.as_view(), name='resumen_productosemanal' ),
+    path('resumen_productolechesemanal/', ResumenSemanalLecheView.as_view(), name='resumen_productolechesemanal' ),
     # API
     path('api_ultimoprecio/', UltimoPrecio.as_view(), name='ultimoprecio'),
+    path('api_compralechesemana/', CompraLecheSemana.as_view(), name='api_compralechesemana'),
 
 ]

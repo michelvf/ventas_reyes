@@ -127,7 +127,7 @@
 
         // function fetchPost(fecha, fichero, actualizar) {
         function fetchPost(formData) {
-            console.log('Dentro de la función fetchData, llega:', formData)
+            // console.log('Dentro de la función fetchData, llega:', formData)
 
             // let formData = new FormData();
             // formData.append('datefilter', fecha);
@@ -165,7 +165,8 @@
             })
             .catch(error => {
               console.error('Error:', error); // Mostrar los errores en la página web
-              const errorContainer = document.getElementById('errorContainer'); errorContainer.innerHTML = ''; // Limpiar cualquier error previo
+              const errorContainer = document.getElementById('errorContainer');
+              errorContainer.innerHTML = ''; // Limpiar cualquier error previo
               Object.entries(error).forEach(([key, value]) => {
                 const errorMessage = document.createElement('p');
                 errorMessage.textContent = `${key}: ${value}`;
@@ -193,7 +194,7 @@
                 fecha_map = formData.get("datefilter")
                 // console.log('la fecha a comparar: ', fecha_map, ', la que llega del formulario: ', formData.get("datefilter"))
                 coincide = dat.filter(d => fecha_map === comparar_fecha(d.fecha))
-                console.log('viendo si las fechas coinciden: ', coincide.lenght)
+                // console.log('viendo si las fechas coinciden: ', coincide.lenght)
                 if (coincide.length > 0) {
                     if (window.confirm(`ya se registró la venta del día ${fecha_map}, ¿desea actualizar?`)) {
                         // fetchPost(fecha, fichero, true)

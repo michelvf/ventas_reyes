@@ -270,4 +270,20 @@ class UltimoPrecio(APIView):
         # rep = 1
 
         return Response(rep, status=status.HTTP_200_OK)
+
+
+class CompraLecheSemana(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+
+    def post(self, request):
+        serializer = VentasPorFechasSerializer(data=request.data)
+        if serializer.is_valid():
+            start_date = serializer.validated_data['start_date']
+            end_date = serializer.validated_data['end_date']
+            compras = Compra.objects.filter(fecha__range=[start_date, end_date])
+            serializer_other = CompraSerializer(compras, many=True)
+            return Response(serializer_other.data, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     

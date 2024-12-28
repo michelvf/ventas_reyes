@@ -2,10 +2,11 @@
 
 {% load static %}
 
-{% block title %}| Resumen Semanal{% endblock title %}
+{% block title %}| Resumen compra de Leche semanal{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
 {% endblock css %}
 
 {% block content %}
@@ -15,30 +16,49 @@
     <p class="az-dashboard-text">Los gastos semales de los produtos comprados</p>
   </div>
   <div class="az-content-header-right">
+    <form method="GET" id="rangoDeFechas">
+      <div class="row row-sm mg-b-20">
+        {% csrf_token %}
+          <div class="col-6">
+            <div class="row mb-3">
+              <label for="rangosFechas" class="col-sm-3 col-form-label">Rangos:</label>
+              <div class="col-9">
+                <input type="text" class="form-control" id="rangosFechas" name="datefilter" style="width: 180px;">
+              </div  >
+            </div>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-primary btn-block">Mostrar</button>
+          </div>
+      </div>
+    </form>
   </div>
 </div><!-- az-dashboard-one-title -->
-<table class="table" id="table">
-    <thead>
-        <tr>
-            <th>Almacén</th>
-            <th>Producto</th>
-            <th>Total Comprado</th>
-            <th>Gasto Total</th>
-            <th>Fecha</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in resumen %}
-        <tr>
-            <td>{{ item.producto__almacen__nombre }}</td>
-            <td>{{ item.producto__nombre }}</td>
-            <td>{{ item.total_comprado }}</td>
-            <td>{{ item.gasto_total }}</td>
-            <td>{{ item.fecha }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="invisible-">
+    <table class="table table-striped" id="table">
+        <thead
+            <tr>
+                <th>Almacén</th>
+                <th>Producto</th>
+                <th>Total Comprado</th>
+                <th>Gasto Total</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in resumen %}
+            <tr>
+                <td>{{ item.producto__almacen__nombre }}</td>
+                <td>{{ item.producto__nombre }}</td>
+                <td class="text-center">{{ item.total_comprado }}</td>
+                <td class="text-right">$ {{ item.gasto_total }}</td>
+                <td>{{ item.fecha }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
 {% endblock %}
 
 {% block js %}
@@ -46,5 +66,130 @@
 
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
     <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
+
+    <script>
+    const fecha = new Date();
+
+    // $.ajax({
+    //     url: '/api/almacen/',
+    //     type: 'get',
+    //     //data: data,
+    //     dataType: 'json',
+    //     success: function(response) {
+
+    //         var len = response.length;
+
+    //         $("#depart").empty();
+    //         for( var i = 0; i<len; i++){
+    //             var id = response[i]['id'];
+    //             var name = response[i]['nombre'];
+    //             if (id == 1) {
+    //                 $("#depart").append("<option value='"+id+"' selected>"+name+"</option>");
+    //             } else {
+    //                 $("#depart").append("<option value='"+id+"'>"+name+"</option>");
+    //             }
+    //         }
+    //     }
+    // });
+
+    // Formar los calendarios para las entre fechas
+    $('input[name="datefilter"]').daterangepicker({
+        autoUpdateInput: true,
+        singleDatePicker: false,
+        //showDropdowns: true,
+        // minYear: 2020,
+        autoApply: true,
+        "showWeekNumbers": true,
+        "firstDayOfWeek": 0,
+        "period": ('week'),
+        locale: {
+            "format": "YYYY-MM-DD",
+            // "separator": " - ",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+            // "customRangeLabel": "Custom",
+            "weekLabel": "S",
+            "daysOfWeek": [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Augusto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 0
+        },
+        // ranges: {
+        //   'Hoy': [moment(), moment()],
+        //   'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        //   'Últimos 7 Días': [moment().subtract(6, 'days'), moment()],
+        //   'Últimos 30 Días': [moment().subtract(30, 'days'), moment()],
+        //   'Este Mes': [moment().startOf('month'), moment().endOf('month')],
+        //   'Mes anterior': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        // },
+        "alwaysShowCalendars": true,
+        "startDate": fecha,
+        "opens": "left",
+        // "endDate": "11/27/2024",
+        //"minDate": "DD/MM/YYYY",
+        //"maxDate": "DD/MM/YYYY"
+        }, function (start, end, label) {
+        //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
+    // $("#rangoDeFechas").on("submit", function(event){
+    //     event.preventDefault();
+    //     const form = $(this);
+    //     // console.log('llegó: ',  form)
+    //     const fechas = form.find("input[name='datefilter']").val()
+    //     // console.log(`fechas del input: ${fechas}`)
+    //     const hasta = fechas.indexOf(' -')
+    //     const desde = fechas.indexOf('- ', hasta) + 2
+    //     const final = fechas.length
+    //     const fecha1 = fechas.substring(0, hasta)
+    //     const [dia1, mes1, ano1] = fecha1.split('/')
+    //     const fecha1_1 = `${ano1}-${mes1}-${dia1}`
+    //     const fecha2 = fechas.substring(desde, final)
+    //     const [dia2, mes2, ano2] = fecha2.split('/')
+    //     const fecha2_2 = `${ano2}-${mes2}-${dia2}`
+    //     // console.log(`el rango es desde: ${fecha1} hasta: ${fecha2}`)
+
+    //     fetch('/compras/api_compralechesemana/', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             // start_date: fecha1_1,
+    //             // end_date: fecha2_2
+    //             start_date: fecha1,
+    //             end_date: fecha2
+    //         }),
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         //showDatatables(data)
+    //         console.log(data);
+    //     });
+    });
+    </script>
 
 {% endblock js %}

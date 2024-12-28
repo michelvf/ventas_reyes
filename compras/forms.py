@@ -145,3 +145,10 @@ class CompraForm(forms.ModelForm):
         )
     )
 
+
+
+
+class ResumenSemanal(forms.Form):
+    # start_date = forms.DateField()
+    # end_date = forms.DateField()
+    datefilter = forms.CharField()
