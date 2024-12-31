@@ -23,6 +23,7 @@ class Departamentos(models.Model):
     Modelo para los Departamentos
     """
     departamento = models.CharField(max_length=200, null=False)
+    comentario = models.TextField(blank=True, null=True)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 

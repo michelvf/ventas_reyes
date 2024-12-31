@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate
-from compras.models import Almacen, Producto, PrecioProducto, Compra 
+from compras.models import Almacen, Producto, PrecioProducto, Compra
+from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Count
 
 
@@ -20,7 +21,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Departamentos
-        fields = ("id", "departamento")
+        fields = ("id", "departamento", "comentario")
 
 
 class ProductosSerializer(serializers.ModelSerializer):
@@ -185,3 +186,21 @@ class CompraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = ('id', 'producto', 'cantidad', 'precio_compra', 'fecha')
+
+
+class NominaDepartamentoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Departament Paypull
+    """
+    class Meta:
+        model = DepartamentoNom
+        fields = ('id', 'departamento', 'comentario')
+
+
+class NominaCargoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Cargo Paypull
+    """
+    class Meta:
+        model = Cargo
+        fields = ('id', 'cargo', 'comentario')

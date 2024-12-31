@@ -17,17 +17,17 @@
             <thead>
                 <tr>
                     <th>Departamento</th>
-                    <!-- th>Cant de Productos</th -->
+                    <th>Comentario</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
-            <tfoot>
+            <!-- tfoot>
                 <tr>
                     <th></th>
-                    <!-- th></th -->
+                    <th></th>
                 </tr>
-            </tfoot>
+            </tfoot -->
         </table>
     </div>
 </div>
@@ -42,12 +42,12 @@
     new DataTable('#venta', {
     language: language,
     ajax: {
-        url: '/api/departamentos/',
+        url: '{{ URL }}', 
         dataSrc: ''
     },
     columns: [
         { data: 'departamento' },
-        //{ data: 'cantidad' }
+        { data: 'comentario' }
     ],
     pageLength: 20,
 });

@@ -38,7 +38,7 @@
   </div>
 </div><!-- az-dashboard-one-title -->
 {% if resumen %}
-    <table class="table" id="table--">
+    <table class="table" id="table">
         <thead>
             <tr class="text-center">
                 <th rowspan="2">No</th>
@@ -69,18 +69,8 @@
                 <td class="text-right">$ {{ f.apagar }}</td>
             </tr>
             {% endfor %}
-         {% comment %}
-            {% for item in resumen %}
-            <tr>
-                <td>{{ item.producto.nombre }}</td>
-                <td>{{ item.cantidad }}</td>
-                <td>$ {{ item.precio_compra }}</td>
-                <td>{{ item.fecha }}</td>
-            </tr>
-            {% endfor %}
-         {% endcomment %}
         </tbody>
-        <tfoot>
+        <tfoot style="font-weight: bold;">
             <tr>
                 <td colspan="2"></td>
                 {% for l in total_litros_dias %}
@@ -107,9 +97,16 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
-    <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
+    <!-- script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script -->
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
+    <!-- script type="text/javascript" src="{% static 'js/buttons.print.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.buttons.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.select.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/seledt.dataTables.js' %}"></script -->
+    <script type="text/javascript" src="{% static 'js/vfs_fonts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jszip.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/buttons.html5.min.js' %}"></script>
 
     <script>
     const fecha = new Date();
@@ -226,8 +223,44 @@
         //     //showDatatables(data)
         //     console.log(data);
         // });
+
     });
 
+    $("#table").DataTable({
+        language: language,
+         layout: {
+             topStart: {
+                buttons: [
+                    'print', 'excel', 'pdf'
+                ]
+        //         buttons: [
+        //             {
+        //                 extend: 'print',
+        //                 exportOptions: {
+        //                     modifier: {
+        //                         selected: null
+        //                     }
+        //                 },
+        //                 // extend: 'pdfHtml5',
+        //                 // pageSize: 'LETTER',
+        //                 // orientation: 'landscape',
+        //                 customize: function (win) {
+        //                     $(win.document.body)
+        //                         .css('font-size', '10pt')
+        //                         .prepend(
+        //                             '<img src="http://localhost:8000/static/img/AAReyes-limpio.png" style="position:absolute; bottom:0; right:0; width:20%;opacity: 0.2;" />'
+        //                         );
+     
+        //                     // $(win.document.body)
+        //                     //     .find('table')
+        //                     //     .addClass('compact')
+        //                     //     .css('font-size', 'inherit');
+        //                 }
+        //             }
+        //         ]
+            }
+        },
+    })
     </script>
 
 {% endblock js %}

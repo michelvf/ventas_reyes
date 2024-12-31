@@ -180,6 +180,13 @@ class ShowDepartamentos(TemplateView):
     """
     template_name = 'ventas/departamentos.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["URL"] = "/api/departamentos/"
+        
+        return context
+    
+
 
 class ShowProductos(TemplateView):
     """
@@ -229,3 +236,10 @@ class ListadoFicherosSubidos(TemplateView):
     """
     template_name = 'ventas/ficherosSubidos.html'
 
+"""
+Punto la Parada:
+21.73781, -82.75416
+
+Punto Di MUU
+21.74459, -82.75517
+"""

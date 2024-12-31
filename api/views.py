@@ -11,9 +11,11 @@ from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
 from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
+from .serializers import NominaDepartamentoSerializer
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
-from .serializers import PrecioProductoSerializer
+from .serializers import PrecioProductoSerializer, NominaCargoSerializer
+from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
@@ -286,4 +288,22 @@ class CompraLecheSemana(APIView):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class NominaDepartamentosApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    API for show the Departaments
+    """
+    queryset = DepartamentoNom.objects.all()
+    serializer_class = NominaDepartamentoSerializer
+
+
+class NominaCargoApiView(viewsets.ReadOnlyModelViewSet):
+    """_API for show the cargos_
+
+    Args:
+        viewsets (_type_): _description_
+    """
+    queryset = Cargo.objects.all()
+    serializer_class = NominaCargoSerializer
+    
     

@@ -27,4 +27,5 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("compras/", include('compras.urls')),
     path("punto_venta/", include('punto_venta.urls')),
+    path("nomina/", include('nomina.urls')),
 ]
