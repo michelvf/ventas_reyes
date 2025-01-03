@@ -17,10 +17,11 @@ class DepartamentoNom(models.Model):
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["departamento"]),
+            models.Index(fields=["activo"]),
         ]
 
     def __str__(self):
-        return self.nombre
+        return self.departamento
 
 
 class Cargo(models.Model):
@@ -38,6 +39,7 @@ class Cargo(models.Model):
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["cargo"]),
+            models.Index(fields=["activo"]),
         ]
 
     def __str__(self):
@@ -55,9 +57,27 @@ class Trabajador(models.Model):
         blank=False,
         null=False
     )
+    cargo = models.ForeignKey(
+        Cargo,
+        related_name="cargos",
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False
+    )
+    fecha = models.DateField()
     activo = models.BooleanField(default=True)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['nombre']
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["nombre"]),
+            models.Index(fields=["departamento"]),
+            models.Index(fields=["cargo"]),
+            models.Index(fields=["activo"]),
+        ]
 
     def __str__(self):
         return self.nombre
@@ -75,6 +95,7 @@ class Nomina(models.Model):
         null=False
     )
     salario = models.FloatField(blank=False, null=False)
+    fecha = models.DateField()
     activo = models.BooleanField(default=True)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
@@ -85,8 +106,9 @@ class Nomina(models.Model):
             models.Index(fields=["id"]),
             models.Index(fields=["trabajador"]),
             models.Index(fields=["salario"]),
+            models.Index(fields=["activo"]),
         ]
 
     def __str__(self):
-        return self.nombre
+        return self.trabajador.nombre
 

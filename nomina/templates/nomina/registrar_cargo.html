@@ -2,21 +2,21 @@
 
 {% load static %}
 
-{% block title %}| Registrar compra{% endblock title %}
+{% block title %}| Registrar cargo{% endblock title %}
 
 {% block content %}
-<h3 class="">{{ texto1 }}</h1>
-<p>{{ texto2 }}</p>
-<form class="form-class" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    
-    <button class="btn btn-outline-primary btn-rounded" type="submit" name="guardar">Registrar</button>
-    <button class="btn btn-outline-primary btn-rounded" type="submit" name="guardar_y_seguir">Registrar y añadir otro</button>
-    <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
-    <button class="btn btn-outline-danger btn-rounded" type="cancel" onclick="cancelar()">Cancelar</button>
-</form>
-{% endblock %}
+    <h3 class="">{{ texto1 }}</h3>
+    <p>{{ texto2 }}</p>
+    <form class="form-class" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="btn btn-outline-primary btn-rounded" type="submit" name="guardar">Registrar</button>
+        <button class="btn btn-outline-primary btn-rounded" type="submit" name="guardar_y_seguir">Registrar y añadir otro</button>
+        <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
+        <button class="btn btn-outline-danger btn-rounded" type="cancel" onClick="history.go(-1);">Cancelar</button>
+    </form>
+{% endblock content %}
 
 {% block js %}
 <script>
@@ -25,9 +25,9 @@
     // if(myEle) {    
     //     console.log('vas a registrar una compra')
     // }
-    function cancelar() { window.location.href = "{% url 'list_compra' %}"; 
-    }
-
+    // function cancelar() { window.location.href = "{% url 'nomina_cargos' %}";
+    // }
+    /*
     async function select(value) {
         await fetch('/compras/api_ultimoprecio/', {
             method: 'POST',
@@ -49,6 +49,7 @@
             // precio_compra.innerHTML = data.precio_compra
         });
     }
+    */
 
 </script>
     

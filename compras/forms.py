@@ -2,6 +2,7 @@ from django import forms
 from .models import Compra, Almacen, Producto, PrecioProducto, UnidadMedida
 from django.utils import timezone
 
+
 class AlmacenForm(forms.ModelForm):
     """
     Formulario para el Almacén
