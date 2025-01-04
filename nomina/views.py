@@ -345,6 +345,10 @@ class NominaDePagoView(View):
                 )
                 .order_by('fecha'))
             
+            total_a_pagar = 0
+            for n in salarios_dias:
+                total_a_pagar += n['salarios']
+            
         # print(f"salarios_dias es: {salarios_dias}")
         return render(
             request,
@@ -355,6 +359,7 @@ class NominaDePagoView(View):
                 'listado': listado,
                 # 'totales_apagar': totales_apagar,
                 'salarios_dias': salarios_dias,
+                'total_a_pagar': total_a_pagar,
             }
         )
          
