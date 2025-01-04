@@ -3,9 +3,11 @@ from .models import Trabajador, DepartamentoNom, Nomina, Cargo
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views import View
-from .forms import CargoForm, TrabajadorForm, NominaForm
+from .forms import CargoForm, TrabajadorForm, NominaForm, DepartamentoForm
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from compras.forms import ResumenSemanal
+from django.db.models import Sum, F
 
 
 # Create your views here.
@@ -16,13 +18,7 @@ class DepartamentoList(ListView):
     List of Departament
     """
     model = DepartamentoNom
-    template_name = 'ventas/departamentos.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["URL"] = "/api/nomina_departamentos/"
-        
-        return context
+    template_name = 'nomina/departamento_list.html'
 
 
 class CargoList(ListView):
@@ -61,9 +57,8 @@ class TrabajdorList(ListView):
 
 class NominaList(ListView):
     """
-    List of Departament
+    List of Payroll
     """
-    model = Nomina
     template_name = 'nomina/nomina_list.html'
     
     def get_context_data(self, **kwargs):
@@ -72,6 +67,10 @@ class NominaList(ListView):
         # context["Titulo"] = " | Nómina"
         
         return context
+    
+    def get_queryset(self):
+        """Return the payroll ordering by date."""
+        return Nomina.objects.order_by("fecha")
 
 
 # ########### Agregar #############
@@ -146,7 +145,30 @@ class RegistrarNominaView(CreateView):
             return reverse('nomina_list')
 
 
-# ########### Actializar ##########
+class RegistrarDepartamentoView(CreateView):
+    """
+    Register Departament
+    """
+    model = DepartamentoNom
+    form_class = DepartamentoForm
+    template_name = 'nomina/registrar_cargo.html'
+    success_url = '/nomina/departamentos/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Departamento"
+        context["texto2"] = "Se agrega un nuevo departamento a donde pertencerán los trabajadores."
+
+        return context
+
+    def get_success_url(self):
+        if 'guardar_y_seguir' in self.request.POST:
+            return reverse('registrar_departamento')
+        else:
+            return reverse('nomina_departamentos')
+
+
+# ########### Actualizar ##########
 class ActualizarCargo(UpdateView):
     """
     Update the records
@@ -202,3 +224,137 @@ class ActualizarTrabajador(UpdateView):
         context["texto2"] = "Se actualiza la información del Trabajador."
         
         return context
+    
+    
+class ActualizarDepartamento(UpdateView):
+    """
+    Register Departament
+    """
+    model = DepartamentoNom
+    form_class = DepartamentoForm
+    template_name = 'nomina/editar_nomina.html'
+    success_url = reverse_lazy('nomina_departamentos')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Departamento"
+        context["texto2"] = "Se agrega un nuevo departamento a donde pertencerán los trabajadores."
+
+        return context
+    
+###### Consultas ######
+class NominaDePagoView(View):
+    """
+    The Payroll by dates
+    """
+    def get(self, request):
+        resumen = None
+        return render(
+            request,
+            'nomina/nomina_de_pago.html', 
+            {'resumen': resumen}
+            )
+        
+    def post(self, request):
+        form = ResumenSemanal(request.POST)
+        resumen = None
+        # print(f"Lo que llega del formulario POST: {form}")
+        if form.is_valid():
+            llega = form.cleaned_data['datefilter']
+            
+            # Separar las fechas
+            fecha_informal= llega.split(' - ')
+            # print(f"Fecha informal: {fecha_informal}")
+            desde= fecha_informal[0]
+            hasta = fecha_informal[1]
+            
+            # Hacer la consultas con el rango de fechas
+            resumen = Nomina.objects.filter(
+                fecha__range=[desde, hasta]
+            ).order_by('fecha')
+            # print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
+            print()
+            
+            # Hacer un arreglo con las fechas
+            fechas = []
+            for f in resumen:
+                if f.fecha not in fechas:
+                    fechas.append(f.fecha)
+            # print(f"fechas es = {fechas}")
+            
+            # Inicia variables
+            listado = []
+            fila = {}
+            cant = 0
+            canti = []
+            nombre = []
+            comparar = True
+            
+            # Comenzado a iterar en el arreglo de la consulta de rango de fechas
+            for l in resumen:
+                # Comprobar si los nombres no se repiten
+                if l.trabajador not in nombre:
+                    nombre.append(l.trabajador)
+                    fila['nombre'] = l.trabajador.nombre
+                    f = 0
+                    
+                    # Volviendo a recorre el arreglo para obtener el salarios
+                    # de los trabajadores por los días trabajados
+                    for p in resumen:
+                        if l.trabajador == p.trabajador:
+                            # print('voy dentro del While')
+                            while comparar:
+                                # print(f"Comparando {p.trabajador} si fechas[f] {fechas[f]} == p.fecha: {p.fecha}")
+                                if fechas[f] == p.fecha:
+                                    canti.append(p.salario)
+                                    cant += p.salario
+                                    # print(f"coinciden fechas, el día: {fechas[f]} el trabajador: {p.trabajador.nombre} ganó: {p.salario}")
+                                    comparar = False
+                                else:
+                                    canti.append(0)
+                                    # print(f"no coinciden,  el día: {fechas[f]} el trabajador: {p.trabajador.nombre} no ganó nada")
+                                    f += 1
+                            f += 1
+                            comparar = True
+                            # canti.append(p.cantidad)
+                            # cant += p.cantidad
+                            
+                    if len(fechas) != f:
+                        canti.append(0)
+                    
+                    # print(f"se va a agregar a la fila:, canti tiene valores: {canti} y de tamaño: {len(canti)}")
+                    
+                    if len(canti) != len(fechas):
+                        canti.append(0)
+                        
+                    fila['cantidad'] = canti
+                    # print(f" f se quedó en: {f} y tamaño fechas {len(fechas)}")
+                    canti = []
+                    if cant != 0:
+                        fila['cant'] = cant
+                        listado.append(fila)
+                        # print(f"para {l.trabajador.nombre}, se agrega la fila: {fila}")
+                fila = {}
+                cant = 0
+
+            salarios_dias = (Nomina.objects.filter(fecha__range=[desde, hasta])
+                .values('fecha')
+                .annotate(
+                    salarios=Sum(F'salario'),
+                    #gasto_total=Sum(F('cantidad') * F('precio_compra'))
+                )
+                .order_by('fecha'))
+            
+        # print(f"salarios_dias es: {salarios_dias}")
+        return render(
+            request,
+            'nomina/nomina_de_pago.html', 
+            {
+                'resumen': resumen,
+                'fechas': fechas,
+                'listado': listado,
+                # 'totales_apagar': totales_apagar,
+                'salarios_dias': salarios_dias,
+            }
+        )
+         

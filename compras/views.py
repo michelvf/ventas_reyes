@@ -302,8 +302,6 @@ class ResumenSemanalLecheView(View):
                                     f += 1
                             f += 1
                             comparar = True
-                            # canti.append(p.cantidad)
-                            # cant += p.cantidad
                     if len(fechas) != f:
                         canti.append(0)
                     fila['cantidad'] = canti

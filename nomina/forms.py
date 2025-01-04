@@ -120,3 +120,26 @@ class NominaForm(forms.ModelForm):
             },
         )
     )
+
+
+class DepartamentoForm(forms.ModelForm):
+    """
+    Formulario para los Departamentos
+    """
+    class Meta:
+        model = DepartamentoNom
+        fields = ['departamento', 'comentario']
+        
+    departamento = forms.CharField(
+        max_length=255,
+        label='Nombre:',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control col-2'},
+        )
+    )
+    
+    comentario = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'rows': 4, 'class': 'form-control col-2'}
+        )
+    )
