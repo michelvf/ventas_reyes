@@ -72,8 +72,9 @@
                 <td colspan="2"></td>
                 {% for l in salarios_dias %}
                     <td class="text-right">$ {{ l.salarios }} </td>
+
                 {% endfor %}
-                <td></td>
+                <td class="text-right tx-bold">$ {{ total_a_pagar }}</td>
             </tr>
         </tfoot>
     </table>
