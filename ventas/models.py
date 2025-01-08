@@ -6,6 +6,8 @@ class fileUpdate(models.Model):
     Modelo para saber la fecha de los ficheros que se han subido
     """
     fecha = models.DateTimeField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['fecha']

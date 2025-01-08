@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Venta{% endblock %}
+
+{% block content %}
+    <h1>Registrar Venta</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ venta_form.as_p }}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
+        <button type="submit" class="btn btn-outline-primary btn-rounded">Guardar</button>
+    </form>
+{% endblock %}

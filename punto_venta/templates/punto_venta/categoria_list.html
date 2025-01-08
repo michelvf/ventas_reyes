@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %} | Lista de Categorías{% endblock title %}
+
+{% block content %}
+    <h1>Categorías</h1>
+    <a href="{% url 'categoria_create' %}">
+        <button class="btn btn-primary btn-rounded btn-block col-md-2">
+            Nueva Categoría
+        </button>
+    </a>
+    <table class="mt-5 table table-hover">
+        <thead>
+            <tr class="tx-center">
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria.nombre }}</td>
+                    <td class="d-flex flex-row justify-content-around"><button class="btn btn-info btn-rounded btn-block col-md-2">Editar</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

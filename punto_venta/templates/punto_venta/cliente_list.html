@@ -1,12 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %} | Ventas{% endblock title %}
+{% block title %} | Lista de Clientes{% endblock title %}
 
 {% block content %}
-    <h1>Listado de clientes</h1>
+    <h1>Clientes</h1>
+    <a href="{% url 'cliente_create' %}" class="">
+        <button class="btn btn-outline-primary btn-rounded col-md-2">
+        Nuevo Cliente
+        </button>
+    </a>
+
+    <table class="table mt-5 table-bordered">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Descripción</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td style="vertical-align: middle;">{{ cliente.nombre }}</td>
+                <td style="vertical-align: middle;">{{ cliente.descripcion }}</td>
+                <td style="vertical-align: middle;"><button class="btn btn-outline-info btn-rounded">Editar</button></td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
     <ul>
-        {% for cliente in clientes %}
-                <li>{{ cliente }}</li>
-        {% endfor %}
     </ul>
 {% endblock content %}

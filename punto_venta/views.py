@@ -1,136 +1,286 @@
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
-from .models import Producto, Transaccion, Venta, DetalleVenta, Cliente
-from .forms import VentaForm, DetalleVentaForm
-from django.views import View
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView
+from .models import Producto, Envio, Venta, Almacen, Cliente, PuntoDeVenta
+from .models import Proveedor, Categoria
+from .forms import ProductoForm, EnvioForm, VentaForm, ClienteForm, ProveedorForm
+from .forms import CategoriaForm, PuntoDeVentaForm, AlmacenForm
+from django.views.generic import TemplateView
 from django.utils import timezone
-from datetime import datetime
-from django.forms import inlineformset_factory
 
 
-# Create your views here.
-
-class ProductoListView(ListView):
-    model = Producto
-    template_name = 'punto_venta/producto_list.html'
-    context_object_name = 'productos'
-
-
-class ProductoCreateView(CreateView):
-    model = Producto
-    template_name = 'punto_venta/producto_form.html'
-    fields = ['nombre', 'descripcion', 'precio', 'cantidad']
-    success_url = reverse_lazy('producto_list')
-
-
-class ProductoUpdateView(UpdateView):
-    model = Producto
-    template_name = 'punto_venta/producto_form.html'
-    fields = ['nombre', 'descripcion', 'precio', 'cantidad']
-    success_url = reverse_lazy('producto_list')
-
-
-class TransaccionCreateView(CreateView):
-    model = Transaccion
-    template_name = 'punto_venta/transaccion_form.html'
-    fields = ['producto', 'tipo', 'cantidad']
-    success_url = reverse_lazy('transaccion_list')
-
-
-class DashboardView(View):
-   template_name = 'punto_venta/dashboard.html'
-
-   def get(self, request, *args, **kwargs):
-       productos = Producto.objects.all()
-       transacciones = Transaccion.objects.all()
-       return render(request, self.template_name, {
-           'productos': productos,
-           'transacciones': transacciones,
-       })
-
-
-class TransaccionListView(ListView):
-    model = Transaccion
-    template_name = 'punto_venta/transaccion_list.html'
-    context_object_name = 'transacciones'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        tipo = self.request.GET.get('tipo')
-        if tipo:
-            queryset = queryset.filter(tipo=tipo)
-        return queryset
-
-
-class ExistenciaMensualView(View):
-    template_name = 'punto_venta/existencia_mensual.html'
-
-    def get(self, request, *args, **kwargs):
-        año = request.GET.get('año', timezone.now().year)
-        mes = request.GET.get('mes', timezone.now().month)
-        transacciones = Transaccion.objects.filter(fecha__year=año, fecha__month=mes)
-
-        existencia = {}
-
-        for transaccion in transacciones:
-            producto = transaccion.producto
-            if producto not in existencia:
-                existencia[producto] = 0
-            if transaccion.tipo == 'entrada':
-                existencia[producto] += transaccion.cantidad
-
-            else:
-                existencia[producto] -= transaccion.cantidad
-                
-        return render(request, self.template_name, {
-            'existencia': existencia,
-            'año': año,
-            'mes': mes,
-        })
-
-
-class VentaCreateView(View):
-    def get(self, request, *args, **kwargs):
-        venta_form = VentaForm()
-        detalle_venta_formset = inlineformset_factory(Venta, DetalleVenta, form=DetalleVentaForm, extra=1)
-        formset = detalle_venta_formset()
-        return render(request, 
-            'punto_venta/venta_form.html', 
-            {'venta_form': venta_form, 'formset': formset}
-        )
-
-    def post(self, request, *args, **kwargs):
-        venta_form = VentaForm(request.POST)
-        detalle_venta_formset = inlineformset_factory(Venta, DetalleVenta, form=DetalleVentaForm, extra=1)
-        formset = detalle_venta_formset(request.POST)
-
-        if venta_form.is_valid() and formset.is_valid():
-            venta = venta_form.save()
-            detalles = formset.save(commit=False)
-            for detalle in detalles:
-                detalle.venta = venta
-                detalle.save()
-            return redirect('venta_list')
-        return render(request,
-            'punto_venta/venta_form.html',
-            {'venta_form': venta_form, 'formset': formset}
-        )
-
-
-class VentaList(ListView):
-    model = Venta
-    template_name = 'punto_venta/venta_list.html'
-    context_object_name = 'ventas'
-
-
-class DetalleVentaList(ListView):
-    model = DetalleVenta
-    template_name = 'punto_venta/detalle_venta_list.html'
-    context_object_name = 'detalle_ventas'
-
-
-class ClienteList(ListView):
+######### List ########
+class ClienteListView(ListView):
+    """
+    Vista Listado de Clientes
+    """
     model = Cliente
     template_name = 'punto_venta/cliente_list.html'
     context_object_name = 'clientes'
+
+
+class ProductoListView(ListView):
+    """
+    Vista Listado de Producto
+    """
+    model = Producto
+    template_name = 'punto_venta/producto_list.html'
+    context_object_name = 'productos'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Productores"
+        
+        return context
+
+
+class EnvioListView(ListView):
+    """
+    Vista Listado de Envios
+    """
+    model = Envio
+    template_name = 'punto_venta/envios_list.html'
+    context_object_name = 'envios'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Envios"
+        
+        return context
+
+
+class VentaListView(ListView):
+    """
+    Vista Listado de Venta
+    """
+    model = Venta
+    template_name = 'punto_venta/venta_list.html'
+    context_object_name = 'ventas'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Ventas"
+        
+        return context
+
+
+class ProveedorListView(ListView):
+    """
+    Vista Listado de Envios
+    """
+    model = Proveedor
+    template_name = 'punto_venta/proveedor_list.html'
+    context_object_name = 'proveedores'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Proveedores"
+        
+        return context
+
+
+class AlmacenListView(ListView):
+    """
+    Vista Listado de Almacen
+    """
+    model = Almacen
+    template_name = 'punto_venta/almacen_list.html'
+    context_object_name = 'almacenes'
+
+
+class PuntoDeVentaListView(ListView):
+    """
+    Vista Listado de PuntoDeVentas
+    """
+    model = PuntoDeVenta
+    template_name = 'punto_venta/puntodeventa_list.html'
+    context_object_name = 'puntodeventas'
+
+
+class CategoriaListView(ListView):
+    """
+    Vista Listado de Categorias
+    """
+    model = Categoria
+    template_name = 'punto_venta/categoria_list.html'
+    context_object_name = 'categorias'
+
+
+class CierreCajaView(ListView):
+    """
+    Vista Listar CierreCaja
+    """
+    model = Venta
+    template_name = 'punto_venta/cierre_caja.html'
+    context_object_name = 'ventas'
+
+    def get_queryset(self):
+        return Venta.objects.filter(punto_de_venta=self.request.user.puntodeventa, fecha__date=timezone.now().date())
+
+
+############### Create View ###########
+class ProductoCreateView(CreateView):
+    """
+    Vista Crear Producto
+    """
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Productos"
+        
+        return context
+
+
+class EnvioCreateView(CreateView):
+    """
+    Vista Crear Envio
+    """
+    model = Envio
+    form_class = EnvioForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('envio_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Envíos"
+        
+        return context
+
+
+class VentaCreateView(CreateView):
+    """
+    Vista Crear Ventas
+    """
+    model = Venta
+    form_class = VentaForm
+    template_name = 'punto_venta/venta_form.html'
+    success_url = reverse_lazy('venta_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Ventas"
+        
+        return context
+    
+
+
+class ProveedorCreateView(CreateView):
+    """
+    Vista Crear Proveedor
+    """
+    model = Proveedor
+    form_class = ProveedorForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('proveedor_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Proveedores"
+        
+        return context
+
+
+class CategoriaCreateView(CreateView):
+    """
+    Vista Crear Categoria
+    """
+    model = Categoria
+    form_class = CategoriaForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('categoria_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Categorías"
+        
+        return context
+
+
+class PuntoDeVentaCreateView(CreateView):
+    """
+    Vista Crear Punto de Venta
+    """
+    model = PuntoDeVenta
+    form_class = PuntoDeVentaForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('puntodeventa_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Punto de Ventas"
+        
+        return context
+
+class ClienteCreateView(CreateView):
+    """
+    Vista Crear Cliente
+    """
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Clientes"
+        
+        return context
+
+
+class AlmacenCreateView(CreateView):
+    """
+    Vista Crear Almacen
+    """
+    model = Almacen
+    form_class = AlmacenForm
+    template_name = 'punto_venta/producto_form.html'
+    success_url = reverse_lazy('almacen_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["URL"] = "/api/nomina_departamentos/"
+        context["Titulo"] = "Almacenes"
+        
+        return context
+
+######### Query ##########
+class InventarioRestanteView(TemplateView):
+    template_name = 'inventory/inventario_restante.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        producto_id = self.request.GET.get('producto_id')
+        almacen_id = self.request.GET.get('almacen_id')
+        punto_de_venta_id = self.request.GET.get('punto_de_venta_id')
+        fecha = self.request.GET.get('fecha')
+
+        producto = Producto.objects.get(id=producto_id)
+        almacen = Almacen.objects.get(id=almacen_id) if almacen_id else None
+        punto_de_venta = PuntoDeVenta.objects.get(id=punto_de_venta_id) if punto_de_venta_id else None
+
+        if almacen:
+            context['inventario_restante'] = producto.inventario_en_almacen(almacen, fecha)
+        elif punto_de_venta:
+            context['inventario_restante'] = producto.inventario_en_punto_de_venta(punto_de_venta, fecha)
+
+        context['producto'] = producto
+        context['almacen'] = almacen
+        context['punto_de_venta'] = punto_de_venta
+        context['fecha'] = fecha
+
+        return context

@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
-    
+{% extends "base.html" %}
 
-{% block title %}| Formulario de Producto{% endblock %}
+{% block title %} | Formulario de {{ Titulo }}{% endblock title %}
 
-{% block content%}
-    <h1>Formulario de Producto</h1>
+{% block content %}
+    <h1>Formulario de {{ Titulo }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-outline-primary btn-rounded">Guardar</button>
+        <button type="submit" class="btn btn-primary btn-rounded btn-block col-md-2">Guardar</button>
     </form>
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %} | Inventario Restante{% endblock title %}
+
+{% block content %}
+    <h1>Inventario Restante de {{ producto.nombre }}</h1>
+    <p>Fecha: {{ fecha }}</p>
+    {% if almacen %}
+        <p>Almacén: {{ almacen.nombre }}</p>
+        <p>Inventario Restante en Almacén: {{ inventario_restante }}</p>
+    {% elif punto_de_venta %}
+        <p>Punto de Venta: {{ punto_de_venta.nombre }}</p>
+        <p>Inventario Restante en Punto de Venta: {{ inventario_restante }}</p>
+    {% endif %}
+{% endblock %}

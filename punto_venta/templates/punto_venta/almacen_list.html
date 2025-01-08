@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %} | Lista de Almacenes{% endblock title %}
+
+{% block content %}
+    <h1>Almacenes</h1>
+    <a href="{% url 'almacen_create' %}">
+        <button class="btn btn-primary btn-rounded btn-block col-md-2">
+            Nuevo Almacén
+        </button>
+    </a>
+    <table class="mt-5 table table-hover">
+        <thead>
+            <tr class="tx-center">
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for almacen in almacenes %}
+                <tr>
+                    <td>{{ almacen.nombre }}</td>
+                    <td>{{ almacen.direccion }}</td>
+                    <td class="d-flex flex-row justify-content-around"><button class="btn btn-info btn-rounded btn-block col-md-6">Editar</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

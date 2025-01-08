@@ -59,19 +59,27 @@
             <a href="{% url 'pago' %}" class="nav-link">Nomina de pago</a>
           </nav>
         </li>
-        <!-- li class="nav-item">
+        <li class="nav-item">
           <a href="" class="nav-link with-sub">Punto de Venta</a>
           <nav class="az-menu-sub">
+            {% comment %}
             <a href="{% url 'dashboard_puntoventa' %}" class="nav-link">DashBoard</a>
-            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
             <a href="{% url 'transaccion_list' %}" class="nav-link">Transacciones</a>
-            <a href="{% url 'venta_create' %}" class="nav-link">Ventas</a>
             <a href="{% url 'existencia_mensual' %}" class="nav-link">Existencia Mensual</a>
-            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
-            <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
             <a href="{% url 'detalle_venta_list' %}" class="nav-link">Detalle Ventas</a>
+            <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
+            {% endcomment %}
+            <a href="{% url 'almacen_list' %}" class="nav-link">Almacén</a>
+            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
+            <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
+            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
+            <a href="{% url 'proveedor_list' %}" class="nav-link">Proveedores</a>
+            <a href="{% url 'categoria_list' %}" class="nav-link">Categorias</a>
+            <a href="{% url 'puntodeventa_list' %}" class="nav-link">Punto de Ventas</a>
+            <a href="{% url 'envio_list' %}" class="nav-link">Envíos</a>
+            
           </nav>
-        </li -->
+        </li>
         <!-- li class="nav-item">
           <a href="" class="nav-link with-sub"><i class="typcn typcn-document"></i> Pages</a>
           <nav class="az-menu-sub">

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %} | Lista de Productos{% endblock title %}
+{% block title %} | Lista de Puntos de Ventas{% endblock title %}
 
 {% block content %}
-    <h1>Productos</h1>
-    <a href="{% url 'producto_create' %}">
+    <h1>Puntos de Ventas</h1>
+    <a href="{% url 'puntodeventa_create' %}">
         <button class="btn btn-primary btn-rounded btn-block col-md-2">
-            Nuevo Producto
+            Nuevo Punto de Venta
         </button>
     </a>
 
@@ -14,22 +14,16 @@
         <table class="mt-5 table">
             <thead>
                 <tr>
-                    <th>Producto</th>
                     <th>Punto de Venta</th>
-                    <th>Proveedor</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Dirección</th>
                     <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
-                {% for producto in productos %}
+                {% for puntodeventa in puntodeventas %}
                     <tr>
-                        <td>{{ producto.nombre }}</td>
-                        <td>{{ producto.nombre }}</td>
-                        <td>{{ producto.proveedor }}</td>
-                        <td>{{ producto.cantidad }}</td>
-                        <td class="tx-right">$ {{ producto.precio }}</td>
+                        <td>{{ puntodeventa.nombre }}</td>
+                        <td>{{ puntodeventa.direccion }}</td>
                         <td class="d-flex flex-row justify-content-around">
                             <button class="btn btn-info btn-rounded btn-block col-md-6">
                                 Editar
