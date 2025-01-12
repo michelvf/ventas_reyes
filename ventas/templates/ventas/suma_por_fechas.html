@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} | Suma por fechas{% endblock title %}
+{% block title %} | Ventas por períodos{% endblock title %}
 
 {% block css %}
     <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
@@ -11,7 +11,7 @@
 {% endblock css %}
 
 {% block content %}
-    <h3 class="mx-3">Suma por Fechas</h1>
+    <h3 class="mx-3">Ventas por períodos</h1>
     <div>
         <form method="GET" id="rangoDeDatos">
             {% csrf_token %}

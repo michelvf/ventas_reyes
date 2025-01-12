@@ -3,7 +3,7 @@
 {% load static %}
 {% load humanize %}
 
-{% block title %}| Resumen de productos semanal{% endblock title %}
+{% block title %}| Compra de Leche semanal{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
@@ -228,38 +228,46 @@
 
     $("#table").DataTable({
         language: language,
-         layout: {
-             topStart: {
-                buttons: [
-                    'print', 'excel', 'pdf'
-                ]
-        //         buttons: [
-        //             {
-        //                 extend: 'print',
-        //                 exportOptions: {
-        //                     modifier: {
-        //                         selected: null
-        //                     }
-        //                 },
+        dom: 'Bfrtip',
+        buttons: [
+        //    'colvis',
+            'excel',
+            'print',
+            'pdf'
+        ],
+        //layout: {
+        //    topStart: {
+        //        buttons: [
+        //            'print', 'excel', 'pdf'
+        //        ]
+        //        buttons: [
+        //            'excel', 'pdf', 'print',
+        //            {
+                    //    extend: 'print',
+                    //    exportOptions: {
+                    //        modifier: {
+                    //            selected: null
+                    //        }
+                    //    },
         //                 // extend: 'pdfHtml5',
         //                 // pageSize: 'LETTER',
         //                 // orientation: 'landscape',
-        //                 customize: function (win) {
-        //                     $(win.document.body)
-        //                         .css('font-size', '10pt')
-        //                         .prepend(
-        //                             '<img src="http://localhost:8000/static/img/AAReyes-limpio.png" style="position:absolute; bottom:0; right:0; width:20%;opacity: 0.2;" />'
-        //                         );
-     
-        //                     // $(win.document.body)
-        //                     //     .find('table')
-        //                     //     .addClass('compact')
-        //                     //     .css('font-size', 'inherit');
-        //                 }
-        //             }
-        //         ]
-            }
-        },
+                        customize: function (win) {
+                            $(win.document.body)
+                                .css('font-size', '10pt')
+                                .prepend(
+                                    '<img src="http://localhost:8000/static/img/AAReyes-limpio.png" style="position:absolute; bottom:0; right:0; width:20%;opacity: 0.2;" />'
+                                );
+    
+        //                    $(win.document.body)
+        //                        .find('table')
+        //                        .addClass('compact')
+        //                        .css('font-size', 'inherit');
+        //                }
+                }
+        //        ]
+        //    }
+        //},
     })
     </script>
 

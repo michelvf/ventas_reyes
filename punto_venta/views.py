@@ -225,6 +225,7 @@ class PuntoDeVentaCreateView(CreateView):
         
         return context
 
+
 class ClienteCreateView(CreateView):
     """
     Vista Crear Cliente
@@ -258,6 +259,7 @@ class AlmacenCreateView(CreateView):
         
         return context
 
+    
 ######### Query ##########
 class InventarioRestanteView(TemplateView):
     template_name = 'inventory/inventario_restante.html'

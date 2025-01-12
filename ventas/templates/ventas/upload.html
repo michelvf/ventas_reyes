@@ -34,7 +34,7 @@
                 {{ field }}
                 {{ field.errors }}
               </div>
-            {% endfor %}
+              {% endfor %}
             <br />
             <div class="col-12 d-flex flex-row-reverse">
               <button class="btn btn-primary btn-block w-25" type="submit">Subir</button>
@@ -71,7 +71,7 @@
     <script type="text/javascript">
         const fecha = new Date();
 
-        $('#id_datefilter').daterangepicker({
+        $('#id_fecha').daterangepicker({
             autoUpdateInput: true,
             singleDatePicker: true,
             showDropdowns: true,
@@ -137,7 +137,7 @@
             fetch('/ventas/upload/', {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json'
+                    // 'Accept': 'application/json'
                     // 'Content-Type': 'application/json',
                     // 'X-CSRFToken': '{{ csrf_token }}',
                     // 'Content-Type': 'multipart/form-data',
@@ -175,39 +175,39 @@
             });
         }
 
-        $("#formulario").submit(function (e){
-            e.preventDefault();
+        //  $("#formulario").submit(function (e){
+        //     e.preventDefault();
 
-            let formData = new FormData(this);
-            // const fecha = $('#id_datefilter').val();
-            // const fichero = $('#id_file').val();
-            // const csrf = $("input[name=csrfmiddlewaretoken]").val();
+        //     let formData = new FormData(this);
+        //     // const fecha = $('#id_datefilter').val();
+        //     // const fichero = $('#id_file').val();
+        //     // const csrf = $("input[name=csrfmiddlewaretoken]").val();
 
 
-            fetch('/api/ficherosubidos/')
-            .then(res => res.json())
-            .then(dat => {
-                // const fecha = $('#id_datefilter').val();
-                //console.log(`lo que llega del fetch de la api ficherosubidos: ${dat}`)
+        //     fetch('/api/ficherosubidos/')
+        //     .then(res => res.json())
+        //     .then(dat => {
+        //         // const fecha = $('#id_datefilter').val();
+        //         //console.log(`lo que llega del fetch de la api ficherosubidos: ${dat}`)
                 
-                //fecha_map = comparar_fecha(formData.get("datefilter"))
-                fecha_map = formData.get("datefilter")
-                // console.log('la fecha a comparar: ', fecha_map, ', la que llega del formulario: ', formData.get("datefilter"))
-                coincide = dat.filter(d => fecha_map === comparar_fecha(d.fecha))
-                // console.log('viendo si las fechas coinciden: ', coincide.lenght)
-                if (coincide.length > 0) {
-                    if (window.confirm(`ya se registró la venta del día ${fecha_map}, ¿desea actualizar?`)) {
-                        // fetchPost(fecha, fichero, true)
+        //         //fecha_map = comparar_fecha(formData.get("datefilter"))
+        //         fecha_map = formData.get("datefilter")
+        //         // console.log('la fecha a comparar: ', fecha_map, ', la que llega del formulario: ', formData.get("datefilter"))
+        //         coincide = dat.filter(d => fecha_map === comparar_fecha(d.fecha))
+        //         // console.log('viendo si las fechas coinciden: ', coincide.lenght)
+        //         if (coincide.length > 0) {
+        //             if (window.confirm(`ya se registró la venta del día ${fecha_map}, ¿desea actualizar?`)) {
+        //                 // fetchPost(fecha, fichero, true)
 
-                        formData.append('actualizar', true);
-                        fetchPost(formData)
-                    };
-                } else {
-                    // fetchPost(fecha, fichero, false)
-                    fetchPost(formData);
-                }
-            })
-            .catch(error => console.log('Error de captar los datos del for y ver si las fechas coinciden: ', error))
-        });
+        //                 formData.append('actualizar', true);
+        //                 fetchPost(formData)
+        //             };
+        //         } else {
+        //             // fetchPost(fecha, fichero, false)
+        //             fetchPost(formData);
+        //         }
+        //     })
+        //     .catch(error => console.log('Error de captar los datos del for y ver si las fechas coinciden: ', error))
+        // });
     </script>
 {% endblock js %}

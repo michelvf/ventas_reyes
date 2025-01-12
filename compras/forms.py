@@ -2,6 +2,8 @@ from django import forms
 from .models import Compra, Almacen, Producto, PrecioProducto, UnidadMedida
 from django.utils import timezone
 
+# from easy_select2 import select2_modelform, Select2, apply_select2
+
 
 class AlmacenForm(forms.ModelForm):
     """
@@ -109,13 +111,17 @@ class CompraForm(forms.ModelForm):
     class Meta:
         model = Compra
         fields = ['producto', 'cantidad' , 'precio_compra', 'fecha']
+        # widget = {
+        #     'producto': apply_select2(forms.Select),
+        #     'class': 'form-control',
+        # }
 
     producto = forms.ModelChoiceField(
-        label='Producto',
+        label='Productores',
         widget=forms.Select(
             attrs={
                 'class': 'form-control col-12 col-md-6',
-                'onChange': 'select(this.value)'
+                # 'onChange': 'select(this.value)'
             }
         ),
         queryset=Producto.objects.all(),

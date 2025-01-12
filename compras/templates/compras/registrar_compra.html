@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block css %}
+<link href="{% static 'assets/lib/select2/css/select2.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
 {% block title %}| Registrar compra{% endblock title %}
 
 {% block content %}
@@ -19,12 +23,17 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'assets/lib/select2/js/select2.min.js' %}"></script>
 <script>
     // var myEle = document.getElementById("compras");
 
     // if(myEle) {    
     //     console.log('vas a registrar una compra')
     // }
+    //$(document).ready(function(){
+        $("#id_producto").select2();
+    //  });
+
     function cancelar() { window.location.href = "{% url 'list_compra' %}"; 
     }
 
