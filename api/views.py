@@ -174,7 +174,7 @@ class LacteosSemanaAPI(APIView):
         lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
         condiciones = Q()
         to_day = datetime.now()
-        a_week = datetime.now() + timedelta(days=-36)
+        a_week = datetime.now() + timedelta(days=-7)
         departamento = 1
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra)
@@ -200,7 +200,7 @@ class VentaSemanalAPI(APIView):
     Ventas en la semana
     """
     def get(self, request):
-        a_week = datetime.now() + timedelta(days=-36)
+        a_week = datetime.now() + timedelta(days=-7)
 
         week_sales = Ventas.objects.filter(
                 fecha__gte=a_week
@@ -289,6 +289,7 @@ class CompraLecheSemana(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+####### Nomina #######
 class NominaDepartamentosApiView(viewsets.ReadOnlyModelViewSet):
     """
     API for show the Departaments

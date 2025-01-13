@@ -22,7 +22,6 @@ from django.conf import settings
 # Index Page
 class IndexView(TemplateView):
     template_name = 'ventas/index.html'
-    # template_name = 'ventas/index2.html'
 
 
 # Create your views here.
@@ -52,10 +51,10 @@ class ExcelUploadView(FormView):
             URI1 = settings.BASE_DIR
             fichero = f'{URI1}{archivo_uri}'
             fecha = request.POST['fecha']
-            print(f'La fecha que llega al POST es: {fecha}')
+            # print(f'La fecha que llega al POST es: {fecha}')
             print(f'Lo que llega del POST: {request.POST}')
             actualizar = form.cleaned_data['actualizar']
-            print(f'actualizar tiene valor: {actualizar}')
+            # print(f'actualizar tiene valor: {actualizar}')
             try:
                 # FUNCIONA
                 df = pd.read_table(fichero, sep='\t', encoding='iso8859_2') 
@@ -68,10 +67,16 @@ class ExcelUploadView(FormView):
                 df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
-                
-            
+            except pd.errors.ParserError:
+                df = pd.read_excel(fichero) 
+
+                # Cambio del tipo de 2 columnas a float64
+                df['Precio Usado'] = df['Precio Usado'].replace({'\$': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
+                excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
+                # form.
                 return render(request, self.template_name, {'form': form, 'error': error_message})
         
         # Insertando los Departamentos
@@ -114,9 +119,9 @@ class ExcelUploadView(FormView):
         if actualizar:
             ventas = Ventas.objects.filter(fecha=fecha).delete()
             # print(f"se van a borrar: {ventas}")
-        else:
-            fileUp = fileUpdate(fecha=date)
-            fileUp.save()
+        # else:
+        #     fileUp = fileUpdate(fecha=fecha)
+        #     fileUp.save()
 
         # Insertando las Ventas
         for i in range(len(excel_file)):
@@ -139,25 +144,33 @@ class ExcelUploadView(FormView):
             # fecha = date
 
             # Preparado para insertarlo en el modelo Departamento
-            obj_venta = Ventas(
+            Ventas.objects.update_or_create(
                 id_producto=codigo_venta,
                 cantidad=cantidad,
                 venta=venta,
                 costo=costo,
                 calculo=calculo,
-                # departamento=departamento_venta,
                 fecha=fecha
             )
-            # Guardando en la BD
-            # print(f"Se va a guardar: {obj_venta}")
-            obj_venta.save()
+            # obj_venta = Ventas(
+            #     id_producto=codigo_venta,
+            #     cantidad=cantidad,
+            #     venta=venta,
+            #     costo=costo,
+            #     calculo=calculo,
+            #     # departamento=departamento_venta,
+            #     fecha=fecha
+            # )
+            # # Guardando en la BD
+            # # print(f"Se va a guardar: {obj_venta}")
+            # obj_venta.save()
         
         # return render(request, self.template_name, {'form': form})
         return render(
                     request,
                     'ventas/success.html'
                 )
-        # Recivir el formulario
+        # Recibir el formulario
         # form = self.form_class(request.POST, request.FILES)
         # si es válido, comienza proceso
         #if form.is_valid():

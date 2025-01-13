@@ -21,7 +21,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Departamentos
-        fields = ("id", "departamento", "comentario")
+        fields = ("id", "departamento", "comentario", "punto_de_venta")
 
 
 class ProductosSerializer(serializers.ModelSerializer):

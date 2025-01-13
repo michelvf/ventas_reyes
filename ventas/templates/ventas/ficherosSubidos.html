@@ -31,8 +31,10 @@
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/es.min.js' %}" /></script>
 <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
 <script>
+    moment.locale('es');
     new DataTable('#venta', {
     language: language,
     ajax: {
@@ -42,12 +44,13 @@
     columns: [
         { data: 'fecha',
             "render": function (data, type, full) {
-                return moment(data).format('D/M/Y');
+                return moment(data).format('DD MMMM Y');
             }
         },
         //{ data: 'cantidad' }
     ],
     pageLength: 20,
+    order: [[ 0, 'desc']],
 });
 </script>
 {% endblock %}

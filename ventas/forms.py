@@ -54,4 +54,4 @@ class ArchivoExcelForm(forms.ModelForm):
     
     class Meta:
         model = fileUpdate
-        fields = ['archivo', 'fecha', 'actualizar']
+        fields = ['archivo', 'fecha']

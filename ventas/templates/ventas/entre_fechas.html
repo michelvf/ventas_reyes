@@ -32,8 +32,8 @@
                     <th>Código</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Precio Costo</th>
                     <th>Precio Venta</th>
+                    <th>Precio Costo</th>
                     <th>Cálculo</th>
                     <th>Departamento</th>
                     <th>Fecha</th>
@@ -52,6 +52,7 @@
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+    <script type="text/javascript" src="{% static 'js/es.min.js' %}" /></script>
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
 
     <script type="text/javascript">
@@ -143,7 +144,7 @@
 
         // const data = datos_fechas
         function showDatatables(data) {
-
+            moment.locale('es');
             table = $('#ventas').DataTable({
                 // destroy: true,
                 language: language,
@@ -158,13 +159,13 @@
                       'sClass': 'center',
                       render: $.fn.dataTable.render.number( ",", ".", 2 )
                     },
-                    { data: 'costo',
-                      'sClass': 'right',
-                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
-                    },
                     { data: 'venta',
-                      'sClass': 'right',
-                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    'sClass': 'right',
+                    render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    },
+                    { data: 'costo',
+                    'sClass': 'right',
+                    render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
                     },
                     { data: 'calculo',
                       'sClass': 'right dt-type-numeric',
@@ -187,7 +188,7 @@
                     { data: 'id_producto.id_departamento.departamento' },
                     { data: 'fecha',
                         "render": function (data, type, full) {
-                            return moment(data).format('D/M/Y');
+                            return moment(data).format('DD/MM/Y');
                         }
                     },
                 ],
@@ -210,13 +211,13 @@
                       'sClass': 'center',
                       render: $.fn.dataTable.render.number( ",", ".", 2 )
                     },
-                    { data: 'costo',
-                      'sClass': 'right',
-                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
-                    },
                     { data: 'venta',
-                      'sClass': 'right',
-                      render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    'sClass': 'right',
+                    render: $.fn.dataTable.render.number( ",", ".", 2, "$" ) 
+                    },
+                    { data: 'costo',
+                    'sClass': 'right',
+                    render: $.fn.dataTable.render.number( ",", ".", 2, "$" )
                     },
                     { data: 'calculo',
                       'sClass': 'right dt-type-numeric',
@@ -239,7 +240,7 @@
                     { data: 'id_producto.id_departamento.departamento' },
                     { data: 'fecha',
                         "render": function (data, type, full) {
-                            return moment(data).format('D/M/Y');
+                            return moment(data).format('DD/MM/YY');
                         }
                     },
                 ],
