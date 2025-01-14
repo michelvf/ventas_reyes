@@ -2,7 +2,7 @@ from django.urls import path
 from .views import ExcelUploadView, ShowVentas, SumarPorFechas, ProdxDepto
 from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
 from .views import LacteosVendidos, ProdMasVendido, ListadoFicherosSubidos
-from .views import SalvaResguardoView, BackupRestoreSQLiteView
+from .views import  BackupRestoreSQLiteView, CalculadoraBilletes
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI
@@ -21,6 +21,8 @@ urlpatterns = [
     path('lacteos/', LacteosVendidos.as_view(), name='lacteos'),
     path('ficherosSubidos/', ListadoFicherosSubidos.as_view(), name='ficherosSubidos'),
     path('backup_restore/', BackupRestoreSQLiteView.as_view(), name='backup_restore'),
+    path('calculadora_billetes/', CalculadoraBilletes.as_view(), name='calculadora_billetes'),
+
 
     # Las API
     path('api_ventasfechas/', VentasPorFechas.as_view(), name='ventasporfechas'),

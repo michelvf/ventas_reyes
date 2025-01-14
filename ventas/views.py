@@ -425,6 +425,9 @@ class BackupRestorePGSQLView(View):
         return redirect('backup_restore')
 
 
+class CalculadoraBilletes(TemplateView):
+    template_name = 'ventas/calculadora_billetes.html'
+
 """
 Punto la Parada:
 21.73781, -82.75416

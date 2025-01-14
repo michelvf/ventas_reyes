@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}| Salva y Restauración{% endblock title %}
+
+{% block content %}
+    <h2>Calculadora de Billetes</h2>
+    <div class="mb-3 fs-2">
+        <strong>Total: <span id="total"></span></strong>
+    </div>
+    <form id="formulario">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 1  </span>
+                  <input id="un_peso" type="number" class="form-control col-9 entrada" aria-label="pesos" placeholder="Billetes de $1">
+                  <span id="resultado_un_peso" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 3   </span>
+                  <input id="tres_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $3">
+                  <span id="resultado_tres_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 5  </span>
+                  <input id="cinco_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $5">
+                  <span id="resultado_cinco_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 10  </span>
+                  <input id="diez_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $10">
+                  <span id="resultado_diez_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$20 </span>
+                  <input id="veinte_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $20">
+                  <span id="resultado_veinte_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 50  </span>
+                  <input id="cincuenta_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $50">
+                  <span id="resultado_cincuenta_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 100 </span>
+                  <input id="cien_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $100">
+                  <span id="resultado_cien_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 200 </span>
+                  <input id="doscientos_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $200">
+                  <span id="resultado_doscientos_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 500 </span>
+                  <input id="quinientos_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $500">
+                  <span id="resultado_quinientos_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$ 1000 </span>
+                  <input id="mil_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $1000">
+                  <span id="resultado_mil_pesos" class="form-control text-end"></span>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endblock %}
+    
+    {% block js %}
+    <script type="text/javascript" src="{% static 'js/calculadora_billetes.js' %}"></script>
+{% endblock %}
