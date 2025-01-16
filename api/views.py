@@ -151,8 +151,8 @@ class LacteosAPI(APIView):
             lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
                 producto_s=Substr('id_producto__producto', 1, 20),
             ).filter(
-                 id_producto__id_departamento=departamento,
-                 fecha__range=[start_date, end_date],
+                id_producto__id_departamento=departamento,
+                fecha__range=[start_date, end_date],
             ).values(
                 'producto_s'
             ).annotate(
@@ -181,8 +181,8 @@ class LacteosSemanaAPI(APIView):
         lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
             producto_s=Substr('id_producto__producto', 1, 20),
         ).filter(
-             id_producto__id_departamento=departamento,
-             fecha__range=[a_week, to_day],
+            id_producto__id_departamento=departamento,
+            fecha__range=[a_week, to_day],
         ).values(
             'producto_s'
         ).annotate(
@@ -200,17 +200,26 @@ class VentaSemanalAPI(APIView):
     Ventas en la semana
     """
     def get(self, request):
-        a_week = datetime.now() + timedelta(days=-7)
+        # a_week = datetime.now() + timedelta(days=-7)
 
-        week_sales = Ventas.objects.filter(
-                fecha__gte=a_week
-            ).annotate(
+        week_sales = Ventas.objects.annotate(
                 fecha_agregada=TruncDate('fecha', output_field=DateField())
             ).values(
                 'fecha_agregada'
             ).annotate(
                 total_vendido=Sum('calculo')
-            ).order_by('fecha_agregada')
+            ).order_by('-fecha_agregada')[:7]
+
+        # El bueno antes de cambiar
+        # week_sales = Ventas.objects.filter(
+        #         fecha__gte=a_week
+        #     ).annotate(
+        #         fecha_agregada=TruncDate('fecha', output_field=DateField())
+        #     ).values(
+        #         'fecha_agregada'
+        #     ).annotate(
+        #         total_vendido=Sum('calculo')
+        #     ).order_by('fecha_agregada')
             
         serializer = VentaSemanalSerializer(week_sales, many=True)
         
