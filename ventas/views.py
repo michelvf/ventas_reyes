@@ -351,10 +351,10 @@ class DepartamentoUpdateView(View):
     #success_url = 'showdepartamentos'
     def get(self, request):
         departamento = Departamentos.objects.all()
-        render(request, 'ventas/update_departament.html', {'departamento': departamento} )
+        return render(request, "ventas/update_departament.html", {'departamento': departamento} )
 
     def post(self, request):
-        pass
+        return True
 
 
 class SalvaResguardoView(View):

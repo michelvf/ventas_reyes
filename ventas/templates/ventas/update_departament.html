@@ -17,14 +17,16 @@
         <tbody>
             {% for depa in departamento %}
                 <tr>
-                    <th>{{ depa.departamento }}</th>
-                    <th>{{ depa.comentario }}</th>
-                    <th>{{ depa.punto_de_venta }}</th>
+                    <th>
+                        <input value='{{ depa.departamento }}' name='departamento' disabled="" />
+                    </th>
+                    <th><textarea name='comentario' class="form-clase"/>{{ depa.comentario }}</textarea></th>
+                    <th><input value='{% if depa.punto_de_venta %}true{% else %}false{% endif %}' name='punt_de_venta' type='checkbox' {% if depa.punto_de_venta %}checked{% endif %}/></th>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <input type="submit" value="Actualizar">
+    <input type="submit" value="Actualizar" class="btn btn-primary">
 </form>
 
 {% endblock content %}
