@@ -53,7 +53,7 @@ class ExcelUploadView(FormView):
             fecha = request.POST['fecha']
             # print(f'La fecha que llega al POST es: {fecha}')
             print(f'Lo que llega del POST: {request.POST}')
-            actualizar = form.cleaned_data['actualizar']
+            # actualizar = form.cleaned_data['actualizar']
             # print(f'actualizar tiene valor: {actualizar}')
             try:
                 # FUNCIONA
@@ -116,8 +116,8 @@ class ExcelUploadView(FormView):
                 obj.save()
 
         # Borrar los que se van a actualizar
-        if actualizar:
-            ventas = Ventas.objects.filter(fecha=fecha).delete()
+        # if actualizar:
+        #     ventas = Ventas.objects.filter(fecha=fecha).delete()
             # print(f"se van a borrar: {ventas}")
         # else:
         #     fileUp = fileUpdate(fecha=fecha)
@@ -168,7 +168,8 @@ class ExcelUploadView(FormView):
         # return render(request, self.template_name, {'form': form})
         return render(
                     request,
-                    'ventas/success.html'
+                    'ventas/success.html',
+                    { 'fecha': fecha    }
                 )
         # Recibir el formulario
         # form = self.form_class(request.POST, request.FILES)
