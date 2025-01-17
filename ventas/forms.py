@@ -1,5 +1,7 @@
 from django import forms
-from .models import fileUpdate
+from .models import fileUpdate, Departamentos
+
+
 
 class ExcelUploadForm(forms.Form):
     """
@@ -55,3 +57,12 @@ class ArchivoExcelForm(forms.ModelForm):
     class Meta:
         model = fileUpdate
         fields = ['archivo', 'fecha']
+
+
+class DepartamentosForm(forms.Form):
+    """
+    Formulario para actualizar departamentos
+    """
+    class Meta:
+        model = Departamentos
+        fields = ['departamento', 'comentario', 'punto_de_venta']

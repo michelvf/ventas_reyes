@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}| Actualizar Departamento {% endblock title %}
+
+{% block content %}
+
+<form method='POST'>
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Departamento</th>
+                <th>Descripción</th>
+                <th>Punto de Venta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for depa in departamento %}
+                <tr>
+                    <th>
+                        <input value='{{ depa.departamento }}' name='departamento' disabled="" />
+                    </th>
+                    <th><textarea name='comentario' class="form-clase"/>{{ depa.comentario }}</textarea></th>
+                    <th><input value='{% if depa.punto_de_venta %}true{% else %}false{% endif %}' name='punt_de_venta' type='checkbox' {% if depa.punto_de_venta %}checked{% endif %}/></th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Actualizar" class="btn btn-primary">
+</form>
+
+{% endblock content %}
