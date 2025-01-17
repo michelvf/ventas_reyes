@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}| Actualizar Departamento {% endblock title %}
+
+{% block content %}
+
+<form method='POST'>
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Departamento</th>
+                <th>Descripción</th>
+                <th>Punto de Venta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for depa in departamento %}
+                <tr>
+                    <th>{{ depa.departamento }}</th>
+                    <th>{{ depa.comentario }}</th>
+                    <th>{{ depa.punto_de_venta }}</th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Actualizar">
+</form>
+
+{% endblock content %}

@@ -5,10 +5,11 @@ import datetime
 import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
-from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm
+from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
 from django.views.generic.edit import FormView
 from rest_framework.views import APIView
 from django.views.generic import TemplateView
+from django.views.generic.edit import UpdateView
 from .models import Departamentos, Productos, Ventas, fileUpdate
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
@@ -338,6 +339,22 @@ class ListadoFicherosSubidos(TemplateView):
     Show the files uploaded
     """
     template_name = 'ventas/ficherosSubidos.html'
+
+
+class DepartamentoUpdateView(View):
+    """
+    Update the value of Departement
+    """
+    #model = Departamentos
+    #template_name = 'ventas/update_departament.html'
+    #form_class = DepartamentosForm
+    #success_url = 'showdepartamentos'
+    def get(self, request):
+        departamento = Departamentos.objects.all()
+        render(request, 'ventas/update_departament.html', {'departamento': departamento} )
+
+    def post(self, request):
+        pass
 
 
 class SalvaResguardoView(View):
