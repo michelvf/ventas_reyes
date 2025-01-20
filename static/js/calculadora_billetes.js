@@ -2,9 +2,9 @@
 var valores = new Object();
 
 // sumatoria de un peso
-document.getElementById('un_peso').addEventListener('input', function() {
+document.getElementById('id_un_peso').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('un_peso').value;
+    let numero = document.getElementById('id_un_peso').value;
     // Multiplicar por 1
     const resultado = numero * 1;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -14,9 +14,9 @@ document.getElementById('un_peso').addEventListener('input', function() {
 });
 
 // tres_pesos
-document.getElementById('tres_pesos').addEventListener('input', function() {
+document.getElementById('id_tres_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('tres_pesos').value;
+    let numero = document.getElementById('id_tres_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 3;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -26,9 +26,9 @@ document.getElementById('tres_pesos').addEventListener('input', function() {
 });
 
 // cinco_pesos
-document.getElementById('cinco_pesos').addEventListener('input', function() {
+document.getElementById('id_cinco_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('cinco_pesos').value;
+    let numero = document.getElementById('id_cinco_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 5;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -38,9 +38,9 @@ document.getElementById('cinco_pesos').addEventListener('input', function() {
 });
 
 // dies_pesos
-document.getElementById('diez_pesos').addEventListener('input', function() {
+document.getElementById('id_diez_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('diez_pesos').value;
+    let numero = document.getElementById('id_diez_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 10;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -50,9 +50,9 @@ document.getElementById('diez_pesos').addEventListener('input', function() {
 });
 
 // viente_pesos
-document.getElementById('veinte_pesos').addEventListener('input', function() {
+document.getElementById('id_veinte_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('veinte_pesos').value;
+    let numero = document.getElementById('id_veinte_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 20;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -62,9 +62,9 @@ document.getElementById('veinte_pesos').addEventListener('input', function() {
 });
 
 // cincuenta_pesos
-document.getElementById('cincuenta_pesos').addEventListener('input', function() {
+document.getElementById('id_cincuenta_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('cincuenta_pesos').value;
+    let numero = document.getElementById('id_cincuenta_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 50;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -74,9 +74,9 @@ document.getElementById('cincuenta_pesos').addEventListener('input', function() 
 });
 
 // cien_pesos
-document.getElementById('cien_pesos').addEventListener('input', function() {
+document.getElementById('id_cien_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('cien_pesos').value;
+    let numero = document.getElementById('id_cien_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 100;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -86,9 +86,9 @@ document.getElementById('cien_pesos').addEventListener('input', function() {
 });
 
 // docientos_pesos
-document.getElementById('doscientos_pesos').addEventListener('input', function() {
+document.getElementById('id_doscientos_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('doscientos_pesos').value;
+    let numero = document.getElementById('id_doscientos_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 200;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -98,9 +98,9 @@ document.getElementById('doscientos_pesos').addEventListener('input', function()
 });
 
 // quinietos_pesos
-document.getElementById('quinientos_pesos').addEventListener('input', function() {
+document.getElementById('id_quinientos_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('quinientos_pesos').value;
+    let numero = document.getElementById('id_quinientos_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 500;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -110,9 +110,9 @@ document.getElementById('quinientos_pesos').addEventListener('input', function()
 });
 
 // mil_pesos
-document.getElementById('mil_pesos').addEventListener('input', function() {
+document.getElementById('id_mil_pesos').addEventListener('input', function() {
     // Capturar el valor del input
-    let numero = document.getElementById('mil_pesos').value;
+    let numero = document.getElementById('id_mil_pesos').value;
     // Multiplicar por 1
     const resultado = numero * 1000;
     // Agregar resultado al objeto para hacer sumatoria final
@@ -123,12 +123,16 @@ document.getElementById('mil_pesos').addEventListener('input', function() {
 
 // Función para sumar todos los valores de los billetes
 function calcular() {
-    total = document.getElementById('total')
+    
     sumar_todo = 0;
     for(let clave in valores) {
         sumar_todo += valores[clave];
     }
-    total.innerHTML = '$ ' + new Intl.NumberFormat().format(sumar_todo);
+    document.getElementById('id_total').value = sumar_todo;
+    document.getElementById('id_total_span').innerHTML =  '$ ' + new Intl.NumberFormat().format(sumar_todo);
+    //document.getElementById('input_total').value = sumar_todo;
+    //document.getElementById('resultado_0_peso').value = sumar_todo;
+    console.log(`sumando da como resultado: ${sumar_todo}`)
 }
 
 // Observando lo que se va calculado por billetes y sumado
@@ -138,9 +142,120 @@ document.querySelectorAll('.entrada').forEach(function(input) {
 
 // Función para limpiar de valores todos los input
 function reset(){
-document.getElementsById("formulario").reset();
+    document.getElementsById("formulario").reset();
 }
 
+window.onload = function() {
+    // Total
+    const total = document.getElementById('id_total')
+    if (total.value.trim() !== '') {
+        const nuevoValor = '$ ' + total.value;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#id_total_span');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // un pesos
+    const un = document.getElementById('id_un_peso')
+    if (un.value.trim() !== '' && un.value !== '0') {
+        const nuevoValor = '$ ' + un.value * 1;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_un_peso');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // tres pesos
+    const tres = document.getElementById('id_tres_pesos')
+    if (tres.value.trim() !== '' && tres.value !== '0') {
+        const nuevoValor = '$ ' + tres.value * 3;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_tres_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // cinco pesos
+    const cinco = document.getElementById('id_cinco_pesos')
+    if (cinco.value.trim() !== '' && cinco.value !== '0') {
+        let nuevoValor = '$ ' + cinco.value * 5;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_cinco_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // diez pesos
+    const diez = document.getElementById('id_diez_pesos')
+    if (diez.value.trim() !== '' && diez.value !== '0') {
+        const nuevoValor = '$ ' + diez.value * 10;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_diez_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // veinte pesos
+    const veinte = document.getElementById('id_veinte_pesos')
+    if (veinte.value.trim() !== '' && veinte.value !== '0') {
+        const nuevoValor = '$ ' + veinte.value * 20;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_veinte_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // cincuenta pesos
+    const cincuenta = document.getElementById('id_cincuenta_pesos')
+    if (cincuenta.value.trim() !== '' && cincuenta.value !== '0') {
+        const nuevoValor = '$ ' + cincuenta.value * 50;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_cincuenta_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // cien pesos
+    const cien = document.getElementById('id_cien_pesos')
+    if (cien.value.trim() !== '' && cien.value !== '0') {
+        const nuevoValor = '$ ' + cien.value * 100;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_cien_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // doscientos pesos
+    const doscientos = document.getElementById('id_doscientos_pesos')
+    if (doscientos.value.trim() !== '' && doscientos.value !== '0') {
+        const nuevoValor = '$ ' + doscientos.value * 200;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_doscientos_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // quinientos pesos
+    const quinientos = document.getElementById('id_quinientos_pesos')
+    if (quinientos.value.trim() !== '' && quinientos.value !== '0') {
+        const nuevoValor = '$ ' + quinientos.value * 500;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_quinientos_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+
+    // mil pesos
+    const mil = document.getElementById('id_mil_pesos')
+    if (mil.value.trim() !== '' && mil.value !== '0') {
+        const nuevoValor = '$ ' + mil.value * 1000;
+        // Selecciona el span correspondiente
+        let span = document.querySelector('#resultado_mil_pesos');
+        // Coloca el nuevo valor en el 
+        span.textContent = nuevoValor;
+    }
+}
 // reinaldo jvl
 // soporte ediberto ferrer 50953838 59077357
 // mercadotecnia@iju.eicma.cu

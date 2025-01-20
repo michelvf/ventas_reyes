@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 
 class fileUpdate(models.Model):
@@ -110,6 +112,39 @@ class Ventas(models.Model):
 
     def __str__(self):
         return self.id_producto.producto
+    
+
+class Contador_billete(models.Model):
+    """
+    Modelo para registrara los conteos de billetes
+    """
+    comentario = models.TextField(null=False, blank=False)
+    fecha = models.DateTimeField(auto_now_add=True)
+    un_peso = models.IntegerField(default=0, null=True, blank=True)
+    tres_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cinco_pesos = models.IntegerField(default=0, null=True, blank=True)
+    diez_pesos = models.IntegerField(default=0, null=True, blank=True)
+    veinte_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cincuenta_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cien_pesos = models.IntegerField(default=0, null=True, blank=True)
+    doscientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    mil_pesos = models.IntegerField(default=0, null=True, blank=True)
+    total = models.IntegerField(null=False, blank=False)
+
+    class Meta:
+        ordering = ["-fecha"] # ["-fecha"] ascending
+        verbose_name = "contador_billete"
+        verbose_name_plural = "contador_billetes"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["fecha"]),
+            models.Index(fields=["comentario"]),
+            models.Index(fields=["total"]),
+        ]
+
+    def __str__(self):
+        return f"{self.fecha.strftime('%d-%m-%Y')} - {self.comentario[:10]}"
 
 """
 Notas:
