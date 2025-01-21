@@ -151,7 +151,8 @@ class LacteosAPI(APIView):
             lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
                 producto_s=Substr('id_producto__producto', 1, 20),
             ).filter(
-                id_producto__id_departamento=departamento,
+                # id_producto__id_departamento__punto_de_venta=departamento,
+                id_producto__id_departamento__in=departamento,
                 fecha__range=[start_date, end_date],
             ).values(
                 'producto_s'
@@ -173,15 +174,20 @@ class LacteosSemanaAPI(APIView):
     def get(self, request):
         lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
         condiciones = Q()
-        to_day = datetime.now()
-        a_week = datetime.now() + timedelta(days=-7)
-        departamento = 1
+        departamento_punto_venta = True
+        # Buscando la ultima fecha
+        tamano = len(fileUpdate.objects.all())
+        ultimo = fileUpdate.objects.all()[tamano - 1]
+        to_day = ultimo.fecha
+        a_week = ultimo.fecha  + timedelta(days=-7)
+        #to_day = datetime.now()
+        #a_week = datetime.now() + timedelta(days=-7)
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra)
         lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
             producto_s=Substr('id_producto__producto', 1, 20),
         ).filter(
-            id_producto__id_departamento=departamento,
+            id_producto__id_departamento__punto_de_venta=departamento_punto_venta,
             fecha__range=[a_week, to_day],
         ).values(
             'producto_s'

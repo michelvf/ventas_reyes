@@ -15,13 +15,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for depa in departamento %}
+            {% for formulario, registro in formularios %}
                 <tr>
-                    <th>
-                        <input value='{{ depa.departamento }}' name='departamento' disabled="" />
-                    </th>
-                    <th><textarea name='comentario' class="form-clase"/>{{ depa.comentario }}</textarea></th>
-                    <th><input value='{% if depa.punto_de_venta %}true{% else %}false{% endif %}' name='punt_de_venta' type='checkbox' {% if depa.punto_de_venta %}checked{% endif %}/></th>
+                    <td>{{ registro.departamento }}</td>
+                    <td>{{ formulario.comentario }}</td>
+                    <td>{{ formulario.punto_de_venta }}</td>
                 </tr>
             {% endfor %}
         </tbody>

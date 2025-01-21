@@ -99,9 +99,15 @@ class ProdMasVendidosVarSerializer(serializers.Serializer):
     """
     Serializer for Ventas with dates
     """
+    
+    def id_puntoVenta():
+        id = [dep.id for dep in Departamentos.objects.all()]
+        return id
+    
     start_date = serializers.DateField()
     end_date = serializers.DateField()
-    departamento = serializers.IntegerField()
+    # departamento = serializers.IntegerField()
+    departamento = serializers.MultipleChoiceField(choices=id_puntoVenta())
 
 
 class ProdMasVendidosSerializer(serializers.ModelSerializer):

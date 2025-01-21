@@ -343,15 +343,24 @@ class DepartamentoUpdateView(View):
     """
     Update the value of Departement
     """
-    def get(self, request):
-        departamento = Departamentos.objects.all()
-        return render(request, "ventas/update_departament.html", {'departamento': departamento} )
+    def get(self, request): 
+        registros = Departamentos.objects.all()
+        formularios = [DepartamentosForm(instance=registro, prefix=str(registro.id)) for registro in registros] 
+        context = {'formularios': zip(formularios, registros)}
+        return render(
+            request,
+            'ventas/update_departament.html',
+            context
+        ) 
+        #return render(request, "ventas/update_departament.html", {'departamento': departamento} )
 
     def post(self, request):
-        post = request.POST
-        print(f'lo que llega al POST: {post}')
-
-        return HttpResponse()
+        registros = Departamentos.objects.all()
+        for registro in registros:
+            formulario = DepartamentosForm(request.POST, instance=registro, prefix=str(registro.id))
+            if formulario.is_valid():
+                formulario.save()
+        return redirect('showdepartamentos')
 
 
 class SalvaResguardoView(View):
@@ -439,15 +448,6 @@ class BackupRestorePGSQLView(View):
         subprocess.run(command, shell=True)
         
         return redirect('backup_restore')
-
-
-# class CalculadoraBilletes(CreateView):
-#     model = Contador_billete
-#     # fields = ['total', 'un_peso', 'tres_pesos',  'cinco_pesos', 'diez_pesos',
-#     #           'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos',
-#     #           'quinientos_pesos', 'mil_pesos', 'comentario']
-#     form_class = CalculadoraBilletesForm
-#     success_url = reverse_lazy('mostrar_conteo_billetes')
 
 
 class CalculadoraBilletes(View):

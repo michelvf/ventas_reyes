@@ -58,13 +58,16 @@ class ArchivoExcelForm(forms.ModelForm):
         fields = ['archivo', 'fecha']
 
 
-class DepartamentosForm(forms.Form):
+class DepartamentosForm(forms.ModelForm):
     """
     Formulario para actualizar departamentos
     """
     class Meta:
         model = Departamentos
-        fields = ['departamento', 'comentario', 'punto_de_venta']
+        fields = ['comentario', 'punto_de_venta']
+        widgets = {
+            'comentario': forms.Textarea(attrs={'class': 'form-control', 'cols': 40, 'rows':2})
+        }
 
 
 class CalculadoraBilletesForm(forms.ModelForm):
@@ -110,14 +113,6 @@ class CalculadoraBilletesForm(forms.ModelForm):
     #     widget=forms.HiddenInput(
     #         attrs={
     #             'class': 'disable',
-    #         }
-    #     )
-    # )
-    
-    # comentario = forms.CharField(
-    #     widget=forms.Textarea(
-    #         attrs={
-    #             'class': 'form-control col-9',
     #         }
     #     )
     # )

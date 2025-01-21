@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="col-3">
-          <select class="form-control" id="depart" name="departamento">
+          <select class="form-control" id="depart" name="departamento[]" multiple="multiple">
           </select>
         </div>
         <div class="col-3">
@@ -103,7 +103,7 @@ $.ajax({
 });
 
 $(document).ready(function(){
-  $('.select2').select2({
+  $('#depart').select2({
     placeholder: 'Escoja uno',
     searchInputPlaceholder: 'Buscar'
   });
