@@ -158,6 +158,7 @@ class LacteosAPI(APIView):
                 'producto_s'
             ).annotate(
                 total_vendido=Sum('cantidad'),
+                total_ventas=Sum('calculo'),
             #    codigo='id_producto__codigo',
             # ).order_by('total_vendido')
             ).order_by('producto_s')
@@ -192,8 +193,8 @@ class LacteosSemanaAPI(APIView):
         ).values(
             'producto_s'
         ).annotate(
-            total_vendido=Sum('cantidad')
-        #    codigo='id_producto__codigo',
+            total_vendido=Sum('cantidad'),
+            total_ventas=Sum('calculo'),
         ).order_by('-total_vendido')
         #).order_by('-cantidad')
 

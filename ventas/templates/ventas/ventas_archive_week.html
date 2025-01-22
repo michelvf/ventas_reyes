@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Ventas Semanales{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<h1>Semana {{ week|date:'W' }}</h1>
+<ul>
+    {% for article in object_list %}
+    <li>{{ article.fecha|date:"F j, Y" }}: {{ article.id_producto }}</li>
+{% endfor %}
+</ul>
+<p>
+    {% if previous_week %}
+        <a href="{% url 'ventas_semanales' previous_week|date:"Y" previous_week|date:"W" %}">
+            Semana anterior: {{ previous_week|date:"W" }} del año {{ previous_week|date:"Y" }}
+        </a>
+    {% endif %}
+    {% if previous_week and next_week %}--{% endif %}
+    {% if next_week %}
+        <a href="{% url 'ventas_semanales' next_week|date:"Y" next_week|date:"W" %}">
+            Próxima Semana: {{ next_week|date:"W" }} del año {{ next_week|date:"Y" }}
+        </a>
+    {% endif %}
+</p>
+{% endblock %}

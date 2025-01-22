@@ -121,6 +121,7 @@
                   <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
+                    <th>Ventas</th>
                   </tr>
                 </thead>
                 <tbody id="tablaLacteos_tbody" style="font-size: 0.875rem !important;">
@@ -404,7 +405,7 @@
       //const fechas = valores.map( (dat, indice) => { return [indice, new Date(dat.fecha_agregada+"T01:00:00")] })
 
       //console.log(`arreglo fecha: ${fechas}, 1ra fecha: ${fechas[0]}, la última ${fechas[6]}`)
-      console.log(`los valores son: ${val}` );
+      //console.log(`los valores son: ${val}` );
       //console.log(`fechas es: ${fechas}` );
 
       var plot = $.plot('#flotChart', [{
@@ -484,7 +485,8 @@
       .then(response => response.json())
       .then(data => {
         data.map(val => {
-          let fila = `<tr><td>${val.producto_s}</td><td>${val.total_vendido}</td></tr>`;
+          let venta = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(val.total_ventas)
+          let fila = `<tr><td>${val.producto_s}</td><td>${val.total_vendido}</td><td>${venta}</td></tr>`;
           //tableBody.append(fila)
           $('#tablaLacteos_tbody').append(fila)
           // console.log('fila a agregar: ', fila)

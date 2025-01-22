@@ -51,7 +51,7 @@
                     <!-- th>Código</th -->
                     <th>Producto</th>
                     <th>Cantidad Vendida</th>
-                    <!-- th>Departamento</th -->
+                    <th>Total Ventas</th>
                 </tr>
             </thead>
             <tbody>
@@ -222,6 +222,11 @@ function tablaDatos(data) {
         // { data: 'id_producto.producto' },
         { data: 'producto_s' },
         { data: 'total_vendido' },
+        { data: 'total_ventas',
+           render: function (data, type, full, meta ) {
+             return new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+           }
+        },
         // { data: 'id_departamento.departamento' }
     ],
     order: [[1, 'desc']]

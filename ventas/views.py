@@ -11,6 +11,7 @@ from django.views.generic.edit import FormView
 from rest_framework.views import APIView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
@@ -481,7 +482,37 @@ class EditarCalculadoraBilletes(UpdateView):
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
-    
+
+
+class VentasAnualesView(YearArchiveView):
+    """
+    Ventas Anuales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    make_object_list = True
+    allow_future = True
+
+
+class VentasMensualesView(MonthArchiveView):
+    """
+    Ventas Mensuales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    allow_future = True
+
+
+class VentasSemanalesView(WeekArchiveView):
+    """
+    Ventas Semanales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    week_format= "%W"
+    allow_future = True
+
+
 """
 Punto la Parada:
 21.73781, -82.75416

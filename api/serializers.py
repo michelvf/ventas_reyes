@@ -130,6 +130,7 @@ class LacteosSerializer(serializers.ModelSerializer):
     
     total_vendido = serializers.IntegerField()
     producto_s = serializers.CharField()
+    total_ventas = serializers.IntegerField()
 
     id_producto=ProductosSerializer(
         # many=True,
@@ -139,7 +140,7 @@ class LacteosSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ventas
-        fields = ["id_producto", "total_vendido", "producto_s"]
+        fields = ["id_producto", "total_vendido", "producto_s", "total_ventas"]
 
 
 class VentaSemanalSerializer(serializers.Serializer): 
