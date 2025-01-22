@@ -5,8 +5,10 @@
 {% block title %} | Productos más ventidos{% endblock title %}
 
 {% block css %}
+    <link href="{% static 'assets/lib/select2/css/select2.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
 {% endblock css %}
 
 {% block content %}
@@ -26,11 +28,10 @@
                     </div>
                     <div class="col-6">
                         <div class="row mb-3">
-                            <label for="depa" class="col-sm-3 col-form-label">Departamento:</label>
+                            <!-- label for="depa" class="col-sm-3 col-form-label">Departamento:</label -->
                             <div class="col-sm-8">
-                                <select class="form-control select2-no-search" name="departamento" id="depa" aria-label="Default select example">
+                                <select class="form-control" name="departamento[]" multiple="multiple" id="depa">
                                 </select>
-                                
                             </div>
                         </div>
                     </div>
@@ -51,7 +52,7 @@
                     <th>Código</th>
                     <th>Producto</th>
                     <th>Cantidad Vendida</th>
-                    <!-- th>Departamento</th -->
+                    <th>Total Vendido</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +69,9 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'assets/lib/select2/js/select2.min.js' %}"></script>
+    <!-- script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script -->
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
     <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
@@ -76,8 +79,22 @@
     <script type="text/javascript" src="{% static 'js/chart.js' %}"></script>
     <script type="text/javascript">
 
-        // Tomar la fecha de hoy
-        const fecha = new Date();
+    // Tomar la fecha de hoy
+    const fecha = new Date();
+
+    // función para dale formato a la valor de moneda
+    function formar_moneda(data) {
+        valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+        if (data > 0) {
+            return '<span class="positivo">' + valor + '</span>';
+            // return data;
+        } else if (data < 0) {
+            return '<span class="negativo">' + valor + '</span>';
+            // return data;
+        } else {
+            return '<span class="cero">' + valor + '</span>';
+        }
+    }
 
         // Formar los calendarios para las entre fechas
         $('input[name="datefilter"]').daterangepicker({
@@ -212,6 +229,12 @@
                 { data: 'codigo' },
                 { data: 'producto' },
                 { data: 'total_vendido' },
+                { data: 'total_ventas',
+                    'sClass': 'right dt-type-numeric',
+                    render: function (data, type, full, meta ) {
+                        return formar_moneda(data)
+                    }
+                },
                 //{ data: 'id_departamento.departamento' }
             ],
             order: [[2, 'desc']]
@@ -284,6 +307,18 @@
             })
           }
         }
+
+        $(document).ready(function(){
+            $('#depa').select2({
+              placeholder: 'Escoja uno',
+              searchInputPlaceholder: 'Buscar'
+            });
+          
+            $('.select2-no-search').select2({
+              minimumResultsForSearch: Infinity,
+              placeholder: 'Escoja uno'
+            });
+          });
 
     </script>
 {% endblock js %}

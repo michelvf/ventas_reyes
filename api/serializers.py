@@ -115,6 +115,7 @@ class ProdMasVendidosSerializer(serializers.ModelSerializer):
     Products more sales
     """
     total_vendido = serializers.IntegerField()
+    total_ventas = serializers.IntegerField()
 
     id_departamento=DepartamentoSerializer(
         read_only=True
@@ -122,7 +123,7 @@ class ProdMasVendidosSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Productos
-        fields  =["codigo", "producto", "total_vendido", "id_departamento"]
+        fields  =["codigo", "producto", "total_vendido", "id_departamento", "total_ventas"]
 
 
 class LacteosSerializer(serializers.ModelSerializer):

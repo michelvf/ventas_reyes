@@ -365,11 +365,10 @@
     function totalVentas(datos) {
       let t = 0
       let total = datos.map(dat => dat.total_vendido)
-      // let tot = total.forEach(v => t += v)
       total.forEach(v => {t += parseFloat(v)})
       // console.log(`Arreglo total: ${total}, sumatoria: ${t}`)
       $('#total_vendido').text('$ ' + new Intl.NumberFormat().format(t))
-      $('#ultimo_dia').text('$ ' + new Intl.NumberFormat().format(total[6]))
+      $('#ultimo_dia').text('$ ' + new Intl.NumberFormat().format(total[0]))
     }
 
     function graifco1(valores) {
@@ -479,7 +478,6 @@
     };
 
     function tablaLacteos() {
-      //let tableBody = $('#tablaLacteos_tbody');
       let lacteos;
       fetch('/ventas/api_lacteossemanal/')
       .then(response => response.json())
@@ -487,7 +485,6 @@
         data.map(val => {
           let venta = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(val.total_ventas)
           let fila = `<tr><td>${val.producto_s}</td><td>${val.total_vendido}</td><td>${venta}</td></tr>`;
-          //tableBody.append(fila)
           $('#tablaLacteos_tbody').append(fila)
           // console.log('fila a agregar: ', fila)
         })

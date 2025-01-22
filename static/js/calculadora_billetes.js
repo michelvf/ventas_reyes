@@ -160,6 +160,7 @@ window.onload = function() {
     const un = document.getElementById('id_un_peso')
     if (un.value.trim() !== '' && un.value !== '0') {
         const nuevoValor = '$ ' + un.value * 1;
+        valores.uno = un.value * 1;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_un_peso');
         // Coloca el nuevo valor en el 
@@ -170,6 +171,7 @@ window.onload = function() {
     const tres = document.getElementById('id_tres_pesos')
     if (tres.value.trim() !== '' && tres.value !== '0') {
         const nuevoValor = '$ ' + tres.value * 3;
+        valores.tres = tres.value * 3;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_tres_pesos');
         // Coloca el nuevo valor en el 
@@ -180,6 +182,7 @@ window.onload = function() {
     const cinco = document.getElementById('id_cinco_pesos')
     if (cinco.value.trim() !== '' && cinco.value !== '0') {
         let nuevoValor = '$ ' + cinco.value * 5;
+        valores.cinco = cinco.value * 5;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_cinco_pesos');
         // Coloca el nuevo valor en el 
@@ -190,6 +193,7 @@ window.onload = function() {
     const diez = document.getElementById('id_diez_pesos')
     if (diez.value.trim() !== '' && diez.value !== '0') {
         const nuevoValor = '$ ' + diez.value * 10;
+        valores.diez = diez.value * 10;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_diez_pesos');
         // Coloca el nuevo valor en el 
@@ -200,6 +204,7 @@ window.onload = function() {
     const veinte = document.getElementById('id_veinte_pesos')
     if (veinte.value.trim() !== '' && veinte.value !== '0') {
         const nuevoValor = '$ ' + veinte.value * 20;
+        valores.veinte = veinte.value * 20;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_veinte_pesos');
         // Coloca el nuevo valor en el 
@@ -210,6 +215,7 @@ window.onload = function() {
     const cincuenta = document.getElementById('id_cincuenta_pesos')
     if (cincuenta.value.trim() !== '' && cincuenta.value !== '0') {
         const nuevoValor = '$ ' + cincuenta.value * 50;
+        valores.cincuenta = cincuenta.value * 50;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_cincuenta_pesos');
         // Coloca el nuevo valor en el 
@@ -220,6 +226,7 @@ window.onload = function() {
     const cien = document.getElementById('id_cien_pesos')
     if (cien.value.trim() !== '' && cien.value !== '0') {
         const nuevoValor = '$ ' + cien.value * 100;
+        valores.cien = cien.value * 100;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_cien_pesos');
         // Coloca el nuevo valor en el 
@@ -230,6 +237,7 @@ window.onload = function() {
     const doscientos = document.getElementById('id_doscientos_pesos')
     if (doscientos.value.trim() !== '' && doscientos.value !== '0') {
         const nuevoValor = '$ ' + doscientos.value * 200;
+        valores.doscientos = doscientos.value * 200;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_doscientos_pesos');
         // Coloca el nuevo valor en el 
@@ -240,6 +248,7 @@ window.onload = function() {
     const quinientos = document.getElementById('id_quinientos_pesos')
     if (quinientos.value.trim() !== '' && quinientos.value !== '0') {
         const nuevoValor = '$ ' + quinientos.value * 500;
+        valores.quinientos = quinientos.value * 500;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_quinientos_pesos');
         // Coloca el nuevo valor en el 
@@ -250,6 +259,7 @@ window.onload = function() {
     const mil = document.getElementById('id_mil_pesos')
     if (mil.value.trim() !== '' && mil.value !== '0') {
         const nuevoValor = '$ ' + mil.value * 1000;
+        valores.mil = mil.value * 1000;
         // Selecciona el span correspondiente
         let span = document.querySelector('#resultado_mil_pesos');
         // Coloca el nuevo valor en el 
