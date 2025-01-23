@@ -174,7 +174,7 @@ class LacteosSemanaAPI(APIView):
         lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
         condiciones = Q()
         to_day = datetime.now()
-        a_week = datetime.now() + timedelta(days=-7)
+        a_week = datetime.now() + timedelta(days=-8)
         departamento = 1
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra)
@@ -200,7 +200,7 @@ class VentaSemanalAPI(APIView):
     Ventas en la semana
     """
     def get(self, request):
-        a_week = datetime.now() + timedelta(days=-7)
+        a_week = datetime.now() + timedelta(days=-8)
 
         week_sales = Ventas.objects.filter(
                 fecha__gte=a_week

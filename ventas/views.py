@@ -53,7 +53,7 @@ class ExcelUploadView(FormView):
             fecha = request.POST['fecha']
             # print(f'La fecha que llega al POST es: {fecha}')
             print(f'Lo que llega del POST: {request.POST}')
-            actualizar = form.cleaned_data['actualizar']
+            # actualizar = form.cleaned_data['actualizar']
             # print(f'actualizar tiene valor: {actualizar}')
             try:
                 # FUNCIONA
@@ -107,17 +107,23 @@ class ExcelUploadView(FormView):
             # Verificando si existe en la BD e insertarlo si no existe
             if not Productos.objects.filter(codigo=codigo).exists():
                 # Preparado para insertarlo en el modelo Departamento
-                obj = Productos(
+
+                Productos.objects.update_or_create(
                     codigo=codigo,
                     producto=producto,
                     id_departamento=departamento
                 )
+                #obj = Productos(
+                #    codigo=codigo,
+                #    producto=producto,
+                #    id_departamento=departamento
+                #)
                 # Guardando en la BD
-                obj.save()
+                # obj.save()
 
         # Borrar los que se van a actualizar
-        if actualizar:
-            ventas = Ventas.objects.filter(fecha=fecha).delete()
+        # if actualizar:
+        #     ventas = Ventas.objects.filter(fecha=fecha).delete()
             # print(f"se van a borrar: {ventas}")
         # else:
         #     fileUp = fileUpdate(fecha=fecha)

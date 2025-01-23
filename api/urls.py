@@ -7,6 +7,7 @@ from .views import CompraApiView, NominaDepartamentosApiView, NominaCargoApiView
 
 router = DefaultRouter()
 
+####### Gestion  ######
 router.register(prefix="departamentos", basename="departamentos", viewset=DepartamentoApiView)
 router.register(prefix="productos", basename="productos", viewset=ProductosApiView)
 router.register(prefix="ventas", basename="ventas", viewset=VentaApiView)
