@@ -15,7 +15,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class VentasAdmin(admin.ModelAdmin):
-    list_display = ["id_producto", "cantidad", "venta", "costo", "fecha"]
+    list_display = ["id_producto", "cantidad", "venta", "costo", "calculo", "fecha"]
 
 
 class FicheroAdmin(admin.ModelAdmin):

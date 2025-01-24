@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "nomina.apps.NominaConfig",
     "punto_venta.apps.PuntoVentaConfig",
     "easy_select2",
+    "resumen.apps.ResumenConfig",
 ]
 
 MIDDLEWARE = [

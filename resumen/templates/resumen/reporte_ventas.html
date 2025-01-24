@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Reporte de Ventas{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">Reporte de ventas por período</h2>
+    <p class="az-dashboard-text"></p>
+  </div>
+  <div class="az-content-header-right">
+  </div>
+</div><!-- az-dashboard-one-title -->
+<div class="row">
+    <div class="col">
+    <table>
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ventas Semanales:</td><td>$ {{ ventas_semanales|floatformat:"2g" }}</td>
+            </tr>
+            <tr>
+                <td>Ventas Mensuales:</td><td>$ {{ ventas_mensuales|floatformat:"2g" }}</td>
+            </tr>
+            <tr>
+                <td>Ventas Trimestrales:</td><td>$ {{ ventas_trimestrales|floatformat:"2g" }}</td>
+            </tr>
+            <tr>
+                <td>Ventas Semestrales:</td><td>$ {{ ventas_semestrales|floatformat:"2g" }}</td>
+            </tr>
+            <tr>
+                <td>Ventas Anuales:</td><td>$ {{ ventas_anuales|floatformat:"2g" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

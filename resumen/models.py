@@ -1,0 +1,19 @@
+from django.db import models
+
+# Create your models here.
+class ResumenVentas(models.Model):
+    periodo = models.CharField(max_length=100)
+    total_vendido = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ["fecha_actualizacion"] # ["-fecha"] ascending
+        verbose_name = "ResumenVenta"
+        verbose_name_plural = "ResumenVentas"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["fecha_actualizacion"]),
+        ]
+    
+    def __str__(self):
+        return self.periodo
