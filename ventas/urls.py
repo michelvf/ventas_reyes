@@ -4,7 +4,7 @@ from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
 from .views import LacteosVendidos, ProdMasVendido, ListadoFicherosSubidos
 from .views import  BackupRestoreSQLiteView, CalculadoraBilletes, DepartamentoUpdateView
 from .views import VentasAnualesView, VentasMensualesView, VentasSemanalesView
-from .views import ShowContadorBilletes, EditarCalculadoraBilletes
+from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVendeMas
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI
@@ -27,6 +27,7 @@ urlpatterns = [
     path('actualizar_departamentos/', DepartamentoUpdateView.as_view(), name='actualizar_departamentos'),
     path('mostrar_conteo_billetes/', ShowContadorBilletes.as_view(), name='mostrar_conteo_billetes'),
     path('editar_calculadora_billetes/<int:pk>/', EditarCalculadoraBilletes.as_view(), name='editar_calculadora_billetes'),
+    path('reporte-mensual-departamento/', DondeSeVendeMas.as_view(), name='reporte_mensual_departamento'),
     path("<int:year>/", VentasAnualesView.as_view(), name="ventas_anuales"),
     path("<int:year>/<int:month>/", VentasMensualesView.as_view(month_format="%m"), name="ventas_mensuales"),
     path("<int:year>/week/<int:week>/", VentasSemanalesView.as_view(), name="ventas_semanales"),

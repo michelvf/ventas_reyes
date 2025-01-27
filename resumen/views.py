@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.utils import timezone
 from django.db.models import Sum
 import datetime
@@ -35,3 +35,43 @@ class ReporteVentasView(TemplateView):
         context['ventas_anuales'] = Ventas.objects.filter(fecha__gte=inicio_año).aggregate(total=Sum('calculo'))['total']
 
         return context
+
+
+class Estadistica(View):
+    """
+    Estadística de las Ventas en el tiempo
+    semanal, mensual, trimestral, semestral, anual
+    """
+    
+    ventas = Ventas.objects.all()
+    
+    # Recorrer validadndo que la fecha = a la 1ra semana e ir cambiando
+    # mientras van pasando las fechas
+    #     ir sumando mienstras se va a recorriendo y hacer 0 el sunando
+    #     cuando cambie de semana
+    semana1 = 0
+    mes1 = 0
+    trimestre1 = 0
+    anno1 = 0
+    suma_semana = 0
+    suma_mes = 0
+    suma_trimestre = 0
+    suma_anno = 0
+    for venta in ventas:
+        fecha = venta.fecha
+        # days = fecha.weekday()
+        semana = fecha.strftime('%V')
+        mes = fecha.strftime('%m')
+        anno = fecha.strftime('%Y')
+        suma_semana += venta.calculo
+        suma_mes += venta.calculo
+        suma_trimestre += venta.calculo
+        suma_anno += venta.calculo
+        if semana != semana1:
+            print(f"semana: {semana}-{anno}, sumatoria: {suma_semana} -- {fecha.strftime('%d/%m/%Y')}")
+            semana1 = semana
+            suma_semana = 0
+        if mes1 != mes:
+            print(f"mes: {mes}-{anno}, sumatoria: {suma_mes} -- {fecha.strftime('%d/%m/%Y')}")
+            mes1 = mes
+            suma_mes = 0

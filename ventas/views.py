@@ -8,7 +8,6 @@ from django.shortcuts import render, redirect
 from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
 from .forms import CalculadoraBilletesForm
 from django.views.generic.edit import FormView
-from rest_framework.views import APIView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
@@ -20,7 +19,8 @@ from django.views import View
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
+from django.utils import timezone
+from django.db.models import Sum, F
 
 # Index Page
 class IndexView(TemplateView):
@@ -511,6 +511,48 @@ class VentasSemanalesView(WeekArchiveView):
     date_field= "fecha"
     week_format= "%W"
     allow_future = True
+
+
+# ¿Qué dia se vende más?
+
+# ¿En qué punto de venta se vende más?
+class DondeSeVendeMas(TemplateView):
+    template_name = 'ventas/reporte_mensual_departamento.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ahora = timezone.now()
+        inicio_mes = ahora.replace(day=1)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+        print(f"ahora: {ahora}, inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+        
+        # Obtener ventas del mes actual
+        ventas_mensuales = Ventas.objects.filter(fecha__gte=inicio_mes, fecha__lte=fin_mes, id_producto__id_departamento__punto_de_venta=True)
+
+        # Crear un diccionario para almacenar los resultados
+        resumen_mensual = {}
+
+        # Inicializar el diccionario con los días y departamentos
+        for i in range((fin_mes - inicio_mes).days + 1):
+            dia = inicio_mes + datetime.timedelta(days=i)
+            resumen_mensual[dia.strftime('%d')] = {}
+            for departamento in Departamentos.objects.filter(punto_de_venta=True):
+                resumen_mensual[dia.strftime('%d')][departamento.departamento] = {
+                    'cantidad_vendida': 0,
+                    'total_vendido': 0
+                }
+
+        print(resumen_mensual)
+        # Rellenar el diccionario con los datos de ventas
+        for venta in ventas_mensuales:
+            dia = venta.fecha.strftime('%d')
+            departamento = venta.id_producto.id_departamento.departamento
+            resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
+            resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
+
+        context['resumen_mensual'] = resumen_mensual
+        return context
+
 
 
 """

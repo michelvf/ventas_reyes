@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -145,3 +146,11 @@ DATE_INPUT_FORMATS = ['%d/%m/%Y']
 SESSION_COOKIE_SECURE = True
 
 STATICFILES_STORAGE = 'whitenoices.storage.CompressedMainfestStaticFilesStorage'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'actualizar-resumenes-cada-dia': {
+        'task': 'resumen.tasks.actualizar_resumenes',
+        'schedule': crontab(minute=0, hour=0),  # Esta configuración ejecutará la tarea cada día a medianoche
+    },
+}
