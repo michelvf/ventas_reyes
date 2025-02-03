@@ -15,6 +15,7 @@ from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
+from .serializers import AnnosMesVentasSerializer
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
@@ -362,7 +363,7 @@ class DiaQueVendeMas(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = AnnosDeVentaSerializer(data=request.data)
+        serializer = AnnosMesVentasSerializer(data=request.data)
         zona_horaria = pytz.timezone('America/Havana')
         if serializer.is_valid():
             anno = serializer.validated_data['anno']
@@ -381,11 +382,14 @@ class DiaQueVendeMas(APIView):
                 venta_cantidad=Sum('cantidad'),
                 venta_total=Sum('calculo')
             )
+        
+        else:
+            print(f"--> el serializer no es válido")
             
         serializer = DiaQueMasVendeSerializar(ventas_mensuales, many=True)
         
         return Response(serializer.data)
-
+        
 
 
 class AnnosDeVenta(APIView):

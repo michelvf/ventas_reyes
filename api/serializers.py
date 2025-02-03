@@ -244,3 +244,11 @@ class MesesSerializer(serializers.Serializer):
     """
     meses = serializers.DateTimeField()
     ventas = serializers.IntegerField()
+
+
+class AnnosMesVentasSerializer(serializers.Serializer):
+    """
+    Años de Ventas
+    """
+    anno = serializers.IntegerField()
+    mes = serializers.IntegerField()

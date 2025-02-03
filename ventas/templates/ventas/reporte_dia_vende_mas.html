@@ -9,7 +9,7 @@
 {% block title %} | Reporte Mensual de Ventas por Día{% endblock title %}
 
 {% block content %}
-<h3 class="my-3">Reporte de Ventas por días del mes: {{ fecha|date:"F"|capfirst }} del {{ fecha|date:"Y" }}</h3>
+<h3 class="my-3">Reporte de Ventas de todos los Puntos de Ventas: {{ fecha|date:"F"|capfirst }} del {{ fecha|date:"Y" }}</h3>
 <div class="row mb-4">
     <div class="col-12">
         <form>
@@ -30,16 +30,18 @@
         </form>
     </div>
 </div>
-<div class="row">
+<div id="div-grafico" class="row invisible">
     <div class="col-12">
-        <p>Gráfico</p>
+        <p>Gráfico:</p>
         <div style="height: 300px; width: 100%;">
             <canvas id="grafico" />
         </div>
     </div>
 </div>
-<div class="row">
+<hr />
+<div id="div-tabla" class="row invisible">
     <div class="col-12 responsive">
+        <p>Tabla:</p>
         <table class="table">
             <thead>
                 <tr>
@@ -160,6 +162,19 @@ function formatDate(d){
     return moment(d).utc().format('dd DD MMM YY') 
 }
 
+function format2Date(d){
+    moment.locale('es', {
+        months : 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+        monthsShort : 'ene._feb._mar_abr._mar_jun_jul._ago_sept._oct._nov._dic.'.split('_'),
+        monthsParseExact : true,
+        weekdays : 'domingo_lunes_martes_miércoles_jueves_vierns_sábado'.split('_'),
+        weekdaysShort : 'dom._lun._mar._mir._jue._vie._sab.'.split('_'),
+        weekdaysMin : 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_'),
+        weekdaysParseExact : true,
+    })
+    return moment(d).utc().format('dd DD') 
+}
+
 function reporte_por_dia(anno, mes) {
     // console.log(`llega mes y año para buscar: ${anno} - ${mes}`)
     fetch('/resumen/dia_mas_venta/', {
@@ -175,36 +190,56 @@ function reporte_por_dia(anno, mes) {
     .then(request => request.json())
     .then(data => {
         // console.log(data)
+        mostrar()
         Tabla(data)
         Grafico(data)
     })
 }
 
-new DataTable('.table', {
-    language: language,
+function mostrar() {
+    grafico = document.getElementById('div-grafico');
+    tabla = document.getElementById('div-tabla');
+    grafico.classList.remove('invisible');
+    tabla.classList.remove('invisible');
+}
 
-    ajax: {
-        url: '/resumen/dia_mas_venta/',
-        dataSrc: ''
-    },
-    columns: [
-        { data: 'fecha',
-            "render": function (data, type, full) {
-                return moment(data).format('DD');
-            }
+function Tabla(data) {
+
+    table = new DataTable('.table')
+
+    table.destroy()
+
+    table = new DataTable('.table', {
+        paging: false,
+        searching: false,
+        retrieve: true,
+        language: language,
+        data: data,
+        /*
+        ajax: {
+            url: '/resumen/dia_mas_venta/',
+            dataSrc: ''
         },
-        { data: 'venta_cantidad' },
-        { data: 'venta_total',
-            'sClass': 'right dt-type-numeric',
-                render: function (data, type, full, meta ) {
-                    return formar_moneda(data)
+        */
+        columns: [
+            { data: 'fecha',
+                "render": function (data, type, full) {
+                    return format2Date(data);
                 }
-        },
-    ],
-    /* */
-    order: [[3, 'desc']],
-    pageLength: 20,
-});
+            },
+            { data: 'venta_cantidad' },
+            { data: 'venta_total',
+                'sClass': 'right dt-type-numeric',
+                    render: function (data, type, full, meta ) {
+                        return formar_moneda(data)
+                    }
+            },
+        ],
+        /* */
+        order: [[3, 'desc']],
+        pageLength: 20,
+    });
+}
 
 function Grafico(data) {
     // function Grafico() {
