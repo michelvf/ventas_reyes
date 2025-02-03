@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Ventas Anuales{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">Ventas Anuales</h2>
+    <p class="az-dashboard-text"></p>
+  </div>
+  <div class="az-content-header-right">
+  </div>
+</div><!-- az-dashboard-one-title -->
+<div class="row">
+    <div class="col">
+        <ul>
+            {% for date in date_list %}
+                <li>{{ date|date }}</li>
+            {% endfor %}
+        </ul>
+        <div>
+            <h1>Todas las Ventas del año {{ year|date:"Y" }}</h1>
+            {% for obj in object_list %}
+                <p>
+                    {{ obj.id_producto }}- {{ obj.fecha|date:"F j, Y" }}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

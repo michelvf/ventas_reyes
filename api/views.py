@@ -121,9 +121,16 @@ class ProductMasVendidoAPI(APIView):
             end_date = serializer.validated_data['end_date']
             departamento = serializer.validated_data['departamento']
             produ_mas_vendido = (Productos.objects
-                .filter(productos__fecha__range=[start_date, end_date], id_departamento=departamento)
-                .annotate(total_vendido=Sum('productos__cantidad'))
-                .order_by('-total_vendido')[:10])
+                .filter(
+                    productos__fecha__range=[start_date, end_date],
+                    id_departamento__in=departamento
+                )
+                .annotate(
+                    total_vendido=Sum('productos__cantidad'),
+                    total_ventas=Sum('productos__calculo')
+                )
+                .order_by('-total_vendido')[:10]
+            )
             serializer_other = ProdMasVendidosSerializer(produ_mas_vendido, many=True)
             return Response(serializer_other.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -137,7 +144,7 @@ class LacteosAPI(APIView):
 
     def post(self, request, format=None):
         serializer = ProdMasVendidosVarSerializer(data=request.data)
-        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE','QUES']
         condiciones = Q()
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra)
@@ -151,12 +158,14 @@ class LacteosAPI(APIView):
             lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
                 producto_s=Substr('id_producto__producto', 1, 20),
             ).filter(
-                 id_producto__id_departamento=departamento,
-                 fecha__range=[start_date, end_date],
+                # id_producto__id_departamento__punto_de_venta=departamento,
+                id_producto__id_departamento__in=departamento,
+                fecha__range=[start_date, end_date],
             ).values(
                 'producto_s'
             ).annotate(
                 total_vendido=Sum('cantidad'),
+                total_ventas=Sum('calculo'),
             #    codigo='id_producto__codigo',
             # ).order_by('total_vendido')
             ).order_by('producto_s')
@@ -171,23 +180,29 @@ class LacteosSemanaAPI(APIView):
     API to show the best selling weekly products
     """
     def get(self, request):
-        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE','QUES']
         condiciones = Q()
-        to_day = datetime.now()
-        a_week = datetime.now() + timedelta(days=-8)
-        departamento = 1
+        departamento_punto_venta = True
+        # Buscando la ultima fecha
+        tamano = len(fileUpdate.objects.all())
+        ultimo = fileUpdate.objects.all()[tamano - 1]
+        to_day = ultimo.fecha
+        a_week = ultimo.fecha  + timedelta(days=-7)
+        #to_day = datetime.now()
+        #a_week = datetime.now() + timedelta(days=-7)
+
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra)
         lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
             producto_s=Substr('id_producto__producto', 1, 20),
         ).filter(
-             id_producto__id_departamento=departamento,
-             fecha__range=[a_week, to_day],
+            id_producto__id_departamento__punto_de_venta=departamento_punto_venta,
+            fecha__range=[a_week, to_day],
         ).values(
             'producto_s'
         ).annotate(
-            total_vendido=Sum('cantidad')
-        #    codigo='id_producto__codigo',
+            total_vendido=Sum('cantidad'),
+            total_ventas=Sum('calculo'),
         ).order_by('-total_vendido')
         #).order_by('-cantidad')
 
@@ -200,17 +215,25 @@ class VentaSemanalAPI(APIView):
     Ventas en la semana
     """
     def get(self, request):
-        a_week = datetime.now() + timedelta(days=-8)
 
-        week_sales = Ventas.objects.filter(
-                fecha__gte=a_week
-            ).annotate(
+        week_sales = Ventas.objects.annotate(
                 fecha_agregada=TruncDate('fecha', output_field=DateField())
             ).values(
                 'fecha_agregada'
             ).annotate(
                 total_vendido=Sum('calculo')
-            ).order_by('fecha_agregada')
+            ).order_by('-fecha_agregada')[:7]
+
+        # El bueno antes de cambiar
+        # week_sales = Ventas.objects.filter(
+        #         fecha__gte=a_week
+        #     ).annotate(
+        #         fecha_agregada=TruncDate('fecha', output_field=DateField())
+        #     ).values(
+        #         'fecha_agregada'
+        #     ).annotate(
+        #         total_vendido=Sum('calculo')
+        #     ).order_by('fecha_agregada')
             
         serializer = VentaSemanalSerializer(week_sales, many=True)
         

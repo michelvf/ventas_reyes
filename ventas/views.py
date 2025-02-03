@@ -5,12 +5,15 @@ import datetime
 import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
-from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm
+from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
+from .forms import CalculadoraBilletesForm
 from django.views.generic.edit import FormView
 from rest_framework.views import APIView
-from django.views.generic import TemplateView
-from .models import Departamentos, Productos, Ventas, fileUpdate
-from django.http import JsonResponse, HttpResponse
+from django.views.generic import TemplateView, ListView
+from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
+from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import View
@@ -30,10 +33,6 @@ class ExcelUploadView(FormView):
     Vista para subir los ficheros Excel e insertarlos en al Base de Datos
     """
     template_name = 'ventas/upload.html'
-    # template_name = 'ventas/subir.html'
-    # form_class = ExcelUploadForm
-    # success_url = '/ventas/success/'
-    # success_url = reverse_lazy('success')
 
     # Si recibo un get, se manda la plantilla con el formulario en blanco
     def get(self, request):
@@ -95,7 +94,6 @@ class ExcelUploadView(FormView):
                 # Guardando en la BD
                 obj.save()
 
-
         # Insertando los Productos
         for i in range(len(excel_file['Descripcion'])):
 
@@ -120,14 +118,6 @@ class ExcelUploadView(FormView):
                 #)
                 # Guardando en la BD
                 # obj.save()
-
-        # Borrar los que se van a actualizar
-        # if actualizar:
-        #     ventas = Ventas.objects.filter(fecha=fecha).delete()
-            # print(f"se van a borrar: {ventas}")
-        # else:
-        #     fileUp = fileUpdate(fecha=fecha)
-        #     fileUp.save()
 
         # Insertando las Ventas
         for i in range(len(excel_file)):
@@ -174,7 +164,8 @@ class ExcelUploadView(FormView):
         # return render(request, self.template_name, {'form': form})
         return render(
                     request,
-                    'ventas/success.html'
+                    'ventas/success.html',
+                    { 'fecha': fecha    }
                 )
         # Recibir el formulario
         # form = self.form_class(request.POST, request.FILES)
@@ -294,7 +285,6 @@ class ShowDepartamentos(TemplateView):
         context["URL"] = "/api/departamentos/"
         
         return context
-    
 
 
 class ShowProductos(TemplateView):
@@ -316,6 +306,15 @@ class SumarPorFechas(TemplateView):
     Show the Sum of sales bettewn tow dates
     """
     template_name = 'ventas/suma_por_fechas.html'
+
+
+class ShowContadorBilletes(ListView):
+    """
+    Show the Billete Counter
+    """
+    model = Contador_billete
+    # template_name = 'ventas/contar_billetes.html'
+    context_object_name = "billetes"
 
 
 class ProdxDepto(TemplateView):
@@ -346,8 +345,34 @@ class ListadoFicherosSubidos(TemplateView):
     template_name = 'ventas/ficherosSubidos.html'
 
 
+class DepartamentoUpdateView(View):
+    """
+    Update the value of Departement
+    """
+    def get(self, request): 
+        registros = Departamentos.objects.all()
+        formularios = [DepartamentosForm(instance=registro, prefix=str(registro.id)) for registro in registros] 
+        context = {'formularios': zip(formularios, registros)}
+        return render(
+            request,
+            'ventas/update_departament.html',
+            context
+        ) 
+        #return render(request, "ventas/update_departament.html", {'departamento': departamento} )
+
+    def post(self, request):
+        registros = Departamentos.objects.all()
+        for registro in registros:
+            formulario = DepartamentosForm(request.POST, instance=registro, prefix=str(registro.id))
+            if formulario.is_valid():
+                formulario.save()
+        return redirect('showdepartamentos')
+
+
 class SalvaResguardoView(View):
-    
+    """
+    Show the save SQL data
+    """
     template_name = 'ventas/salvar_restaurar.html'
     
 
@@ -431,8 +456,67 @@ class BackupRestorePGSQLView(View):
         return redirect('backup_restore')
 
 
-class CalculadoraBilletes(TemplateView):
-    template_name = 'ventas/calculadora_billetes.html'
+class CalculadoraBilletes(View):
+    # form_class = CalculadoraBilletesForm
+    template_name = 'ventas/contador_billete_form.html'
+    
+    def get(self, request, *args, **kawars):
+        # billetes = Contador_billete.objects.all()
+        form = CalculadoraBilletesForm()
+        return render(request, 'ventas/contador_billete_form.html', {'form': form})
+    
+    def post(self, request, *args, **kawars):
+        form = CalculadoraBilletesForm(request.POST)
+        billetes = request.POST
+        print(f"llegaron del POST: {billetes}")
+        
+        if form.is_valid():
+            form.cleaned_data
+            form.save()
+            return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')
+        else:
+            return render(request, self.template_name, {'form': form})
+
+
+class EditarCalculadoraBilletes(UpdateView):
+    """
+    Editar calculadora de billetes
+    """
+    model = Contador_billete
+    # fields = ['total', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
+    template_name = 'ventas/contador_billete_form.html'
+    success_url = reverse_lazy('mostrar_conteo_billetes')
+    form_class = CalculadoraBilletesForm
+
+
+class VentasAnualesView(YearArchiveView):
+    """
+    Ventas Anuales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    make_object_list = True
+    allow_future = True
+
+
+class VentasMensualesView(MonthArchiveView):
+    """
+    Ventas Mensuales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    allow_future = True
+
+
+class VentasSemanalesView(WeekArchiveView):
+    """
+    Ventas Semanales
+    """
+    queryset= Ventas.objects.all()
+    date_field= "fecha"
+    week_format= "%W"
+    allow_future = True
+
 
 """
 Punto la Parada:

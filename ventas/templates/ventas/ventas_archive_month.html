@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Ventas Mensuales{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">Ventas Mensuales</h2>
+    <p class="az-dashboard-text"></p>
+  </div>
+  <div class="az-content-header-right">
+  </div>
+</div><!-- az-dashboard-one-title -->
+<div class="row">
+    <ul>
+        {% for article in object_list %}
+        <li>{{ article.fecha|date:"j F Y" }}: {{ article.id_producto }}</li>
+        {% endfor %}
+    </ul>
+    <p>
+        {% if previous_month %}
+            Mes previo: {{ previous_month|date:"F Y" }}
+        {% endif %}
+        {% if next_month %}
+            Próximo Mes: {{ next_month|date:"F Y" }}
+        {% endif %}
+    </p>
+</div>
+{% endblock %}

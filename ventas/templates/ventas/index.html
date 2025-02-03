@@ -46,7 +46,7 @@
         <div class="card-header">
           <div>
             <h6 class="card-title">Ventas en una semana</h6>
-            <p class="card-text">Las ventas que han ocurrido en la última semana. </p>
+            <p class="card-text">Las últimas 7 ventas registradas .</p>
           </div>
           <!-- div class="btn-group">
             <button class="btn active">Day</button>
@@ -113,7 +113,7 @@
             <div class="card-header" style="position: static !important; max-width: 100% !important;">
               <p>Lácteos más vendidos</p>
               <!--h6>16,869 <small class="tx-success"><i class="icon ion-md-arrow-up"></i> 2.87%</small></h6 -->
-              <small>Lácteos más vendidos en la semana, solamente en el Punto de Venta.</small>
+              <small>Lácteos más vendidos de las últimas 7 ventas, solamente en los Puntos de Ventas.</small>
             </div><!-- card-header -->
             <div class="card-body">
               <table class="table table-striped" id="tabla-lacteos">
@@ -121,6 +121,7 @@
                   <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
+                    <th>Ventas</th>
                   </tr>
                 </thead>
                 <tbody id="tablaLacteos_tbody" style="font-size: 0.875rem !important;">
@@ -364,11 +365,10 @@
     function totalVentas(datos) {
       let t = 0
       let total = datos.map(dat => dat.total_vendido)
-      // let tot = total.forEach(v => t += v)
       total.forEach(v => {t += parseFloat(v)})
       // console.log(`Arreglo total: ${total}, sumatoria: ${t}`)
       $('#total_vendido').text('$ ' + new Intl.NumberFormat().format(t))
-      $('#ultimo_dia').text('$ ' + new Intl.NumberFormat().format(total[6]))
+      $('#ultimo_dia').text('$ ' + new Intl.NumberFormat().format(total[0]))
     }
 
     function graifco1(valores) {
@@ -399,10 +399,13 @@
       // new Chart(ctx1, config)
 
       // let val = [valores.map(dat => [dat.fecha_agregada, dat.total_vendido])]
-      const val = valores.map( (valor, indice) => { return [indice, parseInt(valor.total_vendido)] })
-      const fechas = valores.map(dat => dat.fecha_agregada)
+      const val = valores.map( (valor, indice) => { return [new Date(valor.fecha_agregada+"T00:00:00"), parseInt(valor.total_vendido)] })
+      //const val = valores.map( (valor, indice) => { return [indice, parseInt(valor.total_vendido)] })
+      //const fechas = valores.map( (dat, indice) => { return [indice, new Date(dat.fecha_agregada+"T01:00:00")] })
 
       //console.log(`arreglo fecha: ${fechas}, 1ra fecha: ${fechas[0]}, la última ${fechas[6]}`)
+      //console.log(`los valores son: ${val}` );
+      //console.log(`fechas es: ${fechas}` );
 
       var plot = $.plot('#flotChart', [{
 
@@ -443,20 +446,22 @@
            // min: 0,
            // max: 100,
            // ticks: [[0,''],[20,'20K'],[40,'40K'],[60,'60K'],[80,'80K']],
-            tickColor: '#eee'
+            tickColor: '#eee',
+            //ticks: [fechas],
         },
         xaxis: {
           mode: "time",
-          autoScale: "none",
-          minTickSize: [1, "day"],
+          show: true,
+          //autoScale: "none",
+          //minTickSize: [1, "day"],
           //show: true,
-          color: '#000',
-          //timeformat: "%Y-%m-%d",
-          timeformat: "%a",
+          color: '#e0e1e1',
+          timeformat: "%d-%m-%y",
+          //timeformat: "%a",
           // min: fechas[0],
           // max: fechas[6],
           //timeBase: "milliseconds",
-          ticks: [fechas],
+          //ticks: [fechas],
         },
         zoom: {
           interactive: true
@@ -464,19 +469,22 @@
         pan: {
           interactive: true,
           enableTouch: true
-        }/**/
+        },
+        valueLabels: {
+          show: true,
+          showAsHtml: true,
+        }
       });
     };
 
     function tablaLacteos() {
-      //let tableBody = $('#tablaLacteos_tbody');
       let lacteos;
       fetch('/ventas/api_lacteossemanal/')
       .then(response => response.json())
       .then(data => {
         data.map(val => {
-          let fila = `<tr><td>${val.producto_s}</td><td>${val.total_vendido}</td></tr>`;
-          //tableBody.append(fila)
+          let venta = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(val.total_ventas)
+          let fila = `<tr><td>${val.producto_s}</td><td>${val.total_vendido}</td><td>${venta}</td></tr>`;
           $('#tablaLacteos_tbody').append(fila)
           // console.log('fila a agregar: ', fila)
         })
@@ -566,13 +574,13 @@
 
 
     // Line chart
-    $('.peity-line').peity('line');
+    //$('.peity-line').peity('line');
 
     // Bar charts
-    $('.peity-bar').peity('bar');
+    //$('.peity-bar').peity('bar');
 
     // Bar charts
-    $('.peity-donut').peity('donut');
+    //$('.peity-donut').peity('donut');
 
     // var ctx5 = document.getElementById('chartBar5').getContext('2d');
     // new Chart(ctx5, {
@@ -623,33 +631,33 @@
     // });
 
     // Donut Chart
-    var datapie = {
-      labels: ['Search', 'Email', 'Referral', 'Social', 'Other'],
-      datasets: [{
-        data: [25,20,30,15,10],
-        backgroundColor: ['#6f42c1', '#007bff','#17a2b8','#00cccc','#adb2bd']
-      }]
-    };
+    // var datapie = {
+    //   labels: ['Search', 'Email', 'Referral', 'Social', 'Other'],
+    //   datasets: [{
+    //     data: [25,20,30,15,10],
+    //     backgroundColor: ['#6f42c1', '#007bff','#17a2b8','#00cccc','#adb2bd']
+    //   }]
+    // };
 
-    var optionpie = {
-      maintainAspectRatio: false,
-      responsive: true,
-      legend: {
-        display: false,
-      },
-      animation: {
-        animateScale: true,
-        animateRotate: true
-      }
-    };
+    // var optionpie = {
+    //   maintainAspectRatio: false,
+    //   responsive: true,
+    //   legend: {
+    //     display: false,
+    //   },
+    //   animation: {
+    //     animateScale: true,
+    //     animateRotate: true
+    //   }
+    // };
 
     // For a doughnut chart
-    var ctxpie= document.getElementById('chartDonut');
-    var myPieChart6 = new Chart(ctxpie, {
-      type: 'doughnut',
-      data: datapie,
-      options: optionpie
-    });
+    // var ctxpie= document.getElementById('chartDonut');
+    // var myPieChart6 = new Chart(ctxpie, {
+    //  type: 'doughnut',
+    //  data: datapie,
+    //  options: optionpie
+    // });
 
   });
 </script>

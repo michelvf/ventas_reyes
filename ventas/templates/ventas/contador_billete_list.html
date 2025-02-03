@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}| Listado del Contador de Billetes{% endblock title %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+      <h2 class="az-dashboard-title">Listado del Contador de Billetes</h2>
+      <p class="az-dashboard-text">Las veces que contaste los billetes, ordenados por fechas.</p>
+    </div>
+    <div class="az-content-header-right">
+        <a href="{% url 'calculadora_billetes' %}">
+            <button class="btn btn-primary">Agregar</button>
+        </a>
+    </div>
+  </div><!-- az-dashboard-one-title -->
+ <div>
+    {% if billetes %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Comentario</th>
+                    <th>Monto Total</th>
+                    <th>$1 </th>
+                    <th>$3 </th>
+                    <th>$5 </th>
+                    <th>$10 </th>
+                    <th>$20 </th>
+                    <th>$50 </th>
+                    <th>$100 </th>
+                    <th>$200 </th>
+                    <th>$500 </th>
+                    <th>$1000 </th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for billete in billetes %}
+                    <tr>
+                        <td>{{ billete.fecha|date:"d b Y h:i a" }}</td>
+                        <td>{{ billete.comentario }}</td>
+                        <td>$ {{ billete.total }}</td>
+                        <td>{{ billete.un_peso }}</td>
+                        <td>{{ billete.tres_pesos }}</td>
+                        <td>{{ billete.cinco_pesos }}</td>
+                        <td>{{ billete.diez_pesos }}</td>
+                        <td>{{ billete.veinte_pesos }}</td>
+                        <td>{{ billete.cincuenta_pesos }}</td>
+                        <td>{{ billete.cien_pesos }}</td>
+                        <td>{{ billete.doscientos_pesos }}</td>
+                        <td>{{ billete.quinientos_pesos }}</td>
+                        <td>{{ billete.mil_pesos }}</td>
+                        <td><a href="{% url 'editar_calculadora_billetes' billete.id %}"><button class='btn btn-primary'>Editar</button></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aún no hay registros.</p>
+    {% endif %}
+ </div> 
+
+{% endblock content %}

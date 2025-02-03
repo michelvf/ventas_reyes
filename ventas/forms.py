@@ -1,5 +1,6 @@
 from django import forms
-from .models import fileUpdate
+from .models import fileUpdate, Departamentos, Contador_billete
+
 
 class ExcelUploadForm(forms.Form):
     """
@@ -55,3 +56,63 @@ class ArchivoExcelForm(forms.ModelForm):
     class Meta:
         model = fileUpdate
         fields = ['archivo', 'fecha']
+
+
+class DepartamentosForm(forms.ModelForm):
+    """
+    Formulario para actualizar departamentos
+    """
+    class Meta:
+        model = Departamentos
+        fields = ['comentario', 'punto_de_venta']
+        widgets = {
+            'comentario': forms.Textarea(attrs={'class': 'form-control', 'cols': 40, 'rows':2})
+        }
+
+
+class CalculadoraBilletesForm(forms.ModelForm):
+    """
+    Formulario para el registro del Cálculo
+    """
+    class Meta:
+        model = Contador_billete
+        fields = ['total', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
+        widgets = {
+           "comentario": forms.Textarea(attrs={"class": "form-control col-9", "cols": 100, "rows": 4}),
+           "total": forms.HiddenInput(attrs={"class": "disable"}),
+        }
+        
+        
+    def __init__(self, *args, **kwargs):
+        super(CalculadoraBilletesForm, self).__init__(*args, **kwargs)
+        # self.fields['total'].widget = forms.HiddenInput()
+        self.fields['un_peso'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['un_peso'].required = False
+        self.fields['tres_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['tres_pesos'].required = False
+        self.fields['cinco_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cinco_pesos'].required = False
+        self.fields['diez_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['diez_pesos'].required = False
+        self.fields['veinte_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['veinte_pesos'].required = False
+        self.fields['cincuenta_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cincuenta_pesos'].required = False
+        self.fields['cien_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cien_pesos'].required = False
+        self.fields['doscientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['doscientos_pesos'].required = False
+        self.fields['quinientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['quinientos_pesos'].required = False
+        self.fields['mil_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['mil_pesos'].required = False
+        # self.fields['comentario'].widget = forms.Textarea(attrs={'class': 'form-control col-9', 'row': 4, 'cols': 100})
+        
+    
+    # total = forms.IntegerField(
+    #     widget=forms.HiddenInput(
+    #         attrs={
+    #             'class': 'disable',
+    #         }
+    #     )
+    # )

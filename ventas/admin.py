@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Productos, Ventas, Departamentos, fileUpdate
+from .models import Productos, Ventas, Departamentos, fileUpdate, Contador_billete
 
 class DepatoAdmin(admin.ModelAdmin):
     list_display = ['id', 'departamento']
@@ -26,3 +26,4 @@ admin.site.register(Productos, ProductAdmin)
 admin.site.register(Departamentos, DepatoAdmin)
 admin.site.register(Ventas, VentasAdmin)
 admin.site.register(fileUpdate, FicheroAdmin)
+admin.site.register(Contador_billete)
