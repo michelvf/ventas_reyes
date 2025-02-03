@@ -273,7 +273,7 @@ class NominaDePagoView(View):
                 fecha__range=[desde, hasta]
             ).order_by('fecha')
             # print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
-            print()
+            # print()
             
             # Hacer un arreglo con las fechas
             fechas = []

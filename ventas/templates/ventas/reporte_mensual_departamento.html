@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+{% endblock css%}
+
+{% block title %} | Reporte Mensual de Ventas por Departamento{% endblock title %}
+
+{% block content %}
+<h3 class="my-3">Reporte de Ventas por Departamento del mes: {{ fecha|date:"F" }} del {{ fecha|date:"Y" }}</h3>
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Departamento</th>
+                    <th class="text-center">Cantidad Vendida</th>
+                    <th class="text-right">Total Vendido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dia, departamentos in resumen_mensual.items %}
+                    {% for departamento, datos in departamentos.items %}
+                        {% if datos.cantidad_vendida != 0 %}
+                            <tr
+                            {% if forloop.counter0 == 0 %}
+                                style="border-top: 2px solid black;"
+                            {% endif %}
+                            >
+                                <td>{{ dia }} <span class='invisible'>{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}</span></td>
+                                <td>{{ departamento }}</td>
+                                <td class="text-center">{{ datos.cantidad_vendida }}</td>
+                                <td class="text-right">${{ datos.total_vendido|floatformat:"2g" }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+
+<script>
+// $('.table').Datatables();
+new DataTable('.table', {
+    language: language,
+    /*
+    ajax: {
+        url: '/ventas/api_prod_x_depto/',
+        dataSrc: ''
+    },
+    columns: [
+        { data: 'departamento'},
+        { data: 'num_prod'},
+    ], */
+    order: [[3, 'desc']],
+    pageLength: 20,
+});
+</script>
+{% endblock js %}

@@ -2,6 +2,27 @@ from django.db import models
 from django.utils import timezone
 
 
+class Lacteos(models.Model):
+    """
+    Los Lácteos de la entidad
+    """
+    nombre = models.CharField(max_length=50, blank=False, null=False)
+    descripcion = models.TextField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name_plural = "Lactetos"
+        
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["nombre"]),
+        ]        
+    
+    def __str__(self):
+        return self.nombre
+
 
 class fileUpdate(models.Model):
     """

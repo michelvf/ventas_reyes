@@ -1,5 +1,5 @@
 from django import forms
-from .models import fileUpdate, Departamentos, Contador_billete
+from .models import fileUpdate, Departamentos, Contador_billete, Lacteos
 
 
 class ExcelUploadForm(forms.Form):
@@ -81,8 +81,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
            "comentario": forms.Textarea(attrs={"class": "form-control col-9", "cols": 100, "rows": 4}),
            "total": forms.HiddenInput(attrs={"class": "disable"}),
         }
-        
-        
+          
     def __init__(self, *args, **kwargs):
         super(CalculadoraBilletesForm, self).__init__(*args, **kwargs)
         # self.fields['total'].widget = forms.HiddenInput()
@@ -108,7 +107,6 @@ class CalculadoraBilletesForm(forms.ModelForm):
         self.fields['mil_pesos'].required = False
         # self.fields['comentario'].widget = forms.Textarea(attrs={'class': 'form-control col-9', 'row': 4, 'cols': 100})
         
-    
     # total = forms.IntegerField(
     #     widget=forms.HiddenInput(
     #         attrs={
@@ -116,3 +114,15 @@ class CalculadoraBilletesForm(forms.ModelForm):
     #         }
     #     )
     # )
+
+class LacteosForm(forms.ModelForm):
+    """
+    Fromulario para los Láteos
+    """
+    class Meta:
+        model = Lacteos
+        fields = ['nombre', 'descripcion']
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class":"form-control"}),
+            "descripcion": forms.Textarea(attrs={"class":"form-control", "rows": 2  })
+        }

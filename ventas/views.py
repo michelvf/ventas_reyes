@@ -6,13 +6,13 @@ import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
 from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
-from .forms import CalculadoraBilletesForm
+from .forms import CalculadoraBilletesForm, LacteosForm
 from django.views.generic.edit import FormView
-from rest_framework.views import APIView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
+from .models import Lacteos
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -20,7 +20,8 @@ from django.views import View
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
+from django.utils import timezone
+from django.db.models import Sum, F
 
 # Index Page
 class IndexView(TemplateView):
@@ -516,6 +517,111 @@ class VentasSemanalesView(WeekArchiveView):
     date_field= "fecha"
     week_format= "%W"
     allow_future = True
+
+
+# ¿Qué dia se vende más?
+class DiaQueVendeMas(TemplateView):
+    template_name = 'ventas/reporte_dia_vende_mas.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ahora = timezone.now()
+        inicio_mes = ahora.replace(day=1)
+    #     fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+        
+    #     ventas_mensuales = Ventas.objects.filter(
+    #             fecha__gte=inicio_mes,
+    #             fecha__lte=fin_mes,
+    #             id_producto__id_departamento__punto_de_venta=True
+    #         ).values(
+    #             'fecha'
+    #         ).annotate(
+    #             venta_cantidad=Sum('cantidad'),
+    #             venta_total=Sum('calculo')
+    #         )
+
+    #     print(f"ventas por días: {ventas_mensuales}")
+    #     # Crear un diccionario para almacenar los resultados
+    #     resumen_mensual = {}
+
+    #     context['resumen_mensual'] = ventas_mensuales
+        context['fecha'] =  inicio_mes
+            
+        return context
+
+# ¿En qué punto de venta se vende más?
+class DondeSeVendeMas(TemplateView):
+    template_name = 'ventas/reporte_mensual_departamento.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ahora = timezone.now()
+        inicio_mes = ahora.replace(day=1)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+        # print(f"ahora: {ahora}, inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+        
+        # Obtener ventas del mes actual
+        ventas_mensuales = Ventas.objects.filter(fecha__gte=inicio_mes, fecha__lte=fin_mes, id_producto__id_departamento__punto_de_venta=True)
+
+        # Crear un diccionario para almacenar los resultados
+        resumen_mensual = {}
+
+        # Inicializar el diccionario con los días y departamentos
+        for i in range((fin_mes - inicio_mes).days + 1):
+            dia = inicio_mes + datetime.timedelta(days=i)
+            resumen_mensual[dia.strftime('%d')] = {}
+            for departamento in Departamentos.objects.filter(punto_de_venta=True):
+                resumen_mensual[dia.strftime('%d')][departamento.departamento] = {
+                    'cantidad_vendida': 0,
+                    'total_vendido': 0
+                }
+
+        # print(resumen_mensual)
+        # Rellenar el diccionario con los datos de ventas
+        for venta in ventas_mensuales:
+            dia = venta.fecha.strftime('%d')
+            departamento = venta.id_producto.id_departamento.departamento
+            resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
+            resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
+
+        context['resumen_mensual'] = resumen_mensual
+        context['fecha'] =  inicio_mes
+        return context
+
+
+class LacteosListView(ListView):
+    """
+    Listar los lácteos
+    """
+    model = Lacteos
+    template_name = 'ventas/lacteos_listview.html' 
+
+
+class LacteosCreate(CreateView):
+    """
+    Crear nuevos acteos
+    """
+    model = Lacteos
+    form_class = LacteosForm
+    template_name = 'ventas/lacteos_form.html'
+    success_url= "/ventas/listado_lacteos/"
+    success_message= "%(name)s was created successfully"
+
+
+class LacteosUpdate(UpdateView):
+    """
+    Crear nuevos acteos
+    """
+    model = Lacteos
+    form_class = LacteosForm
+    template_name = 'ventas/lacteos_form.html'
+    success_url= "/ventas/listado_lacteos/"
+    success_message= "%(name)s was created successfully"
+    
+    
+# ventas de lácteos, por departamentos
+# ventas por departamentos
+# dpto Don Reyes, no sale el helado 0250 lts
 
 
 """

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Crear|Editar Lácteos{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<h2>Los 10 productos más vendidos</h2>
+<div class="row">
+    <div class="col-10">
+        <form method="POST" id="rangoDeFechas">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Agregar">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock js %}
+         

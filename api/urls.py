@@ -23,6 +23,8 @@ router.register(prefix="compra", viewset=CompraApiView, basename="compra")
 router.register(prefix="nomina_departamentos", viewset=NominaDepartamentosApiView, basename="nomina_departamentos")
 router.register(prefix="nomina_cargos", viewset=NominaCargoApiView, basename="nomina_cargos")
 
+######## Resumen #########
+
 
 # Están en ventas.urls
 # urlpatterns = [

@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+{% endblock css%}
+
+{% block title %} | Reporte Mensual de Ventas por Día{% endblock title %}
+
+{% block content %}
+<h3 class="my-3">Reporte de Ventas por días del mes: {{ fecha|date:"F"|capfirst }} del {{ fecha|date:"Y" }}</h3>
+<div class="row mb-4">
+    <div class="col-12">
+        <form>
+            <div class="row row-sm">
+                <div class="col-md-5 col-lg-4">
+                  <label class="form-control-label">Año:</label>
+                  <select id="anno_select" class="form-control select2-no-search select2-hidden-accessible">
+                    
+                  </select>
+                </div><!-- col -->
+                <div class="col-md-5 col-lg-4 mg-t-20 mg-md-t-0">
+                  <label class="form-control-label">Mes:</label>
+                  <select id="mes_select" class="form-control select2-no-search select2-hidden-accessible">
+                    <option><- Escoja un año</option>
+                  </select>
+                </div><!-- col -->
+              </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <p>Gráfico</p>
+        <div style="height: 300px; width: 100%;">
+            <canvas id="grafico" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Cantidad Vendida</th>
+                    <th class="text-right">Total Vendido</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+
+<script>
+
+    // Llenar el select de los años
+    fetch('/resumen/anno_venta')
+    .then(response => response.json())
+    .then(data => {
+        const select = document.getElementById('anno_select');
+        select.innerHTML = '';
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = '';
+        opcionDefault.textContent = 'Selecciona una opción';
+        select.appendChild(opcionDefault);
+        data.forEach(valor => {
+            const optionElement = document.createElement('option');
+            optionElement.value = valor.anno; // Usa el valor que corresponda (ej: id)
+            optionElement.textContent = valor.anno; // Usa el texto que corresponda (ej: nombre)
+            select.appendChild(optionElement);
+            // console.log(`años registrados: ${valor.anno}`)
+        })
+    })
+
+    // Esperar a que seleccione un año y escoger los meses de año
+    const annoSelect = document.getElementById('anno_select')
+    annoSelect.addEventListener('change', function() {
+        const year = this.value;
+        if (year) {
+            // console.log(`llegó el año: ${year}, ahora a buscar los meses.`)
+            // Buscar los meses del año escogido
+            fetchMeses(year);
+        }
+    });
+
+    // espera a que se escoga un mes
+    const mesSelect = document.getElementById('mes_select')
+    mesSelect.addEventListener('change', function() {
+        const mes = this.value;
+        if (mes) {
+            //console.log(`llegó el año: ${year}, ahora a buscar los meses.`)
+            anno = annoSelect.value
+            reporte_por_dia(anno, mes);
+        }
+    });
+
+    function fetchMeses(year) {
+        // console.log(`Buscar Mes del año: ${year}`);
+        fetch('/resumen/anno_venta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },  
+            body: JSON.stringify({
+                anno: year,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(`Llegan los meses: ${data} del año: ${year}`)
+            const select = document.getElementById('mes_select');
+            select.innerHTML = '';
+            const opcionDefault = document.createElement('option');
+            opcionDefault.value = '';
+            opcionDefault.textContent = 'Selecciona una opción';
+            select.appendChild(opcionDefault);
+            data.forEach(valor => {
+                const optionElement = document.createElement('option');
+                optionElement.value = moment(valor.meses).format('M'); // Usa el valor que corresponda (ej: id)
+                optionElement.textContent = moment(valor.meses).format('MMMM'); // Usa el texto que corresponda (ej: nombre)
+                select.appendChild(optionElement);
+                // console.log(`años registrados: ${valor.anno}`)
+            })
+        });
+    }
+
+function formar_moneda(data) {
+    valor = new Intl.NumberFormat('en', { currency: 'USD', style: 'currency'}).format(data)
+    if (data > 0) {
+        return '<span class="positivo">' + valor + '</span>';
+        // return data;
+    } else if (data < 0) {
+        return '<span class="negativo">' + valor + '</span>';
+        // return data;
+    } else {
+        return '<span class="cero">' + valor + '</span>';
+    }
+}
+
+function formatDate(d){
+    moment.locale('es', {
+        months : 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+        monthsShort : 'ene._feb._mar_abr._mar_jun_jul._ago_sept._oct._nov._dic.'.split('_'),
+        monthsParseExact : true,
+        weekdays : 'domingo_lunes_martes_miércoles_jueves_vierns_sábado'.split('_'),
+        weekdaysShort : 'dom._lun._mar._mir._jue._vie._sab.'.split('_'),
+        weekdaysMin : 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_'),
+        weekdaysParseExact : true,
+    })
+    return moment(d).utc().format('dd DD MMM YY') 
+}
+
+function reporte_por_dia(anno, mes) {
+    // console.log(`llega mes y año para buscar: ${anno} - ${mes}`)
+    fetch('/resumen/dia_mas_venta/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },  
+        body: JSON.stringify({
+            anno: anno,
+            mes: mes,
+        }),
+    })
+    .then(request => request.json())
+    .then(data => {
+        // console.log(data)
+        Tabla(data)
+        Grafico(data)
+    })
+}
+
+new DataTable('.table', {
+    language: language,
+
+    ajax: {
+        url: '/resumen/dia_mas_venta/',
+        dataSrc: ''
+    },
+    columns: [
+        { data: 'fecha',
+            "render": function (data, type, full) {
+                return moment(data).format('DD');
+            }
+        },
+        { data: 'venta_cantidad' },
+        { data: 'venta_total',
+            'sClass': 'right dt-type-numeric',
+                render: function (data, type, full, meta ) {
+                    return formar_moneda(data)
+                }
+        },
+    ],
+    /* */
+    order: [[3, 'desc']],
+    pageLength: 20,
+});
+
+function Grafico(data) {
+    // function Grafico() {
+      const ctx = document.getElementById('grafico').getContext('2d');
+      // const ctx = document.getElementById('grafico');
+
+      if(this.graf) {
+           this.graf.destroy()
+      }
+
+      var gradient2 = ctx.createLinearGradient(0, 280, 0, 0);
+      gradient2.addColorStop(0, 'rgba(0,123,255,0)');
+      gradient2.addColorStop(1, 'rgba(0,123,255,.3)');
+
+      if(data) {
+          graf = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              // labels: ['algo', 'algo', 'algo', 'algo', 'algo', 'algo', 'algo'],
+              labels: data.map(label => formatDate(label.fecha)),
+              datasets: [
+                {
+                    label: 'Ventas diarias en un mes',
+                    data: data.map(value => value.venta_total),
+                    //fill: false,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 1,
+                }
+              ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        // position: 'top',
+                        display: false,
+                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Ventas diarias en un mes'
+                    // }
+                },
+                maintainAspectRatio: false,
+            } 
+        });
+      }
+    }
+</script>
+{% endblock js %}
