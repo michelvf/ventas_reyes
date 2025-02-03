@@ -9,7 +9,7 @@
 {% block title %} | Reporte Mensual de Ventas por Departamento{% endblock title %}
 
 {% block content %}
-<h3 class="my-3">Reporte Mensual de Ventas por Departamento</h3>
+<h3 class="my-3">Reporte de Ventas por Departamento del mes: {{ fecha|date:"F" }} del {{ fecha|date:"Y" }}</h3>
 <div class="row">
     <div class="col-12">
         <table class="table">
@@ -25,11 +25,15 @@
                 {% for dia, departamentos in resumen_mensual.items %}
                     {% for departamento, datos in departamentos.items %}
                         {% if datos.cantidad_vendida != 0 %}
-                            <tr>
-                                <td>{{ dia }}</td>
+                            <tr
+                            {% if forloop.counter0 == 0 %}
+                                style="border-top: 2px solid black;"
+                            {% endif %}
+                            >
+                                <td>{{ dia }} <span class='invisible'>{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}</span></td>
                                 <td>{{ departamento }}</td>
                                 <td class="text-center">{{ datos.cantidad_vendida }}</td>
-                                <td class="text-right">{{ datos.total_vendido }}</td>
+                                <td class="text-right">${{ datos.total_vendido|floatformat:"2g" }}</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -59,7 +63,7 @@ new DataTable('.table', {
         { data: 'departamento'},
         { data: 'num_prod'},
     ], */
-    order: [[1, 'desc']],
+    order: [[3, 'desc']],
     pageLength: 20,
 });
 </script>

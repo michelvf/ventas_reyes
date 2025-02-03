@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}| Listado de los lácteos de la entidad{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+
+<h3 class="my-3" style="width: 100%;">Listado de Lacteos de la Entidad</h3>
+<p>Este listado es para que el Sistema Web sepa qué palabras buscar para obntener los productos lácteos. Ojo, es el principio de la palabra, si se desea coincidencia con la palabra Yogurt, con poner Yogur, basta, y así con los demás productos. Por lo general, los productos Lácteos comienzan el nombre del producto, ejemplo: Yogurt Sabor</p>
+<div class="row">
+    <div class="col">
+        <div class="d-flex flex-row justify-content-end">
+            <a href="{% url 'crear_lacteos' %}">
+                <button class="btn btn-primary">Agregar</button>
+            </a>
+        </div>
+        {% if object_list %}
+        <table id="lacteos" class="display table table-striped table-hover table-bordered mt-3" >
+            <thead>
+                <tr>
+                    <th>Lácteos</th>
+                    <th>Descripción</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lacteo in object_list %}
+                <tr>
+                    <td>{{ lacteo.nombre }}</td>
+                    <td>{{ lacteo.descripcion }}</td>
+                    <td>
+                        <a href="{% url 'editar_lacteos' lacteo.id %}">
+                            <button class="btn btn-primary">
+                                Editar
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <!-- tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot -->
+        </table>
+        {% else %}
+            No hay datos por el momento.
+        {% endif%}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

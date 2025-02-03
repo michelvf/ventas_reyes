@@ -4,22 +4,24 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework import authentication
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Lacteos
 from .serializers import DepartamentoSerializer, ProductosSerializer
-from .serializers import VentaSerializer, VentasPorFechasSerializer
+from .serializers import VentaSerializer, VentasPorFechasSerializer, AnnosDeVentaSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
-from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer
+from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer, AnnoSerializer
 from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
-from .serializers import NominaDepartamentoSerializer
+from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
-from .serializers import PrecioProductoSerializer, NominaCargoSerializer
+from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
 from datetime import timedelta, datetime
+from django.db.models.functions import ExtractYear, TruncMonth
+import pytz
 
 
 # Create your views here.
@@ -144,10 +146,11 @@ class LacteosAPI(APIView):
 
     def post(self, request, format=None):
         serializer = ProdMasVendidosVarSerializer(data=request.data)
-        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        # lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE', 'QUE']
+        lacteos = Lacteos.objects.all().values('nombre')
         condiciones = Q()
         for palabra in lacteos:
-            condiciones |= Q(id_producto__producto__istartswith=palabra)
+            condiciones |= Q(id_producto__producto__istartswith=palabra['nombre'])
             # condiciones |= Q(id_producto__producto__startswith=palabra)
             # condiciones |= Q(id_producto__producto__icontains=palabra)
             # condiciones |= Q(id_producto__producto__contains=palabra)
@@ -180,7 +183,8 @@ class LacteosSemanaAPI(APIView):
     API to show the best selling weekly products
     """
     def get(self, request):
-        lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE']
+        # lacteos = ['YOGUR','HELA','REQ','SUER','ENERG','PALE', 'QUESO']
+        lacteos = Lacteos.objects.all().values('nombre')
         condiciones = Q()
         departamento_punto_venta = True
         # Buscando la ultima fecha
@@ -191,7 +195,7 @@ class LacteosSemanaAPI(APIView):
         #to_day = datetime.now()
         #a_week = datetime.now() + timedelta(days=-7)
         for palabra in lacteos:
-            condiciones |= Q(id_producto__producto__istartswith=palabra)
+            condiciones |= Q(id_producto__producto__istartswith=palabra['nombre'])
         lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
             producto_s=Substr('id_producto__producto', 1, 20),
         ).filter(
@@ -330,4 +334,92 @@ class NominaCargoApiView(viewsets.ReadOnlyModelViewSet):
     queryset = Cargo.objects.all()
     serializer_class = NominaCargoSerializer
     
+
+# ¿Qué dia se vende más?
+class DiaQueVendeMas(APIView):
+    """
+    API Día que más venden
+    """
     
+    def get(self, request):
+        ahora = timezone.now()
+        inicio_mes = ahora.replace(day=1, hour=1)
+        fin_mes = (inicio_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        
+        ventas_mensuales = Ventas.objects.filter(
+                fecha__gte=inicio_mes,
+                fecha__lte=fin_mes,
+                id_producto__id_departamento__punto_de_venta=True
+            ).values(
+                'fecha'
+            ).annotate(
+                venta_cantidad=Sum('cantidad'),
+                venta_total=Sum('calculo')
+            )
+
+        serializer = DiaQueMasVendeSerializar(ventas_mensuales, many=True)
+        
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AnnosDeVentaSerializer(data=request.data)
+        zona_horaria = pytz.timezone('America/Havana')
+        if serializer.is_valid():
+            anno = serializer.validated_data['anno']
+            mes = serializer.validated_data['mes']
+            ahora = timezone.now()
+            inicio_mes = ahora.replace(day=1, hour=1, month=mes, year=anno)
+            fin_mes = (inicio_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        
+            ventas_mensuales = Ventas.objects.filter(
+                fecha__gte=inicio_mes,
+                fecha__lte=fin_mes,
+                id_producto__id_departamento__punto_de_venta=True
+            ).values(
+                'fecha'
+            ).annotate(
+                venta_cantidad=Sum('cantidad'),
+                venta_total=Sum('calculo')
+            )
+            
+        serializer = DiaQueMasVendeSerializar(ventas_mensuales, many=True)
+        
+        return Response(serializer.data)
+
+
+
+class AnnosDeVenta(APIView):
+    """
+    Años de Ventas
+    """
+    def get(self, request):
+        # Annotate the queryset with the year extracted from the date field
+        queryset = Ventas.objects.annotate(
+            anno=ExtractYear('fecha')
+        ).values('anno').annotate(
+            cant_vendida=Count('id')
+        ).order_by('anno')  # Order by year in descending order
+
+        serializer = AnnosDeVentaSerializer(queryset, many=True)
+        
+        return Response(serializer.data)
+    
+    authentication_classes = [authentication.TokenAuthentication]
+
+    def post(self, request, format=None):
+        serializer = AnnoSerializer(data=request.data)
+        zona_horaria = pytz.timezone('America/Havana')
+        if serializer.is_valid():
+            anno = serializer.validated_data['anno']
+            # ano = int(anno)
+            inicio = datetime(anno, 1, 1, tzinfo=zona_horaria)
+            fin = datetime(anno, 12, 31, tzinfo=zona_horaria)
+            meses = Ventas.objects.filter(fecha__range=(inicio, fin)) \
+            .annotate(meses=TruncMonth('fecha')) \
+            .values('meses') \
+            .annotate(ventas=Count('id')) \
+            .order_by('meses')
+            serializer_other = MesesSerializer(meses, many=True)
+            # return Response(ventas_fecha.values(), status=status.HTTP_200_OK)
+            return Response(serializer_other.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

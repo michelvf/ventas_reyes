@@ -212,3 +212,35 @@ class NominaCargoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cargo
         fields = ('id', 'cargo', 'comentario')
+        
+
+class DiaQueMasVendeSerializar(serializers.Serializer):
+    """
+    Serializer for more Sales by Days
+    """
+    fecha = serializers.DateTimeField()
+    venta_cantidad = serializers.DecimalField(max_digits=10, decimal_places=2) 
+    venta_total = serializers.DecimalField(max_digits=10, decimal_places=2)
+    
+
+class AnnosDeVentaSerializer(serializers.Serializer):
+    """
+    Años de Ventas
+    """
+    anno = serializers.IntegerField()
+    cant_vendida = serializers.IntegerField()
+
+
+class AnnoSerializer(serializers.Serializer):
+    """
+    Serializer for Ventas with year
+    """
+    anno = serializers.IntegerField()
+
+
+class MesesSerializer(serializers.Serializer):
+    """
+    Meses de Ventas
+    """
+    meses = serializers.DateTimeField()
+    ventas = serializers.IntegerField()

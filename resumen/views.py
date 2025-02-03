@@ -68,10 +68,10 @@ class Estadistica(View):
         suma_trimestre += venta.calculo
         suma_anno += venta.calculo
         if semana != semana1:
-            print(f"semana: {semana}-{anno}, sumatoria: {suma_semana} -- {fecha.strftime('%d/%m/%Y')}")
+            # print(f"semana: {semana}-{anno}, sumatoria: {suma_semana} -- {fecha.strftime('%d/%m/%Y')}")
             semana1 = semana
             suma_semana = 0
         if mes1 != mes:
-            print(f"mes: {mes}-{anno}, sumatoria: {suma_mes} -- {fecha.strftime('%d/%m/%Y')}")
+            # print(f"mes: {mes}-{anno}, sumatoria: {suma_mes} -- {fecha.strftime('%d/%m/%Y')}")
             mes1 = mes
             suma_mes = 0

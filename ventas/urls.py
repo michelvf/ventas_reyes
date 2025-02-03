@@ -5,6 +5,7 @@ from .views import LacteosVendidos, ProdMasVendido, ListadoFicherosSubidos
 from .views import  BackupRestoreSQLiteView, CalculadoraBilletes, DepartamentoUpdateView
 from .views import VentasAnualesView, VentasMensualesView, VentasSemanalesView
 from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVendeMas
+from .views import DiaQueVendeMas, LacteosListView, LacteosCreate, LacteosUpdate
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI
@@ -28,6 +29,11 @@ urlpatterns = [
     path('mostrar_conteo_billetes/', ShowContadorBilletes.as_view(), name='mostrar_conteo_billetes'),
     path('editar_calculadora_billetes/<int:pk>/', EditarCalculadoraBilletes.as_view(), name='editar_calculadora_billetes'),
     path('reporte-mensual-departamento/', DondeSeVendeMas.as_view(), name='reporte_mensual_departamento'),
+    path('reporte-venta-mensual/', DiaQueVendeMas.as_view(), name='reporte_venta_mensual'),
+    path('listado_lacteos/', LacteosListView.as_view(), name='listado_lacteos'),
+    path('crear_lacteos/', LacteosCreate.as_view(), name='crear_lacteos'),
+    path('editar_lacteos/<int:pk>', LacteosUpdate.as_view(), name='editar_lacteos'),
+    
     path("<int:year>/", VentasAnualesView.as_view(), name="ventas_anuales"),
     path("<int:year>/<int:month>/", VentasMensualesView.as_view(month_format="%m"), name="ventas_mensuales"),
     path("<int:year>/week/<int:week>/", VentasSemanalesView.as_view(), name="ventas_semanales"),

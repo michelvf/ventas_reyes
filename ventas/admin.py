@@ -2,6 +2,13 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import Productos, Ventas, Departamentos, fileUpdate, Contador_billete
+from .models import Lacteos
+
+
+class LacteosAdmin(admin.ModelAdmin):
+    list_display = ['id', 'nombre', 'descripcion']
+    search_fields = ['nombre']
+
 
 class DepatoAdmin(admin.ModelAdmin):
     list_display = ['id', 'departamento']
@@ -27,3 +34,4 @@ admin.site.register(Departamentos, DepatoAdmin)
 admin.site.register(Ventas, VentasAdmin)
 admin.site.register(fileUpdate, FicheroAdmin)
 admin.site.register(Contador_billete)
+admin.site.register(Lacteos, LacteosAdmin)
