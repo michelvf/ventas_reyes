@@ -622,7 +622,7 @@ class LacteosUpdate(UpdateView):
 # ventas de lácteos, por departamentos
 # ventas por departamentos
 # dpto Don Reyes, no sale el helado 0250 lts
-
+    
 
 """
 Punto la Parada:
