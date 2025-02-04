@@ -6,7 +6,7 @@ import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
 from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
-from .forms import CalculadoraBilletesForm, LacteosForm
+from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
@@ -464,7 +464,7 @@ class CalculadoraBilletes(View):
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
         billetes = request.POST
-        print(f"llegaron del POST: {billetes}")
+        # print(f"llegaron del POST: {billetes}")
         
         if form.is_valid():
             form.cleaned_data
@@ -545,18 +545,23 @@ class DiaQueVendeMas(TemplateView):
         return context
 
 # ¿En qué punto de venta se vende más?
-class DondeSeVendeMas(TemplateView):
+class DondeSeVendeMas(View):
+    """
+    Dónde se vende más por Puntos de Ventas, se escoge la fecha a buscar
+    """
     template_name = 'ventas/reporte_mensual_departamento.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        ahora = timezone.now()
-        inicio_mes = ahora.replace(day=1)
+    def buscar_y_calcular(self, fecha_entrada):
+        inicio_mes = fecha_entrada.replace(day=1, month=1)
         fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
         # print(f"ahora: {ahora}, inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
         
         # Obtener ventas del mes actual
-        ventas_mensuales = Ventas.objects.filter(fecha__gte=inicio_mes, fecha__lte=fin_mes, id_producto__id_departamento__punto_de_venta=True)
+        ventas_mensuales = Ventas.objects.filter(
+            fecha__gte=inicio_mes,
+            fecha__lte=fin_mes,
+            id_producto__id_departamento__punto_de_venta=True
+        )
 
         # Crear un diccionario para almacenar los resultados
         resumen_mensual = {}
@@ -579,9 +584,39 @@ class DondeSeVendeMas(TemplateView):
             resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
             resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
 
-        context['resumen_mensual'] = resumen_mensual
-        context['fecha'] =  inicio_mes
-        return context
+        return resumen_mensual
+        
+    
+    def get(self, request, *args, **kwargs):
+        # context = super().get_context_data(**kwargs)
+        ahora = timezone.now()
+        context = {}
+        context['fecha'] =  ahora
+        context['resumen_mensual'] = self.buscar_y_calcular(ahora)
+        
+        return render(request, 'ventas/reporte_mensual_departamento.html', context)
+    
+    
+    def post(self, request, *args, **kwargs):
+        # form = DondeSeVendeMasForm(request.POST)
+        # if form.is_valid():
+        if request.method == "POST":
+            # context = super().get_context_data(**kwargs)
+            # form.cleaned_data
+            print("request: ", request.POST)
+            anno = request.POST.get('anno')
+            mes = request.POST.get('mes')
+            
+            # anno = request.POST['anno']
+            # mes = request.POST  ['mes']
+            print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
+            fecha = datetime.datetime(year=anno, month=mes,day=1)
+            
+            context = {}
+            context['fecha'] =  fecha
+            context['resumen_mensual'] = self.buscar_y_calcular(fecha)
+        
+            return render(request, 'ventas/reporte_mensual_departamento.html', context)
 
 
 class LacteosListView(ListView):
@@ -617,7 +652,7 @@ class LacteosUpdate(UpdateView):
 # ventas de lácteos, por departamentos
 # ventas por departamentos
 # dpto Don Reyes, no sale el helado 0250 lts
-    
+
 
 """
 Punto la Parada:
