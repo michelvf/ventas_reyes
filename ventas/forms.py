@@ -129,7 +129,7 @@ class LacteosForm(forms.ModelForm):
         }
 
 
-class DondeSeVendeMasForm(forms.ModelForm):
+class DondeSeVendeMasForm(forms.Form):
     """
     Formulario para lo más vendido
     """
