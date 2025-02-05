@@ -21,14 +21,16 @@ def actualizar_resumen_ventas(sender, instance, **kwargs):
     inicio_año = ahora.replace(month=1, day=1)
     
     totales = {
-        'semanal': Ventas.objects.filter(fecha_venta__gte=inicio_semana).aggregate(total=Sum('total_vendido'))['total'],
-        'mensual': Ventas.objects.filter(fecha_venta__gte=inicio_mes).aggregate(total=Sum('total_vendido'))['total'],
-        'trimestral': Ventas.objects.filter(fecha_venta__gte=inicio_trimestre).aggregate(total=Sum('total_vendido'))['total'],
-        'semestral': Ventas.objects.filter(fecha_venta__gte=inicio_semestre).aggregate(total=Sum('total_vendido'))['total'],
-        'anual': Ventas.objects.filter(fecha_venta__gte=inicio_año).aggregate(total=Sum('total_vendido'))['total'],
+        'semanal': Ventas.objects.filter(fecha__gte=inicio_semana).aggregate(total=Sum('calculo'))['total'],
+        'mensual': Ventas.objects.filter(fecha__gte=inicio_mes).aggregate(total=Sum('calculo'))['total'],
+        'trimestral': Ventas.objects.filter(fecha__gte=inicio_trimestre).aggregate(total=Sum('calculo'))['total'],
+        'semestral': Ventas.objects.filter(fecha__gte=inicio_semestre).aggregate(total=Sum('calculo'))['total'],
+        'anual': Ventas.objects.filter(fecha__gte=inicio_año).aggregate(total=Sum('calculo'))['total'],
     }
 
     for periodo, total in totales.items():
-        resumen, creado = ResumenVentas.objects.get_or_create(periodo=periodo)
-        resumen.total_vendido = total or 0
-        resumen.save()
+        print(f"Período: {periodo}, Total: {total}")
+        resumen, creado = ResumenVentas.objects.get_or_create(periodo=periodo, total_vendido=total or 0)
+        print('El dúo, resumen: {resumen}, creado: {creado}')
+        # resumen.total_vendido = total or 0
+        # resumen.save()

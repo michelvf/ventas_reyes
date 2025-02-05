@@ -129,9 +129,9 @@ class LacteosForm(forms.ModelForm):
         }
 
 
-class DondeSeVendeMasForm(forms.ModelForm):
+class DondeSeVendeMasForm(forms.Form):
     """
     Formulario para lo más vendido
     """
-    anno = forms.IntegerField()
-    mes = forms.IntegerField()
+    anno = forms.CharField()
+    mes = forms.CharField()

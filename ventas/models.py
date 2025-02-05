@@ -29,7 +29,6 @@ class fileUpdate(models.Model):
     Modelo para saber la fecha de los ficheros que se han subido
     """
     archivo = models.FileField(upload_to='ficheros/')
-    # nombre = models.CharField(max_length=100)
     fecha = models.DateTimeField()
     actualizar = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)

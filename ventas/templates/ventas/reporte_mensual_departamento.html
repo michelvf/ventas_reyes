@@ -26,6 +26,9 @@
                     <option><- Escoja un año</option>
                   </select>
                 </div><!-- col -->
+                <div class="col-md-5 col-lg-4 d-flex align-items-end">
+                    <input class="btn btn-primary" type="submit" value="Solicitar" />
+                </div>
               </div>
         </form>
     </div>
@@ -103,17 +106,18 @@
      }
  });
 
- // espera a que se escoga un mes
- const mesSelect = document.getElementById('mes_select')
- mesSelect.addEventListener('change', function() {
-     const mes = this.value;
-     if (mes) {
-         //console.log(`llegó el año: ${year}, ahora a buscar los meses.`)
-         anno = annoSelect.value
-         // reporte_por_dia(anno, mes);
-         llamada_post(anno, mes);
-     }
- });
+
+// Espera a que se escoga un mes
+// mesSelect.addEventListener('change', function() {
+//     const mesSelect = document.getElementById('mes_select')
+//     const mes = this.value;
+//     if (mes) {
+//         //console.log(`llegó el año: ${year}, ahora a buscar los meses.`)
+//         anno = annoSelect.value
+//         // reporte_por_dia(anno, mes);
+//         llamada_post(anno, mes);
+//     }
+// });
 
  function fetchMeses(year) {
      // console.log(`Buscar Mes del año: ${year}`);
@@ -184,6 +188,7 @@ function format2Date(d){
  return moment(d).utc().format('dd DD') 
 }
 
+/*
 function llamada_post(anno, mes) {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const headers = new Headers({
@@ -200,11 +205,12 @@ function llamada_post(anno, mes) {
         body: JSON.stringify({ anno: anno, mes: mes }),
         // body: formData,
     })
-    .then( response => response.json())
-    .then( response => {
-        console.log(response)
-    })
+    // .then( response => response.json())
+    // .then( response => {
+    //     console.log(response)
+    //})
 }
+*/
 
 
 function reporte_por_dia(anno, mes) {

@@ -157,6 +157,4 @@ class ResumenSemanal(forms.Form):
     """
     Formulario para recibir el rago de fechas
     """
-    # start_date = forms.DateField()
-    # end_date = forms.DateField()
     datefilter = forms.CharField()

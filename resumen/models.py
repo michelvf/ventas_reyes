@@ -2,6 +2,9 @@ from django.db import models
 
 # Create your models here.
 class ResumenVentas(models.Model):
+    """
+    Modelo Resumen de las Ventas, va a guardar las ventas en el tiempo
+    """
     periodo = models.CharField(max_length=100)
     total_vendido = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_actualizacion = models.DateTimeField(auto_now=True)

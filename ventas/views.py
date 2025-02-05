@@ -48,11 +48,12 @@ class ExcelUploadView(FormView):
         if form.is_valid():
             archivo_model = form.save()
             archivo_uri = archivo_model.archivo.url
+            # archivo_uri = form.archivo.url
             URI1 = settings.BASE_DIR
             fichero = f'{URI1}{archivo_uri}'
             fecha = request.POST['fecha']
             # print(f'La fecha que llega al POST es: {fecha}')
-            print(f'Lo que llega del POST: {request.POST}')
+            # print(f'Lo que llega del POST: {request.POST}')
             # actualizar = form.cleaned_data['actualizar']
             # print(f'actualizar tiene valor: {actualizar}')
             try:
@@ -63,16 +64,16 @@ class ExcelUploadView(FormView):
                 # df = pd.read_table(fichero, sep='\t', encoding='iso8859_2')
                 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
             except pd.errors.ParserError:
                 df = pd.read_excel(fichero) 
 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
                 excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
@@ -598,17 +599,16 @@ class DondeSeVendeMas(View):
     
     
     def post(self, request, *args, **kwargs):
-        # form = DondeSeVendeMasForm(request.POST)
-        # if form.is_valid():
-        if request.method == "POST":
+        form = DondeSeVendeMasForm(request.POST)
+        if form.is_valid():
+        # if request.method == "POST":
             # context = super().get_context_data(**kwargs)
             # form.cleaned_data
-            print("request: ", request.POST)
-            anno = request.POST.get('anno')
-            mes = request.POST.get('mes')
-            
-            # anno = request.POST['anno']
-            # mes = request.POST  ['mes']
+            #print("request: ", request.POST)
+            # anno = request.POST.get('anno')
+            # mes = request.POST.get('mes')
+            anno = form.clean_data['anno']
+            mes = form.clean_data['mes']
             print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
             fecha = datetime.datetime(year=anno, month=mes,day=1)
             
