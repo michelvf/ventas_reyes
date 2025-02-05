@@ -29,8 +29,8 @@ def actualizar_resumen_ventas(sender, instance, **kwargs):
     }
 
     for periodo, total in totales.items():
-        print(f"Período: {periodo}, Total: {total}")
+        # print(f"Período: {periodo}, Total: {total}")
         resumen, creado = ResumenVentas.objects.get_or_create(periodo=periodo, total_vendido=total or 0)
-        print('El dúo, resumen: {resumen}, creado: {creado}')
+        # print('El dúo, resumen: {resumen}, creado: {creado}')
         # resumen.total_vendido = total or 0
         # resumen.save()
