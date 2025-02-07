@@ -555,8 +555,8 @@ class DondeSeVendeMas(View):
 
     def buscar_y_calcular(self, fecha_entrada):
         print(f"en el procesamiento: la fecha que llega es: {fecha_entrada}")
-        inicio_mes = fecha_entrada.replace(day=1, month=1)
-        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
         print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
         
         # Obtener ventas del mes actual
@@ -586,6 +586,7 @@ class DondeSeVendeMas(View):
         for venta in ventas_mensuales:
             dia = venta.fecha.strftime('%d')
             departamento = venta.id_producto.id_departamento.departamento
+            print(f"Venta cantidad: {venta.cantidad}")
             resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
             resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
             #resumen_mensual[dia][departamento]['suma'] += resumen_mensual[dia][departamento]['total_vendido']
@@ -597,7 +598,7 @@ class DondeSeVendeMas(View):
         # context = super().get_context_data(**kwargs)
         ahora = timezone.now()
         context = {}
-        context['fecha'] =  ahora
+        context['fecha'] = ahora
         context['resumen_mensual'] = self.buscar_y_calcular(ahora)
         
         return render(request, 'ventas/reporte_mensual_departamento.html', context)
@@ -618,12 +619,12 @@ class DondeSeVendeMas(View):
             anno = form.cleaned_data['anno']
             mes = form.cleaned_data['mes']
             print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
-            zona_horaria = pytz.timezone('America/Havana')
-            fecha = datetime.datetime(year=anno, month=mes,day=1, tzinfo=zona_horaria)
+            fecha1 = timezone.now()
+            fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
             # fecha = datetime.datetime(year=anno, month=mes,day=1)
             print(f"fecha a enviar para procesamiento: {fecha}")
             context = {}
-            context['fecha'] =  fecha
+            context['fecha'] = fecha
             context['resumen_mensual'] = self.buscar_y_calcular(fecha)
             
             #print(f"voy a renderizar, el contexto es: {context}")

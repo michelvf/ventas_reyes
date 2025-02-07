@@ -58,7 +58,7 @@
                                 <td rowspan="{{ departamentos.items|length }}" class="text-center align-middle">{{ dia }} <span class='invisible'>{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}</span></td>
                                 {% endif %}
                                 <td>{{ departamento }}</td>
-                                <td class="text-center">{{ datos.cantidad_vendida }}</td>
+                                <td class="text-center">{{ datos.cantidad_vendida|floatformat:"2g" }}</td>
                                 <td class="text-right">${{ datos.total_vendido|floatformat:"2g" }}</td>
                                 <!-- td>${{datos.suma|floatformat:"2g"}}</td-->
                             </tr>
@@ -78,6 +78,16 @@
 <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
 
 <script>
+    moment.locale('es', {
+        months : 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+        monthsShort : 'ene._feb._mar_abr._mar_jun_jul._ago_sept._oct._nov._dic.'.split('_'),
+        monthsParseExact : true,
+        weekdays : 'domingo_lunes_martes_miércoles_jueves_vierns_sábado'.split('_'),
+        weekdaysShort : 'dom._lun._mar._mir._jue._vie._sab.'.split('_'),
+        weekdaysMin : 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_'),
+        weekdaysParseExact : true,
+    })
+
  // Llenar el select de los años
  fetch('/resumen/anno_venta')
  .then(response => response.json())
@@ -164,6 +174,7 @@ function formar_moneda(data) {
  }
 }
 
+/*
 function formatDate(d){
  moment.locale('es', {
      months : 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
@@ -190,7 +201,7 @@ function format2Date(d){
  return moment(d).utc().format('dd DD') 
 }
 
-/*
+
 function llamada_post(anno, mes) {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const headers = new Headers({
