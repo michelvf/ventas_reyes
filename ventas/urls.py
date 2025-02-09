@@ -8,7 +8,7 @@ from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVende
 from .views import DiaQueVendeMas, LacteosListView, LacteosCreate, LacteosUpdate
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
-from api.views import VentaSemanalAPI, LacteosSemanaAPI
+from api.views import VentaSemanalAPI, LacteosSemanaAPI, DondeSeVendeMasAPI
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -46,6 +46,8 @@ urlpatterns = [
     path('api_ventasemanal/', VentaSemanalAPI.as_view(), name="api_ventasemanal"),
     path('api_lacteos/', LacteosAPI.as_view(), name="api_lacteos"),
     path('api_lacteossemanal/', LacteosSemanaAPI.as_view(), name="api_lacteossemanal"),
+    path('api_dondesevendemas/', DondeSeVendeMasAPI.as_view(), name="api_dondesevendemas"),
+    
     
 ]
 

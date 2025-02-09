@@ -6,7 +6,7 @@ import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
 from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
-from .forms import CalculadoraBilletesForm, LacteosForm
+from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils import timezone
 from django.db.models import Sum, F
+import pytz
 
 # Index Page
 class IndexView(TemplateView):
@@ -48,11 +49,12 @@ class ExcelUploadView(FormView):
         if form.is_valid():
             archivo_model = form.save()
             archivo_uri = archivo_model.archivo.url
+            # archivo_uri = form.archivo.url
             URI1 = settings.BASE_DIR
             fichero = f'{URI1}{archivo_uri}'
             fecha = request.POST['fecha']
             # print(f'La fecha que llega al POST es: {fecha}')
-            print(f'Lo que llega del POST: {request.POST}')
+            # print(f'Lo que llega del POST: {request.POST}')
             # actualizar = form.cleaned_data['actualizar']
             # print(f'actualizar tiene valor: {actualizar}')
             try:
@@ -63,16 +65,16 @@ class ExcelUploadView(FormView):
                 # df = pd.read_table(fichero, sep='\t', encoding='iso8859_2')
                 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
             except pd.errors.ParserError:
                 df = pd.read_excel(fichero) 
 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
                 excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
@@ -469,7 +471,7 @@ class CalculadoraBilletes(View):
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
         billetes = request.POST
-        print(f"llegaron del POST: {billetes}")
+        # print(f"llegaron del POST: {billetes}")
         
         if form.is_valid():
             form.cleaned_data
@@ -527,41 +529,48 @@ class DiaQueVendeMas(TemplateView):
         context = super().get_context_data(**kwargs)
         ahora = timezone.now()
         inicio_mes = ahora.replace(day=1)
-    #     fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
         
-    #     ventas_mensuales = Ventas.objects.filter(
-    #             fecha__gte=inicio_mes,
-    #             fecha__lte=fin_mes,
-    #             id_producto__id_departamento__punto_de_venta=True
-    #         ).values(
-    #             'fecha'
-    #         ).annotate(
-    #             venta_cantidad=Sum('cantidad'),
-    #             venta_total=Sum('calculo')
-    #         )
+        ventas_mensuales = Ventas.objects.filter(
+                fecha__gte=inicio_mes,
+                fecha__lte=fin_mes,
+                id_producto__id_departamento__punto_de_venta=True
+            ).values(
+                'fecha'
+            ).annotate(
+                venta_cantidad=Sum('cantidad'),
+                venta_total=Sum('calculo')
+            )
 
-    #     print(f"ventas por días: {ventas_mensuales}")
-    #     # Crear un diccionario para almacenar los resultados
-    #     resumen_mensual = {}
+        print(f"ventas por días: {ventas_mensuales}")
+        # Crear un diccionario para almacenar los resultados
+        resumen_mensual = {}
 
-    #     context['resumen_mensual'] = ventas_mensuales
+        context['resumen_mensual'] = ventas_mensuales
         context['fecha'] =  inicio_mes
             
         return context
 
 # ¿En qué punto de venta se vende más?
-class DondeSeVendeMas(TemplateView):
+class DondeSeVendeMas(View):
+    """
+    Dónde se vende más por Puntos de Ventas, se escoge la fecha a buscar
+    """
     template_name = 'ventas/reporte_mensual_departamento.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        ahora = timezone.now()
-        inicio_mes = ahora.replace(day=1)
-        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
-        # print(f"ahora: {ahora}, inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
-        
+    def buscar_y_calcular(self, fecha_entrada):
+        print(f"en el procesamiento: la fecha que llega es: {fecha_entrada}")
+        inicio_mes = fecha_entrada.replace(day=1, hour=1, minute=0, second=0)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1, hour=23, minute=59, second=59) - datetime.timedelta(days=1)
+        # print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+
         # Obtener ventas del mes actual
-        ventas_mensuales = Ventas.objects.filter(fecha__gte=inicio_mes, fecha__lte=fin_mes, id_producto__id_departamento__punto_de_venta=True)
+        ventas_mensuales = Ventas.objects.filter(
+            #fecha__gte=inicio_mes,
+            #fecha__lte=fin_mes,
+            fecha__range=(inicio_mes, fin_mes),
+            id_producto__id_departamento__punto_de_venta=True
+        )
 
         # Crear un diccionario para almacenar los resultados
         resumen_mensual = {}
@@ -573,7 +582,8 @@ class DondeSeVendeMas(TemplateView):
             for departamento in Departamentos.objects.filter(punto_de_venta=True):
                 resumen_mensual[dia.strftime('%d')][departamento.departamento] = {
                     'cantidad_vendida': 0,
-                    'total_vendido': 0
+                    'total_vendido': 0,
+                    # 'suma': 0
                 }
 
         # print(resumen_mensual)
@@ -583,10 +593,48 @@ class DondeSeVendeMas(TemplateView):
             departamento = venta.id_producto.id_departamento.departamento
             resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
             resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
+            #resumen_mensual[dia][departamento]['suma'] += resumen_mensual[dia][departamento]['total_vendido']
 
-        context['resumen_mensual'] = resumen_mensual
-        context['fecha'] =  inicio_mes
-        return context
+        return resumen_mensual
+
+
+    def get(self, request, *args, **kwargs):
+        # context = super().get_context_data(**kwargs)
+        ahora = timezone.now()
+        context = {}
+        context['fecha'] = ahora
+        context['resumen_mensual'] = self.buscar_y_calcular(ahora)
+
+        return render(request, 'ventas/reporte_mensual_departamento.html', context)
+
+
+    def post(self, request):
+        #print('dentro del post, voy a capturar el formulario')
+        form = DondeSeVendeMasForm(request.POST)
+        #print(f"dentro del post, a ver si el formulario es válido")
+        if form.is_valid():
+        # if request.method == "POST":
+            # context = super().get_context_data(**kwargs)
+            # form.cleaned_data
+            #print("request: ", request.POST)
+            #print(f"formulario válido, a procesar entonces")
+            # anno = request.POST.get('anno')
+            # mes = request.POST.get('mes')
+            anno = form.cleaned_data['anno']
+            mes = form.cleaned_data['mes']
+            #print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
+            # zona_horaria = pytz.timezone('America/Havana')
+            zona_horaria = pytz.timezone('UTC')
+            fecha = datetime.datetime(year=anno, month=mes,day=1,tzinfo=zona_horaria)
+            # fecha = datetime.datetime(year=anno, month=mes,day=1)
+            #print(f"fecha a enviar para procesamiento: {fecha}")
+            context = {}
+            context['fecha'] = fecha
+            context['resumen_mensual'] = self.buscar_y_calcular(fecha)
+
+            #print(f"voy a renderizar, el contexto es: {context}")
+
+        return render(request, 'ventas/reporte_mensual_departamento.html', context)
 
 
 class LacteosListView(ListView):
@@ -622,7 +670,7 @@ class LacteosUpdate(UpdateView):
 # ventas de lácteos, por departamentos
 # ventas por departamentos
 # dpto Don Reyes, no sale el helado 0250 lts
-    
+
 
 """
 Punto la Parada:

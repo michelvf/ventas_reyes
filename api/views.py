@@ -15,7 +15,7 @@ from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
-from .serializers import AnnosMesVentasSerializer
+from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
@@ -377,20 +377,72 @@ class DiaQueVendeMas(APIView):
                 fecha__lte=fin_mes,
                 id_producto__id_departamento__punto_de_venta=True
             ).values(
-                'fecha'
+                'fecha' # , 'id_producto__id_departamento__departamento'
             ).annotate(
                 venta_cantidad=Sum('cantidad'),
                 venta_total=Sum('calculo')
             )
         
-        else:
-            print(f"--> el serializer no es válido")
-            
-        serializer = DiaQueMasVendeSerializar(ventas_mensuales, many=True)
+            # print(f"ventas_mensuales: {ventas_mensuales}")
         
-        return Response(serializer.data)
+            
+            serializer = DiaQueMasVendeSerializar(ventas_mensuales, many=True)
+            
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
+class DondeSeVendeMasAPI(APIView):
+    """
+    Dónde se vende más por día y por Puntos de Ventas
+    """
+    def post(self, request):
+        serializer = AnnosMesVentasSerializer(data=request.data)
+        zona_horaria = pytz.timezone('America/Havana')
+        if serializer.is_valid():
+            anno = serializer.validated_data['anno']
+            mes = serializer.validated_data['mes']
+            ahora = timezone.now()
+            inicio_mes = ahora.replace(day=1, hour=1, month=mes, year=anno)
+            fin_mes = (inicio_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        
+            # Obtener ventas del mes actual
+            ventas_mensuales = Ventas.objects.filter(
+                fecha__gte=inicio_mes,
+                fecha__lte=fin_mes,
+                id_producto__id_departamento__punto_de_venta=True
+            )
+
+            # Crear un diccionario para almacenar los resultados
+            resumen_mensual = {}
+
+            # Inicializar el diccionario con los días y departamentos
+            for i in range((fin_mes - inicio_mes).days + 1):
+                dia = inicio_mes + timedelta(days=i)
+                resumen_mensual[dia.strftime('%d')] = {}
+                for departamento in Departamentos.objects.filter(punto_de_venta=True):
+                    resumen_mensual[dia.strftime('%d')][departamento.departamento] = {
+                        'cantidad_vendida': 0,
+                        'total_vendido': 0
+                    }
+
+            print(resumen_mensual)
+            # Rellenar el diccionario con los datos de ventas
+            for venta in ventas_mensuales:
+                dia = venta.fecha.strftime('%d')
+                departamento = venta.id_producto.id_departamento.departamento
+                resumen_mensual[dia][departamento]['cantidad_vendida'] += venta.cantidad
+                resumen_mensual[dia][departamento]['total_vendido'] += venta.calculo
+
+            # context['resumen_mensual'] = resumen_mensual
+            # context['fecha'] =  inicio_mes
+                
+            serializer = DondeSeVendeMasSerializar(resumen_mensual, many=True)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    
 
 class AnnosDeVenta(APIView):
     """
@@ -418,11 +470,11 @@ class AnnosDeVenta(APIView):
             # ano = int(anno)
             inicio = datetime(anno, 1, 1, tzinfo=zona_horaria)
             fin = datetime(anno, 12, 31, tzinfo=zona_horaria)
-            meses = Ventas.objects.filter(fecha__range=(inicio, fin)) \
-            .annotate(meses=TruncMonth('fecha')) \
-            .values('meses') \
-            .annotate(ventas=Count('id')) \
-            .order_by('meses')
+            meses = Ventas.objects.filter(fecha__range=(inicio, fin)
+                ).annotate(meses=TruncMonth('fecha')
+                ).values('meses'
+                ).annotate(ventas=Count('id')
+                ).order_by('meses')
             serializer_other = MesesSerializer(meses, many=True)
             # return Response(ventas_fecha.values(), status=status.HTTP_200_OK)
             return Response(serializer_other.data, status=status.HTTP_200_OK)

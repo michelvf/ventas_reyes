@@ -13,6 +13,7 @@
 <div class="row mb-4">
     <div class="col-12">
         <form>
+            {% csrf_token %}
             <div class="row row-sm">
                 <div class="col-md-5 col-lg-4">
                   <label class="form-control-label">Año:</label>
@@ -108,9 +109,11 @@
 
     function fetchMeses(year) {
         // console.log(`Buscar Mes del año: ${year}`);
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         fetch('/resumen/anno_venta/', {
             method: 'POST',
             headers: {
+                'X-CSRFToken': csrftoken,
                 'Content-Type': 'application/json',
             },  
             body: JSON.stringify({
@@ -176,10 +179,13 @@ function format2Date(d){
 }
 
 function reporte_por_dia(anno, mes) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+       
     // console.log(`llega mes y año para buscar: ${anno} - ${mes}`)
     fetch('/resumen/dia_mas_venta/', {
         method: 'POST',
         headers: {
+            'X-CSRFToken': csrftoken,
             'Content-Type': 'application/json',
         },  
         body: JSON.stringify({

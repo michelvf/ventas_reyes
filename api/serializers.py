@@ -223,6 +223,14 @@ class DiaQueMasVendeSerializar(serializers.Serializer):
     venta_total = serializers.DecimalField(max_digits=10, decimal_places=2)
     
 
+class DondeSeVendeMasSerializar(serializers.Serializer):
+    """
+    Donde se vende más por día y por Puntos de Ventas
+    """
+    cantidad_vendida = serializers.DecimalField(max_digits=10, decimal_places=2) 
+    total_vendido = serializers.DecimalField(max_digits=10, decimal_places=2)
+    
+
 class AnnosDeVentaSerializer(serializers.Serializer):
     """
     Años de Ventas

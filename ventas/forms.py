@@ -115,6 +115,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
     #     )
     # )
 
+
 class LacteosForm(forms.ModelForm):
     """
     Fromulario para los Láteos
@@ -126,3 +127,11 @@ class LacteosForm(forms.ModelForm):
             "nombre": forms.TextInput(attrs={"class":"form-control"}),
             "descripcion": forms.Textarea(attrs={"class":"form-control", "rows": 2  })
         }
+
+
+class DondeSeVendeMasForm(forms.Form):
+    """
+    Formulario para lo más vendido
+    """
+    anno = forms.IntegerField()
+    mes = forms.IntegerField()
