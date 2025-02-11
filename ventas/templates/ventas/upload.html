@@ -6,6 +6,7 @@
 
 {% block css %}
 <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+<link href="{% static 'css/spinner.css' %}" rel="stylesheet" />
 {% endblock css %}
 
 {% block content %}
@@ -62,7 +63,13 @@
       </div>
     </div>
 </div>
-<span class="spinner"></span>
+
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner-border text-light" role="status">
+      <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
  {% endblock %}
 
 {% block js %}
@@ -210,5 +217,12 @@
         //     })
         //     .catch(error => console.log('Error de captar los datos del for y ver si las fechas coinciden: ', error))
         // });
+
+        // spinner
+        document.getElementById('formulario').addEventListener('submit', function(event) {
+          //event.preventDefault();
+          document.getElementById('spinnerOverlay').style.display = 'flex';
+
+      });
     </script>
 {% endblock js %}
