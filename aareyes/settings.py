@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "punto_venta.apps.PuntoVentaConfig",
     "easy_select2",
     "resumen.apps.ResumenConfig",
+    "codigosbarra.apps.CodigosbarraConfig",
 ]
 
 MIDDLEWARE = [
