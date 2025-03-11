@@ -65,16 +65,22 @@ class ExcelUploadView(FormView):
                 # df = pd.read_table(fichero, sep='\t', encoding='iso8859_2')
                 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+
+                # Para Eleventa 2025
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
             except pd.errors.ParserError:
                 df = pd.read_excel(fichero) 
 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
                 excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
