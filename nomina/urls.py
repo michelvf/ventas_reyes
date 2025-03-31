@@ -4,6 +4,7 @@ from .views import RegistrarCargosView, RegistrarTrabajadorView, RegistrarTrabaj
 from .views import RegistrarDepartamentoView, RegistrarNominaView, TrabajadorBaja
 from .views import ActualizarCargo, ActualizarNomina, ActualizarTrabajador, ActualizarDepartamento
 from .views import ActualizarTrabajador2
+# from .views import RegistrBajasView
 from .views import NominaDePagoView
 
 urlpatterns = [
@@ -21,13 +22,16 @@ urlpatterns = [
     path('registrar_trabajador2/', RegistrarTrabajador2View.as_view(), name='registrar_trabajador2'),
     path('registrar_nomina/', RegistrarNominaView.as_view(), name='registrar_nomina'),
     path('registrar_departamento/', RegistrarDepartamentoView.as_view(), name='registrar_departamento'),
+    # path('registrar_baja/', RegistrBajasView.as_view(), name='registrar_baja'),
+    
 
     ### Actualizar
     path('actualizar_cargo/<int:pk>/', ActualizarCargo.as_view(), name='actualizar_cargo'),
     path('actualizar_nomina/<int:pk>/', ActualizarNomina.as_view(), name='actualizar_nomina'),
     path('actualizar_trabajador/<int:pk>/', ActualizarTrabajador.as_view(), name='actualizar_trabajador'),
     path('actualizar_trabajador2/<int:pk>/', ActualizarTrabajador2.as_view(), name='actualizar_trabajador2'),
-    path('actualizar_departamento/<int:pk>/', ActualizarDepartamento.as_view(), name='actualizar_departamento'),
+    # path('actualizar_baja/<int:pk>/', ActualizarBaja.as_view(), name='actualizar_baja'),path('actualizar_departamento/<int:pk>/', ActualizarDepartamento.as_view(), name='actualizar_departamento'),
+
 
     ### Consultas
     path('pago/', NominaDePagoView.as_view(), name='pago'),

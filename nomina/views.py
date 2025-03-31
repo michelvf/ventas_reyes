@@ -223,28 +223,27 @@ class RegistrarTrabajador2View(CreateView):
         return context
 
 
+# class RegistrBajasView(CreateView):
+#     """
+#     Register Worked
+#     """
+#     model = Trabajador2
+#     form_class = Trabajador2Form
+#     template_name = 'nomina/registro_bajas.html'
+#     success_url = '/nomina/trabajadores2/'
 
-class RegistrBajasView(CreateView):
-    """
-    Register Worked
-    """
-    model = Trabajador2
-    form_class = Trabajador2Form
-    template_name = 'nomina/registrar_bajas.html'
-    success_url = '/nomina/trabajadores2/'
+#     def get_success_url(self):
+#         if 'guardar_y_seguir' in self.request.POST:
+#             return reverse('registrar_bajas')
+#         else:
+#             return reverse('nomina_trabajadores2')
 
-    def get_success_url(self):
-        if 'guardar_y_seguir' in self.request.POST:
-            return reverse('registrar_bajas')
-        else:
-            return reverse('nomina_trabajadores2')
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["texto1"] = "Agregar un Bajas"
+#         context["texto2"] = "Se visualiza las bajas."
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["texto1"] = "Agregar un Bajas"
-        context["texto2"] = "Se visualiza las bajas."
-
-        return context
+#         return context
 
 
 
@@ -340,8 +339,27 @@ class ActualizarTrabajador2(UpdateView):
         context["texto2"] = "Se actualiza la información del Trabajador."
         
         return context
+
+
+class ActualizarBaja(UpdateView):
+    """
+    Update the terminate a worker
+    """
+    model = Trabajador2
+    # fields = ['nombre', 'departamento', 'cargo', 'fecha', 'activo']
+    form_class = Trabajador2Form
+    # template_name_suffix = "_update"
+    template_name = 'nomina/editar_baja.html'
+    success_url = reverse_lazy('nomina_trabajadores2')
     
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Actualizar la baja"
+        context["texto2"] = "Se actualiza la información del Trabajador."
+        
+        return context
+
+
 ###### Consultas ######
 class NominaDePagoView(View):
     """
