@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from .models import Trabajador, DepartamentoNom, Nomina, Cargo
+from .models import Trabajador2, Nomina2
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views import View
 from .forms import CargoForm, TrabajadorForm, NominaForm, DepartamentoForm
+from .forms import Trabajador2Form, Nomina2Form
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from compras.forms import ResumenSemanal
@@ -71,6 +73,36 @@ class NominaList(ListView):
     def get_queryset(self):
         """Return the payroll ordering by date."""
         return Nomina.objects.order_by("fecha")
+
+
+class TrabajdorList2(ListView):
+    """
+    List of active worker
+    """
+    model = Trabajador2
+    template_name = 'nomina/trabajadores_list2.html'
+    
+    # Mostrar todos los activos
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            activo=True
+        ) # .annotate(
+            # interviewed_number=Count('interviewer', filter=Q(interviewer__user__role='0', interviewer__is_approved=True))
+        # )
+
+
+class TrabajadorBaja(ListView):
+    """
+    List of out Worker
+    """
+    model = Trabajador2
+    template_name = "nomina/bajas.html"
+    
+    # Show only out Worker
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            activo=False
+        )
 
 
 # ########### Agregar #############
@@ -168,6 +200,54 @@ class RegistrarDepartamentoView(CreateView):
             return reverse('nomina_departamentos')
 
 
+class RegistrarTrabajador2View(CreateView):
+    """
+    Register Worked
+    """
+    model = Trabajador2
+    form_class = Trabajador2Form
+    template_name = 'nomina/registrar_cargo2.html'
+    success_url = '/nomina/trabajadores2/'
+
+    def get_success_url(self):
+        if 'guardar_y_seguir' in self.request.POST:
+            return reverse('registrar_trabajador2')
+        else:
+            return reverse('nomina_trabajadores2')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Trabajador"
+        context["texto2"] = "Se agrega un nuevo trabajador."
+
+        return context
+
+
+
+class RegistrBajasView(CreateView):
+    """
+    Register Worked
+    """
+    model = Trabajador2
+    form_class = Trabajador2Form
+    template_name = 'nomina/registrar_bajas.html'
+    success_url = '/nomina/trabajadores2/'
+
+    def get_success_url(self):
+        if 'guardar_y_seguir' in self.request.POST:
+            return reverse('registrar_bajas')
+        else:
+            return reverse('nomina_trabajadores2')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Agregar un Bajas"
+        context["texto2"] = "Se visualiza las bajas."
+
+        return context
+
+
+
 # ########### Actualizar ##########
 class ActualizarCargo(UpdateView):
     """
@@ -241,6 +321,26 @@ class ActualizarDepartamento(UpdateView):
         context["texto2"] = "Se agrega un nuevo departamento a donde pertencerán los trabajadores."
 
         return context
+
+
+class ActualizarTrabajador2(UpdateView):
+    """
+    Update the records
+    """
+    model = Trabajador2
+    # fields = ['nombre', 'departamento', 'cargo', 'fecha', 'activo']
+    form_class = Trabajador2Form
+    # template_name_suffix = "_update"
+    template_name = 'nomina/editar_nomina2.html'
+    success_url = reverse_lazy('nomina_trabajadores2')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Actualizar el Trabajador"
+        context["texto2"] = "Se actualiza la información del Trabajador."
+        
+        return context
+    
     
 ###### Consultas ######
 class NominaDePagoView(View):

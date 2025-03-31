@@ -667,11 +667,14 @@ class LacteosUpdate(UpdateView):
     success_url= "/ventas/listado_lacteos/"
     success_message= "%(name)s was created successfully"
     
-    
+
 # ventas de lácteos, por departamentos
 # ventas por departamentos
 # dpto Don Reyes, no sale el helado 0250 lts
 
+
+class CalculoPorcientoPrecio(TemplateView):
+    template_name = 'ventas/calculo_porciento.html'
 
 """
 Punto la Parada:

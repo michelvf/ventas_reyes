@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Trabajadores Baja{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+{% endblock css%}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+      <h2 class="az-dashboard-title">Trabajadores de Baja</h2>
+      <p class="az-dashboard-text">Listado de los trabajadores que han sido baja</p>
+    </div>
+    <div class="az-content-header-right">
+      <!-- a href="{% url 'registrar_trabajador2' %}">
+        <button class="btn btn-primary">Agregar</button>
+      </a -->
+    </div>
+</div><!-- az-dashboard-one-title -->
+
+<div class="row">
+    <div class="col">
+        {% if object_list  %}
+            <table id="venta" class="display table table-striped table-hover table-bordered" >
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Salario</th>
+                        <th>Fecha Alta</th>
+                        <th>Activo</th>
+                        <th>Fecha Baja</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in object_list %}
+                        <tr>
+                            <td style="vertical-align:middle !important;">{{ item.nombre }}</td>
+                            <td style="vertical-align:middle !important;">{{ item.salario }}</td>
+                            <td style="vertical-align:middle !important;">{{ item.fecha_entrada }}</td>
+                            <td class="text-center" style="vertical-align:middle !important;">
+                            {% if item.activo %}
+                                <i class="fa fa-check  text-success"></i>
+                            {% else %}
+                                <i class="fa fa-times  text-danger"></i>
+                            {% endif %}
+                                {% comment %} {{ item.activo }} {% endcomment %}
+                            </td>
+                            <td class="text-center" style="vertical-align:middle !important;">{{ item.fecha_baja|default_if_none:"-" }}</td>
+                            <td style="vertical-align:middle !important;">
+                                <a href="{% url 'actualizar_trabajador2' item.id %}" style="text-decoration:none;">
+                                    <button class="btn btn-outline-success btn-rounded">
+                                        <i class="typcn typcn-edit"></i>Editar
+                                    </button>
+                                </a>
+                            &nbsp;
+                            <!-- a href="{% url 'borrar_compra' item.id %}">
+                                <button class="btn btn-outline-danger btn-rounded">
+                                    <i class="typcn typcn-trash"></i>Borrar
+                                </button>
+                            </a -->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <!-- tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot -->
+            </table>
+        {% else %}
+            No hay trabajadores registrados
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+<script>
+    new DataTable('#venta', {
+    language: language,
+    /*
+    ajax: {
+        url: '/api/nomina_cargos', 
+        dataSrc: ''
+    },
+    columns: [
+        { data: 'cargo' },
+        { data: 'comentario' }
+    ],
+    pageLength: 20,
+    */
+});
+</script>
+{% endblock %}
