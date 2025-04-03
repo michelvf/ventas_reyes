@@ -532,7 +532,7 @@ class NominaDePagoView2(View):
         resumen = None
         return render(
             request,
-            'nomina/nomina_de_pago.html', 
+            'nomina/nomina_de_pago2.html', 
             {'resumen': resumen}
             )
         
@@ -550,10 +550,10 @@ class NominaDePagoView2(View):
             hasta = fecha_informal[1]
             
             # Hacer la consultas con el rango de fechas
-            resumen = Nomina.objects.filter(
+            resumen = Nomina2.objects.filter(
                 fecha__range=[desde, hasta]
             ).order_by('fecha')
-            # print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
+            print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
             # print()
             
             # Hacer un arreglo con las fechas
@@ -618,7 +618,7 @@ class NominaDePagoView2(View):
                 fila = {}
                 cant = 0
 
-            salarios_dias = (Nomina.objects.filter(fecha__range=[desde, hasta])
+            salarios_dias = (Nomina2.objects.filter(fecha__range=[desde, hasta])
                 .values('fecha')
                 .annotate(
                     salarios=Sum(F'salario'),

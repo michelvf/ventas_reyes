@@ -25,6 +25,7 @@ docopt==0.6.2
 et_xmlfile==2.0.0
 executing==2.1.0
 gunicorn==23.0.0
+h11==0.14.0
 html5lib==1.1
 idna==3.10
 ipython==8.30.0
@@ -73,6 +74,8 @@ tzdata==2024.2
 tzlocal==5.2
 uritools==4.0.3
 urllib3==2.3.0
+uvicorn==0.34.0
+uvicorn-worker==0.3.0
 vine==5.1.0
 wcwidth==0.2.13
 webencodings==0.5.1
