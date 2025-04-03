@@ -148,7 +148,7 @@ class DepartamentoForm(forms.ModelForm):
 
 class Trabajador2Form(forms.ModelForm):
     """
-    Formulario para los Trabajadores
+    Formulario para los Trabajadores 2
     """
     class Meta:
         model = Trabajador2
@@ -214,9 +214,9 @@ class Trabajador2Form(forms.ModelForm):
     )
 
 
-class Nomina2Form(forms.ModelForm):
+class NominaForm2(forms.ModelForm):
     """
-    Formulario para los Trabajadores
+    Formulario para los Trabajadores 2
     """
     class Meta:
         model = Nomina2
@@ -233,6 +233,22 @@ class Nomina2Form(forms.ModelForm):
             #     }
             # ),
         }
+
+    fecha = forms.DateField(
+        widget=forms.DateInput(
+            format="%Y-%m-%d",
+            attrs={
+                'class': 'form-control col-2',
+                'type': 'date',
+                'value': timezone.now().strftime("%Y-%m-%d"),
+            },
+        )
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filtrar solo los objetos activos
+        self.fields['trabajador'].queryset = Trabajador2.objects.filter(activo=True)
 
     # trabajador = forms.Select(
     #     widget=forms.ChoiceField(

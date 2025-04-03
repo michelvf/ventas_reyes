@@ -115,7 +115,7 @@ class Nomina(models.Model):
 
 class Trabajador2(models.Model):
     """
-    Worked model
+    Worked model 2
     """
     nombre = models.CharField(max_length=255, blank=False, null=False)
     salario = models.FloatField(blank=False, null=False)
@@ -142,7 +142,7 @@ class Trabajador2(models.Model):
 
 class Nomina2(models.Model):
     """
-    Payroll model
+    Payroll model 2
     """
     trabajador = models.ForeignKey(
         Trabajador2,
