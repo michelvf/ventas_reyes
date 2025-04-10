@@ -72,7 +72,8 @@ class Productos(models.Model):
     """
     Modelo para los Productos
     """
-    codigo = models.IntegerField(null=False)
+    # codigo = models.IntegerField(null=False)  # Con Abarrote viejo
+    codigo = models.CharField(max_length=400, null=False)  # Con Eleventa
     producto = models.CharField(max_length=200, null=False)
     imagen = models.ImageField(upload_to='ventas/', null=True, blank=True, default='ventas/defecto.jpg')
     id_departamento = models.ForeignKey(

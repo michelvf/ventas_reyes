@@ -65,16 +65,20 @@ class ExcelUploadView(FormView):
                 # df = pd.read_table(fichero, sep='\t', encoding='iso8859_2')
                 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
             except pd.errors.ParserError:
                 df = pd.read_excel(fichero) 
 
                 # Cambio del tipo de 2 columnas a float64
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
+                # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
                 excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
@@ -98,11 +102,11 @@ class ExcelUploadView(FormView):
                 obj.save()
 
         # Insertando los Productos
-        for i in range(len(excel_file['Descripcion'])):
+        for i in range(len(excel_file['Descripción'])):
 
             # Tomando el valor de un departamento
-            producto = excel_file['Descripcion'][i]
-            codigo = excel_file['Codigo'][i]
+            producto = excel_file['Descripción'][i]
+            codigo = excel_file['Código'][i]
             departamento=Departamentos.objects.get(departamento=excel_file['Departamento'][i])
 
             # Verificando si existe en la BD e insertarlo si no existe
@@ -126,9 +130,9 @@ class ExcelUploadView(FormView):
         for i in range(len(excel_file)):
             # Leyendo una fila
             fila = excel_file.iloc[i]
-            
+
             # Buscando el id del producto a insertar
-            codigo_venta = Productos.objects.get(codigo=fila['Codigo'])
+            codigo_venta = Productos.objects.get(codigo=fila['Código'])
             # Tomando valores del Excel
             # cantidad = float(fila['Cantidad'])
             # venta = float(fila['Precio Usado'].apply(lambda x: x.replace('$', '')))
