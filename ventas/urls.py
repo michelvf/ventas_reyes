@@ -6,6 +6,7 @@ from .views import  BackupRestoreSQLiteView, CalculadoraBilletes, DepartamentoUp
 from .views import VentasAnualesView, VentasMensualesView, VentasSemanalesView
 from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVendeMas
 from .views import DiaQueVendeMas, LacteosListView, LacteosCreate, LacteosUpdate
+from .views import CalculoPorcientoPrecio
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI, DondeSeVendeMasAPI
@@ -30,6 +31,8 @@ urlpatterns = [
     path('editar_calculadora_billetes/<int:pk>/', EditarCalculadoraBilletes.as_view(), name='editar_calculadora_billetes'),
     path('reporte-mensual-departamento/', DondeSeVendeMas.as_view(), name='reporte_mensual_departamento'),
     path('reporte-venta-mensual/', DiaQueVendeMas.as_view(), name='reporte_venta_mensual'),
+    path('porciento-precio/', CalculoPorcientoPrecio.as_view(), name='porciento_precio'),
+    
     path('listado_lacteos/', LacteosListView.as_view(), name='listado_lacteos'),
     path('crear_lacteos/', LacteosCreate.as_view(), name='crear_lacteos'),
     path('editar_lacteos/<int:pk>', LacteosUpdate.as_view(), name='editar_lacteos'),

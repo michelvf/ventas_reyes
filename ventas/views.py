@@ -67,8 +67,10 @@ class ExcelUploadView(FormView):
                 # Cambio del tipo de 2 columnas a float64
                 # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
                 # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
+
+                # Para Eleventa 2025
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
                 excel_file = df
                 # tipos_datos = df.dtypes
             except pd.errors.ParserError:
@@ -77,8 +79,8 @@ class ExcelUploadView(FormView):
                 # Cambio del tipo de 2 columnas a float64
                 # df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).astype(float)
                 # df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).astype(float)
-                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
-                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r'\,': ''}, regex=True).astype(float)
+                df['Precio Usado'] = df['Precio Usado'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
+                df['Precio Costo'] = df['Precio Costo'].replace({r'\$': ''}, regex=True).replace({r',': ''}, regex=True).astype(float)
                 excel_file = df
             except Exception as e:
                 error_message = f"Error al leer el fichero: {e}"
@@ -681,11 +683,14 @@ class LacteosUpdate(UpdateView):
     success_url= "/ventas/listado_lacteos/"
     success_message= "%(name)s was created successfully"
     
-    
+
 # ventas de lácteos, por departamentos
 # ventas por departamentos
 # dpto Don Reyes, no sale el helado 0250 lts
 
+
+class CalculoPorcientoPrecio(TemplateView):
+    template_name = 'ventas/calculo_porciento.html'
 
 """
 Punto la Parada:
