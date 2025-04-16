@@ -135,3 +135,13 @@ class DondeSeVendeMasForm(forms.Form):
     """
     anno = forms.IntegerField()
     mes = forms.IntegerField()
+
+
+class EstudioInventarioForm(forms.Form):
+    """
+    Formulario para subir ficheros excel
+    """
+    # actualizar = forms.CheckboxInput()
+    
+    ipv = forms.FileField(label="Subir Excel IPV")
+    eleventa = forms.FileField(label="Subir Excel Eleventa")

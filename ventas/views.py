@@ -6,7 +6,7 @@ import pickle
 import xlrd, csv
 from django.shortcuts import render, redirect
 from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, DepartamentosForm
-from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
+from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm, EstudioInventarioForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
@@ -675,6 +675,77 @@ class LacteosUpdate(UpdateView):
 
 class CalculoPorcientoPrecio(TemplateView):
     template_name = 'ventas/calculo_porciento.html'
+
+
+class EstudioInventario(FormView):
+    template_name = "ventas/estudio_inventario.html"
+    form_class = EstudioInventarioForm
+
+    def form_valid(self, form):
+        resultados = None
+        resultado_filtrado = None
+        resultado_filtrado1 = None
+        errores = None
+
+        try:
+            # Cargar los archivos
+            ipv_file = self.request.FILES["ipv"]
+            eleventa_file = self.request.FILES["eleventa"]
+
+            # Leer los 2 fichero Excel
+            ipv = pd.read_excel(ipv_file, sheet_name="01")
+            eleventa = pd.read_excel(eleventa_file)
+
+            # Asegurar que la columna Inv.Final es de tipo float
+            ipv['Inv.Final'] = ipv['Inv.Final'].astype(float)
+
+            # Aseguramos que las columnas "Productos" y "Producto" sean comparables
+            ipv['Productos'] = ipv['Productos'].str.strip()
+            eleventa['Producto'] = eleventa['Producto'].str.strip()
+
+            # Cambio de nombre
+            ipv.rename(columns={"Inv.Final": "Inv_Final"}, inplace=True)
+
+            # Realizar un merge para comparar por Productos
+            resultado = pd.merge(ipv, eleventa, left_on='Productos', right_on='Producto', how='inner')
+
+            # Crear una nueva columna booleana si Existencia == Inv.Final
+            resultado['Existencia_Igual_InvFinal'] = resultado['Existencia'] == resultado['Inv_Final']
+
+            # Filtrar las filas donde Existencia_Igual_InvFinal es False
+            resultado_filtrado = resultado[resultado['Existencia_Igual_InvFinal'] == False]
+
+            # Mostrar resultado
+            # print(resultado_filtrado)
+
+            # Seleccionar las columnas específicas y mostrar solo esas
+            columnas_a_mostrar1 = [
+                'Codigo', 'Productos', 'Inv_Final', 'Código', 'Producto', 'Existencia', 'Existencia_Igual_InvFinal'
+            ]
+
+            # Asegurarnos de que las columnas existen en el DataFrame antes de imprimir
+            columnas_disponibles1 = [col for col in columnas_a_mostrar1 if col in resultado_filtrado.columns]
+
+            # Imprimir las columnas filtradas
+            # print(resultado_filtrado[columnas_disponibles1])
+            resultado_filtrado2 = resultado_filtrado[columnas_disponibles1]
+
+            # Mostrar resultados2
+            print(resultado_filtrado2)
+        
+        except Exception as e:
+            errores = str(e)
+
+        return render(self.request, self.template_name, {
+            "form": form,
+            "resultados1": resultado_filtrado,
+            "resultados2": resultado_filtrado2,
+            "errores": errores
+        })
+
+    
+
+
 
 """
 Punto la Parada:

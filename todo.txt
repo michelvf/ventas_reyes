@@ -1,6 +1,6 @@
 hacer:
 - Compras
-
+- Nomina según Administradora
 
 hecho:
 - instalar pip install gunicornd
