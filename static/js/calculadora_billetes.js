@@ -132,7 +132,7 @@ function calcular() {
     document.getElementById('id_total_span').innerHTML =  '$ ' + new Intl.NumberFormat().format(sumar_todo);
     //document.getElementById('input_total').value = sumar_todo;
     //document.getElementById('resultado_0_peso').value = sumar_todo;
-    console.log(`sumando da como resultado: ${sumar_todo}`)
+    //console.log(`sumando da como resultado: ${sumar_todo}`)
 }
 
 // Observando lo que se va calculado por billetes y sumado
@@ -265,6 +265,20 @@ window.onload = function() {
         // Coloca el nuevo valor en el 
         span.textContent = nuevoValor;
     }
+}
+
+function limpiar_datos() {
+    document.getElementById('id_total').textContent = '';
+    document.getElementById('resultado_un_pesos').textContent = '';
+    document.getElementById('resultado_tres_pesos').textContent = '';
+    document.getElementById('resultado_cinco_pesos').textContent = '';
+    document.getElementById('resultado_diez_pesos').textContent = '';
+    document.getElementById('resultado_veinte_pesos').textContent = '';
+    document.getElementById('resultado_cincuenta_pesos').textContent = '';
+    document.getElementById('resultado_cien_pesos').textContent = '';
+    document.getElementById('resultado_doscientos_pesos').textContent = '';
+    document.getElementById('resultado_quinientos_pesos').textContent = '';
+    document.getElementById('resultado_mil_pesos').textContent = '';
 }
 // reinaldo jvl
 // soporte ediberto ferrer 50953838 59077357
