@@ -133,7 +133,55 @@ class Ventas(models.Model):
 
     def __str__(self):
         return self.id_producto.producto
+
+
+class Tipo_cuenta(models.Model):
+    """
+    Tipo de cuenta, de crédio o débito
+    """
+    tipo = models.CharField(max_length=100, blank=False, null=False)
+    siglas = models.CharField(max_length=2, blank=False, null=False)
+    comentario = models.TextField(null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        ordering = ['tipo']
+        verbose_name = "tipo_cuenta"
+        verbose_name_plural = "tipo_cuentas"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["tipo"]),
+            models.Index(fields=["update_at"])
+        ]
+
+    def __str__(self):
+        return self.tipo
+
+
+class Cuenta(models.Model):
+    """
+    Saldo de las Cuentas
+    """
+    cuenta = models.CharField(max_length=100, null=False, blank=False)
+    saldo = models.FloatField(null=False, blank=False)
+    comentario = models.TextField(null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['cuenta']
+        verbose_name = "cuentas"
+        verbose_name_plural = "cuentas"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["cuenta"]),
+            models.Index(fields=["update_at"])
+        ]
+
+    def __str__(self):
+        return self.cuenta
+
 
 class Contador_billete(models.Model):
     """
@@ -141,6 +189,13 @@ class Contador_billete(models.Model):
     """
     comentario = models.TextField(null=False, blank=False)
     fecha = models.DateTimeField(auto_now_add=True)
+    tipo_cuenta = models.ForeignKey(
+        Tipo_cuenta,
+        related_name="tipo_cuenta",
+        on_delete=models.PROTECT,
+        blank=False,
+        null=False
+    )
     un_peso = models.IntegerField(default=0, null=True, blank=True)
     tres_pesos = models.IntegerField(default=0, null=True, blank=True)
     cinco_pesos = models.IntegerField(default=0, null=True, blank=True)
@@ -152,6 +207,8 @@ class Contador_billete(models.Model):
     quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     total = models.IntegerField(null=False, blank=False)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-fecha"] # ["-fecha"] ascending

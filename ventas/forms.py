@@ -76,7 +76,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
     """
     class Meta:
         model = Contador_billete
-        fields = ['total', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
+        fields = ['total', 'tipo_cuenta', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
         widgets = {
            "comentario": forms.Textarea(attrs={"class": "form-control col-9", "cols": 100, "rows": 4}),
            "total": forms.HiddenInput(attrs={"class": "disable"}),
@@ -85,6 +85,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CalculadoraBilletesForm, self).__init__(*args, **kwargs)
         # self.fields['total'].widget = forms.HiddenInput()
+        self.fields['tipo_cuenta'].widget.attrs.update({'class': 'form-control col-9 entrada'})
         self.fields['un_peso'].widget.attrs.update({'class': 'form-control col-9 entrada'})
         self.fields['un_peso'].required = False
         self.fields['tres_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
