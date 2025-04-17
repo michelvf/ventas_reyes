@@ -104,32 +104,37 @@ class ExcelUploadView(FormView):
                 obj.save()
 
         # Insertando los Productos
-        for i in range(len(excel_file['Descripcion'])):
+        for i in range(len(excel_file['Descripción'])):
 
             # Tomando el valor de un departamento
-            producto = excel_file['Descripcion'][i]
-            codigo = excel_file['Codigo'][i]
+            producto = excel_file['Descripción'][i]
+            codigo = excel_file['Código'][i]
             departamento=Departamentos.objects.get(departamento=excel_file['Departamento'][i])
 
             # Verificando si existe en la BD e insertarlo si no existe
             if not Productos.objects.filter(codigo=codigo).exists():
                 # Preparado para insertarlo en el modelo Departamento
-                obj = Productos(
+
+                Productos.objects.update_or_create(
                     codigo=codigo,
                     producto=producto,
                     id_departamento=departamento
                 )
+                #obj = Productos(
+                #    codigo=codigo,
+                #    producto=producto,
+                #    id_departamento=departamento
+                #)
                 # Guardando en la BD
-                obj.save()
-
+                # obj.save()
 
         # Insertando las Ventas
         for i in range(len(excel_file)):
             # Leyendo una fila
             fila = excel_file.iloc[i]
-            
+
             # Buscando el id del producto a insertar
-            codigo_venta = Productos.objects.get(codigo=fila['Codigo'])
+            codigo_venta = Productos.objects.get(codigo=fila['Código'])
             # Tomando valores del Excel
             # cantidad = float(fila['Cantidad'])
             # venta = float(fila['Precio Usado'].apply(lambda x: x.replace('$', '')))
@@ -561,10 +566,15 @@ class DondeSeVendeMas(View):
 
     def buscar_y_calcular(self, fecha_entrada):
         print(f"en el procesamiento: la fecha que llega es: {fecha_entrada}")
-        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
-        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
-        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
-        
+
+        inicio_mes = fecha_entrada.replace(day=1, hour=1, minute=0, second=0)
+        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1, hour=23, minute=59, second=59) - datetime.timedelta(days=1)
+        # print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+
+
+#        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
+#        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
+#        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
         # Obtener ventas del mes actual
         ventas_mensuales = Ventas.objects.filter(
             #fecha__gte=inicio_mes,
@@ -584,7 +594,7 @@ class DondeSeVendeMas(View):
                 resumen_mensual[dia.strftime('%d')][departamento.departamento] = {
                     'cantidad_vendida': 0,
                     'total_vendido': 0,
-                    'suma': 0
+                    # 'suma': 0
                 }
 
         # print(resumen_mensual)
@@ -598,43 +608,49 @@ class DondeSeVendeMas(View):
             #resumen_mensual[dia][departamento]['suma'] += resumen_mensual[dia][departamento]['total_vendido']
 
         return resumen_mensual
-        
-    
+
+
     def get(self, request, *args, **kwargs):
         # context = super().get_context_data(**kwargs)
         ahora = timezone.now()
         context = {}
         context['fecha'] = ahora
         context['resumen_mensual'] = self.buscar_y_calcular(ahora)
-        
+
         return render(request, 'ventas/reporte_mensual_departamento.html', context)
-    
-    
+
+
     def post(self, request):
-        print('dentro del post, voy a capturar el formulario')
+        #print('dentro del post, voy a capturar el formulario')
         form = DondeSeVendeMasForm(request.POST)
-        print(f"dentro del post, a ver si el formulario es válido")
+        #print(f"dentro del post, a ver si el formulario es válido")
         if form.is_valid():
         # if request.method == "POST":
             # context = super().get_context_data(**kwargs)
             # form.cleaned_data
             #print("request: ", request.POST)
-            print(f"formulario válido, a procesar entonces")
+            #print(f"formulario válido, a procesar entonces")
             # anno = request.POST.get('anno')
             # mes = request.POST.get('mes')
             anno = form.cleaned_data['anno']
             mes = form.cleaned_data['mes']
+
+            #print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
+            # zona_horaria = pytz.timezone('America/Havana')
+            zona_horaria = pytz.timezone('UTC')
+            fecha = datetime.datetime(year=anno, month=mes,day=1,tzinfo=zona_horaria)
+
             print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
-            fecha1 = timezone.now()
-            fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
+#            fecha1 = timezone.now()
+#            fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
             # fecha = datetime.datetime(year=anno, month=mes,day=1)
-            print(f"fecha a enviar para procesamiento: {fecha}")
+            #print(f"fecha a enviar para procesamiento: {fecha}")
             context = {}
             context['fecha'] = fecha
             context['resumen_mensual'] = self.buscar_y_calcular(fecha)
-            
+
             #print(f"voy a renderizar, el contexto es: {context}")
-        
+
         return render(request, 'ventas/reporte_mensual_departamento.html', context)
 
 

@@ -51,7 +51,7 @@
                             </td>
                             <td class="text-center" style="vertical-align:middle !important;">{{ item.fecha_baja|default_if_none:"-" }}</td>
                             <td style="vertical-align:middle !important;">
-                                <a href="{% url 'actualizar_trabajador2' item.id %}" style="text-decoration:none;">
+                                <a href="{% url 'actualizar_baja' item.id %}" style="text-decoration:none;">
                                     <button class="btn btn-outline-success btn-rounded">
                                         <i class="typcn typcn-edit"></i>Editar
                                     </button>

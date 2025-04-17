@@ -156,3 +156,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute=0, hour=0),  # Esta configuración ejecutará la tarea cada día a medianoche
     },
 }
+
+# Consultas asincrónias
+# DJANGO_ALLOW_ASYNC_UNSAFE = True

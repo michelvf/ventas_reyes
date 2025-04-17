@@ -195,6 +195,7 @@ class LacteosSemanaAPI(APIView):
         a_week = ultimo.fecha  + timedelta(days=-7)
         #to_day = datetime.now()
         #a_week = datetime.now() + timedelta(days=-7)
+
         for palabra in lacteos:
             condiciones |= Q(id_producto__producto__istartswith=palabra['nombre'])
         lacteos_vendidos = Ventas.objects.filter(condiciones).annotate(
@@ -219,7 +220,6 @@ class VentaSemanalAPI(APIView):
     Ventas en la semana
     """
     def get(self, request):
-        # a_week = datetime.now() + timedelta(days=-7)
 
         week_sales = Ventas.objects.annotate(
                 fecha_agregada=TruncDate('fecha', output_field=DateField())
