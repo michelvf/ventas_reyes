@@ -4,6 +4,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+    <!-- link rel="stylesheet" href="{% static 'assets/lib/fontawesome-free/css/fontawesome.min.css' %}" / -->
 {% endblock css %}
 
 {% block content %}
@@ -82,19 +83,16 @@
     </div><!-- col -->
     <div class="col-lg-5 mg-t-20 mg-lg-t-0">
       <div class="row row-sm">
-        <!-- div class="col-sm-6">
+        <div class="col-sm-6 mb-3">
           <div class="card card-dashboard-two">
             <div class="card-header">
-              <h6>33.50% <i class="icon ion-md-trending-up tx-success"></i> <small>18.02%</small></h6>
-              <p>Bounce Rate</p>
+              <h6 class="card-title mb-2 text-success"><i class="fas fa-hand-holding-usd"></i>&nbsp;Efectivo:</h6>
             </div><!-- card-header -->
-            <!-- div class="card-body">
-              <div class="chart-wrapper">
-                <div id="flotChart1" class="flot-chart"></div>
-              </div><!-- chart-wrapper -->
-            <!-- /div><!-- card-body -->
-          <!-- /div><!-- card -->
-        <!-- /div><!-- col -->
+            <div class="card-body d-flex flex-row-reverse">
+              <h2 class="px-2"><span>$ </span><span id="efectivo"></span><small>.00</small></h2>
+            </div><!-- card-body -->
+          </div><!-- card -->
+        </div><!-- col -->
         <!--div class="col-sm-6 mg-t-20 mg-sm-t-0">
           <div class="card card-dashboard-two">
             <div class="card-header">
@@ -344,6 +342,14 @@
     .then(da => {
       document.getElementById('actualizado').innerHTML = moment(da[da.length - 1].fecha).format('D/M/Y')
     })
+
+    // Mostrar Efectivo
+    fetch('/api/saldo_efectivo/')
+    .then(rest => rest.json())
+    .then(dat => {
+      document.getElementById('efectivo').innerHTML = new Intl.NumberFormat().format(dat[0].saldo)
+    })
+
 
     // API datos semanales
     var datos = [];

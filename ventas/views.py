@@ -12,7 +12,7 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
-from .models import Lacteos
+from .models import Lacteos, Cuenta, Tipo_cuenta
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -482,6 +482,20 @@ class CalculadoraBilletes(View):
         if form.is_valid():
             form.cleaned_data
             form.save()
+            
+            saldo = Cuenta.objects.get(cuenta="Efectivo")
+            registro = form.cleaned_data['total']
+            tipo = form.cleaned_data['tipo_cuenta']
+            # print(f"Registro: {registro}")
+            # print(f"Saldo de Efectivo: {saldo.saldo}")
+            if tipo == 1:
+                saldo.saldo += registro
+            else:
+                saldo.saldo -= registro
+            
+            # print(f"Saldo actualizado: {saldo.saldo}")
+            saldo.save()
+                
             return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')
         else:
             return render(request, self.template_name, {'form': form})
