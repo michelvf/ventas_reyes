@@ -11,7 +11,7 @@
 {% block content %}
 <div class="az-dashboard-one-title">
     <div>
-      <h2 class="az-dashboard-title">Listado del Contador de Billetes</h2>
+      <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span></h2>
       <p class="az-dashboard-text">Las veces que contaste los billetes, ordenados por fechas.</p>
     </div>
     <div class="az-content-header-right">
@@ -131,6 +131,19 @@
   <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
 
   <script>
+    // Mostrar Efectivo
+    var Efectivo = document.getElementById('efectivo')
+    fetch('/api/saldo_efectivo/')
+    .then(rest => rest.json())
+    .then(dat => {
+        const efec = dat[0].saldo
+        if (efec > 0) {
+            Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
+        } else {
+            Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
+        }
+    })
+
     //new DataTable('#tabla', {
     var table = $('#tabla').DataTable({
         language: language,
