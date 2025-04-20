@@ -22,6 +22,7 @@
                     <th>Fecha</th>
                     <th>Comentario</th>
                     <th>Monto Total</th>
+                    <th>Operación</th>
                     <th>$1 </th>
                     <th>$3 </th>
                     <th>$5 </th>
@@ -41,6 +42,7 @@
                         <td>{{ billete.fecha|date:"d b Y h:i a" }}</td>
                         <td>{{ billete.comentario }}</td>
                         <td>$ {{ billete.total }}</td>
+                        <td>{{ billete.tipo_cuenta.siglas }}</td>
                         <td>{{ billete.un_peso }}</td>
                         <td>{{ billete.tres_pesos }}</td>
                         <td>{{ billete.cinco_pesos }}</td>
