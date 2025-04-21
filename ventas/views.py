@@ -485,13 +485,43 @@ class CalculadoraBilletes(View):
             
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
-            tipo = form.cleaned_data['tipo_cuenta']
+            tipo = request.POST.get('tipo_cuenta')
+            un = request.POST.get('un_peso')
+            tres = request.POST.get('tres_pesos')
+            cinco = request.POST.get('cinco_pesos')
+            diez = request.POST.get('diez_pesos')
+            veinte = request.POST.get('veinte_pesos')
+            cincuenta = request.POST.get('cincuenta_pesos')
+            cien = request.POST.get('cien_pesos')
+            doscientos = request.POST.get('doscientos_pesos')
+            quinientos = request.POST.get('quinientos_pesos')
+            mil = request.POST.get('mil_pesos')
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
             if tipo == 1:
                 saldo.saldo += registro
+                saldo.un += un
+                saldo.tres += tres
+                saldo.cinco += cinco
+                saldo.diez += diez
+                saldo.veinte += veinte
+                saldo.cincuenta += cincuenta
+                saldo.cien += cien
+                saldo.doscientos += doscientos
+                saldo.quinientos += quinientos
+                saldo.mil += mil
             else:
                 saldo.saldo -= registro
+                saldo.un -= un
+                saldo.tres -= tres
+                saldo.cinco -= cinco
+                saldo.diez -= diez
+                saldo.veinte -= veinte
+                saldo.cincuenta -= cincuenta
+                saldo.cien -= cien
+                saldo.doscientos -= doscientos
+                saldo.quinientos -= quinientos
+                saldo.mil -= mil
             
             # print(f"Saldo actualizado: {saldo.saldo}")
             saldo.save()

@@ -8,7 +8,7 @@ from .forms import CargoForm, TrabajadorForm, NominaForm, DepartamentoForm, Nomi
 from .forms import Trabajador2Form, NominaForm2
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from compras.forms import nomina_rango_fechasSemanal
+from compras.forms import ResumenSemanal
 from django.db.models import Sum, F
 
 
@@ -415,7 +415,7 @@ class NominaDePagoView(View):
             )
         
     def post(self, request):
-        form = nomina_rango_fechasSemanal(request.POST)
+        form = ResumenSemanal(request.POST)
         nomina_rango_fechas = None
         # print(f"Lo que llega del formulario POST: {form}")
         if form.is_valid():
