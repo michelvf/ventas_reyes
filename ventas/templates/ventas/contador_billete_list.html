@@ -27,8 +27,9 @@
                 <tr>
                     <th>Fecha</th>
                     <th>Comentario</th>
-                    <th>Monto</th>
                     <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Sub Total</th>
                     <th>$1 </th>
                     <th>$3 </th>
                     <th>$5 </th>
@@ -48,12 +49,19 @@
                         <td>{{ billete.fecha|date:"d/m/y H:i" }}</td>
                         <td>{{ billete.comentario }}</td>
                         <td>	
-			    {% if billete.tipo_cuenta.siglas == "CR" %}
-			      <span class="positivo">${{ billete.total }}</span>
-			    {% else %}
-				<span class="negativo">${{ billete.total }}</span>
-			    {% endif %}
-		        </td>
+                            {% if billete.tipo_cuenta.siglas == "CR" %}
+                                <span class="positivo">${{ billete.total }}</span>
+                            {% else %}
+                                <span class="negativo">${{ billete.total }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if billete.sub_total > 0 %}
+                                <span class="positivo">${{ billete.sub_total }}</span>
+                            {% else %}
+                                <span class="negativo">${{ billete.sub_total }}</span>
+                            {% endif %}
+                        </td>
                         <td style="text-align:center !important">{{ billete.tipo_cuenta.siglas }}</td>
                         <td style="text-align:center !important">{{ billete.un_peso }}</td>
                         <td style="text-align:center !important">{{ billete.tres_pesos }}</td>
@@ -69,18 +77,14 @@
                             <a href="{% url 'editar_calculadora_billetes' billete.id %}">
                                 <button class='btn btn-primary'>Editar</button>
                             </a>
-<<<<<<< HEAD
                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles">
-=======
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modaldemo3">
->>>>>>> 8d4812f870a3f4554908fcad5552749c703f3082
                                 Detalle
                             </button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
+            <!-- tfoot>
                 <tr>
                     <th></th>
                     <th></th>
@@ -98,11 +102,8 @@
                     <th></th>
                     <th></th>
                 </tr>
-            </tfoot>
+            </tfoot -->
         </table>
-        <div class="tx-center pd-y-20 bg-gray-200">
-            <a href="" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldemo1">View Live Demo</a>
-        </div>
     {% else %}
         <p>Aún no hay registros.</p>
     {% endif %}

@@ -485,11 +485,9 @@ class CalculadoraBilletes(View):
 
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
-<<<<<<< HEAD
             # tipo = form.cleaned_data['tipo_cuenta']
             tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
-=======
             tipo = request.POST.get('tipo_cuenta')
             un = request.POST.get('un_peso')
             tres = request.POST.get('tres_pesos')
@@ -501,7 +499,6 @@ class CalculadoraBilletes(View):
             doscientos = request.POST.get('doscientos_pesos')
             quinientos = request.POST.get('quinientos_pesos')
             mil = request.POST.get('mil_pesos')
->>>>>>> 8d4812f870a3f4554908fcad5552749c703f3082
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
             # print(f"lo que llega del formulario: {form}")
@@ -510,34 +507,29 @@ class CalculadoraBilletes(View):
             if tipo == 1:
                 print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
-                saldo.un += un
-                saldo.tres += tres
-                saldo.cinco += cinco
-                saldo.diez += diez
-                saldo.veinte += veinte
-                saldo.cincuenta += cincuenta
-                saldo.cien += cien
-                saldo.doscientos += doscientos
-                saldo.quinientos += quinientos
-                saldo.mil += mil
+                saldo.un += un if un is not None else 0
+                saldo.tres += tres if tres is not None else 0
+                saldo.cinco += cinco if cinco is not None else 0
+                saldo.diez += diez if diez is not None else 0
+                saldo.veinte += veinte if veinte is not None else 0
+                saldo.cincuenta += cincuenta if cincuenta is not None else 0
+                saldo.cien += cien if cien is not None else 0
+                saldo.doscientos += doscientos if doscientos is not None else 0
+                saldo.quinientos += quinientos if quinientos is not None else 0
+                saldo.mil += mil if mil is not None else 0
             else:
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
-<<<<<<< HEAD
-
-=======
-                saldo.un -= un
-                saldo.tres -= tres
-                saldo.cinco -= cinco
-                saldo.diez -= diez
-                saldo.veinte -= veinte
-                saldo.cincuenta -= cincuenta
-                saldo.cien -= cien
-                saldo.doscientos -= doscientos
-                saldo.quinientos -= quinientos
-                saldo.mil -= mil
-            
->>>>>>> 8d4812f870a3f4554908fcad5552749c703f3082
+                saldo.un -= un if un is not None else 0
+                saldo.tres -= tres if tres is not None else 0
+                saldo.cinco -= cinco if cinco is not None else 0
+                saldo.diez -= diez if diez is not None else 0
+                saldo.veinte -= veinte if veinte is not None else 0
+                saldo.cincuenta -= cincuenta if cincuenta is not None else 0
+                saldo.cien -= cien if cien is not None else 0
+                saldo.doscientos -= doscientos if doscientos is not None else 0
+                saldo.quinientos -= quinientos if quinientos is not None else 0
+                saldo.mil -= mil if mil is not None else 0
             # print(f"Saldo actualizado: {saldo.saldo}")
             saldo.save()
 

@@ -227,6 +227,7 @@ class Contador_billete(models.Model):
     quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     total = models.IntegerField(null=False, blank=False)
+    sub_total = models.IntegerField(null=False, blank=False)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
