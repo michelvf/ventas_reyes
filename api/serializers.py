@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta
 from compras.models import Almacen, Producto, PrecioProducto, Compra
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Count
@@ -260,3 +260,15 @@ class AnnosMesVentasSerializer(serializers.Serializer):
     """
     anno = serializers.IntegerField()
     mes = serializers.IntegerField()
+    
+
+# class SaldoEfectivoSerializer(serializers.Serializer):
+class SaldoEfectivoSerializer(serializers.ModelSerializer):
+    """
+    Saldo de Efectivo Serializer
+    """
+    # saldo = serializers.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        model = Cuenta
+        fields = ['id', 'cuenta', 'saldo']
+        

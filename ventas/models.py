@@ -161,10 +161,20 @@ class Tipo_cuenta(models.Model):
 
 class Cuenta(models.Model):
     """
-    Saldo de las Cuentas
+    Saldo de las Cuentas Model
     """
     cuenta = models.CharField(max_length=100, null=False, blank=False)
     saldo = models.FloatField(null=False, blank=False)
+    un_peso = models.IntegerField(default=0, null=True, blank=True)
+    tres_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cinco_pesos = models.IntegerField(default=0, null=True, blank=True)
+    diez_pesos = models.IntegerField(default=0, null=True, blank=True)
+    veinte_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cincuenta_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cien_pesos = models.IntegerField(default=0, null=True, blank=True)
+    doscientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     comentario = models.TextField(null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
@@ -211,7 +221,7 @@ class Contador_billete(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-fecha"] # ["-fecha"] ascending
+        # ordering = ["-fecha"] # ["-fecha"] ascending
         verbose_name = "contador_billete"
         verbose_name_plural = "contador_billetes"
         indexes = [
