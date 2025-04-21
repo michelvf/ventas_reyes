@@ -270,5 +270,18 @@ class SaldoEfectivoSerializer(serializers.ModelSerializer):
     # saldo = serializers.DecimalField(max_digits=10, decimal_places=2)
     class Meta:
         model = Cuenta
-        fields = ['id', 'cuenta', 'saldo']
+        fields = ['id',
+                'cuenta',
+                'saldo',
+                'un_peso',
+                'tres_pesos',
+                'cinco_pesos',
+                'diez_pesos',
+                'veinte_pesos',
+                'cincuenta_pesos',
+                'cien_pesos',
+                'doscientos_pesos',
+                'quinientos_pesos',
+                'mil_pesos'
+                ]
         

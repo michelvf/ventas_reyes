@@ -485,9 +485,23 @@ class CalculadoraBilletes(View):
 
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
+<<<<<<< HEAD
             # tipo = form.cleaned_data['tipo_cuenta']
             tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
+=======
+            tipo = request.POST.get('tipo_cuenta')
+            un = request.POST.get('un_peso')
+            tres = request.POST.get('tres_pesos')
+            cinco = request.POST.get('cinco_pesos')
+            diez = request.POST.get('diez_pesos')
+            veinte = request.POST.get('veinte_pesos')
+            cincuenta = request.POST.get('cincuenta_pesos')
+            cien = request.POST.get('cien_pesos')
+            doscientos = request.POST.get('doscientos_pesos')
+            quinientos = request.POST.get('quinientos_pesos')
+            mil = request.POST.get('mil_pesos')
+>>>>>>> 8d4812f870a3f4554908fcad5552749c703f3082
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
             # print(f"lo que llega del formulario: {form}")
@@ -496,10 +510,34 @@ class CalculadoraBilletes(View):
             if tipo == 1:
                 print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
+                saldo.un += un
+                saldo.tres += tres
+                saldo.cinco += cinco
+                saldo.diez += diez
+                saldo.veinte += veinte
+                saldo.cincuenta += cincuenta
+                saldo.cien += cien
+                saldo.doscientos += doscientos
+                saldo.quinientos += quinientos
+                saldo.mil += mil
             else:
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
+<<<<<<< HEAD
 
+=======
+                saldo.un -= un
+                saldo.tres -= tres
+                saldo.cinco -= cinco
+                saldo.diez -= diez
+                saldo.veinte -= veinte
+                saldo.cincuenta -= cincuenta
+                saldo.cien -= cien
+                saldo.doscientos -= doscientos
+                saldo.quinientos -= quinientos
+                saldo.mil -= mil
+            
+>>>>>>> 8d4812f870a3f4554908fcad5552749c703f3082
             # print(f"Saldo actualizado: {saldo.saldo}")
             saldo.save()
 
