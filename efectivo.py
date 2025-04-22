@@ -47,6 +47,15 @@ def efectivo():
 
     print(f"Total: {suma:,}, $1: {un}, $3: {tres}, $5: {cinco}, $10: {diez}, $20: {veinte}")
     print(f"$50: {cincuenta}, $100: {cien}, $200: {doscientos}, $500: {quinientos}, $1000: {mil}")
+    print(f"Desea actualizar (y/n)", end="")
+    resp = input()
+    if resp == "n":
+        update = Cuenta.objects.get(cuenta='Efectivo')
+        update(un_peso=un, tres_pesos=tres, cinco_pesos=cien, diez_pesos=diez, veinte_pesos=veinte,\
+            cincuenta_pesos=cincuenta, cien_pesos==cien, doscientos_pesos=doscientos, quinientos_pesos=quinientos, mil_pesos=mil )
+        update.save()
+    else:
+        exit()
 # ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinie ntos_pesos;
 # ALTER TABLE ventas_cuenta ADD un_peso NULL DEFAULT 0;
 

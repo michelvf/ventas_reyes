@@ -476,19 +476,25 @@ class CalculadoraBilletes(View):
 
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
-        billetes = request.POST
+        # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
 
+        sub_total = CalculadoraBilletes.objects.last()
         if form.is_valid():
+            
+            # Validar los datos llegados del formulario
             form.cleaned_data
+            #form('sub_total') = form.total + sub_total.sub_total
+            # Guardar los datos del formulario
             form.save()
-
+            print(f"Lo que se guardó del formulario: {form}")
+            
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
             # tipo = form.cleaned_data['tipo_cuenta']
             tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
-            tipo = request.POST.get('tipo_cuenta')
+            # tipo = request.POST.get('tipo_cuenta')
             un = request.POST.get('un_peso')
             tres = request.POST.get('tres_pesos')
             cinco = request.POST.get('cinco_pesos')
@@ -507,6 +513,7 @@ class CalculadoraBilletes(View):
             if tipo == 1:
                 print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
+                # saldo.sub_cuenta += form.total
                 saldo.un += un if un is not None else 0
                 saldo.tres += tres if tres is not None else 0
                 saldo.cinco += cinco if cinco is not None else 0
@@ -520,6 +527,7 @@ class CalculadoraBilletes(View):
             else:
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
+                # saldo.sub_cuenta -= form.total
                 saldo.un -= un if un is not None else 0
                 saldo.tres -= tres if tres is not None else 0
                 saldo.cinco -= cinco if cinco is not None else 0
@@ -530,7 +538,9 @@ class CalculadoraBilletes(View):
                 saldo.doscientos -= doscientos if doscientos is not None else 0
                 saldo.quinientos -= quinientos if quinientos is not None else 0
                 saldo.mil -= mil if mil is not None else 0
+                
             # print(f"Saldo actualizado: {saldo.saldo}")
+            # Guardar los datos actualizados en la Cuenta
             saldo.save()
 
             return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')

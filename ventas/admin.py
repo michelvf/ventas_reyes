@@ -37,7 +37,7 @@ class CuentaAdmin(admin.ModelAdmin):
     list_display = ["id", "cuenta", "saldo", "comentario"]
     
 class Contador_billeteAdmin(admin.ModelAdmin):
-    list_display = ["id", "total", "comentario"]
+    list_display = ["id", "total", "sub_total", "tipo_cuenta", "comentario"]
 
 
 admin.site.register(Productos, ProductAdmin)
