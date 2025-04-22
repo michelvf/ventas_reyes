@@ -6,12 +6,44 @@
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+  <style> 
+   
+    .modal-header {
+        background-color: #0059be;
+        color: white;
+        display: flex;
+        //flex-direction: column;
+        //align-items: center;
+        padding-top: 4px; /* Ajuste para acomodar la franja */
+        //position: relative;
+    }
+
+    .modal-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px; /* Ancho de la franja amarilla */
+        background-color: #fdb02b;;
+    }
+    .ancho {
+        /* Asegurar que la segunda columna tenga un ancho fijo */
+        td:nth-child(2), th:nth-child(2) {
+            width: 540px !important;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="az-dashboard-one-title">
     <div>
-      <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span></h2>
+      <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span>&nbsp;
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()">
+        Detalle
+        </button>
+    </h2>
       <p class="az-dashboard-text">Las veces que contaste los billetes, ordenados por fechas.</p>
     </div>
     <div class="az-content-header-right">
@@ -22,7 +54,7 @@
   </div><!-- az-dashboard-one-title -->
  <div>
     {% if billetes %}
-        <table class="table" id="tabla">
+        <table class="table ancho" id="tabla">
             <thead>
                 <tr>
                     <th>Fecha</th>
@@ -30,16 +62,6 @@
                     <th>Tipo</th>
                     <th>Monto</th>
                     <th>Sub Total</th>
-                    <th>$1 </th>
-                    <th>$3 </th>
-                    <th>$5 </th>
-                    <th>$10 </th>
-                    <th>$20 </th>
-                    <th>$50 </th>
-                    <th>$100 </th>
-                    <th>$200 </th>
-                    <th>$500 </th>
-                    <th>$1000 </th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -48,6 +70,7 @@
                     <tr>
                         <td>{{ billete.fecha|date:"d/m/y H:i" }}</td>
                         <td>{{ billete.comentario }}</td>
+                        <td style="text-align:center !important">{{ billete.tipo_cuenta.siglas }}</td>
                         <td>	
                             {% if billete.tipo_cuenta.siglas == "CR" %}
                                 <span class="positivo">${{ billete.total }}</span>
@@ -61,23 +84,12 @@
                             {% else %}
                                 <span class="negativo">${{ billete.sub_total }}</span>
                             {% endif %}
-                        </td>
-                        <td style="text-align:center !important">{{ billete.tipo_cuenta.siglas }}</td>
-                        <td style="text-align:center !important">{{ billete.un_peso }}</td>
-                        <td style="text-align:center !important">{{ billete.tres_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.cinco_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.diez_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.veinte_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.cincuenta_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.cien_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.doscientos_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.quinientos_pesos }}</td>
-                        <td style="text-align:center !important">{{ billete.mil_pesos }}</td>
+                        </td>                        
                         <td>
                             <a href="{% url 'editar_calculadora_billetes' billete.id %}">
                                 <button class='btn btn-primary'>Editar</button>
                             </a>
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles">
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes({{ billete.id }})">
                                 Detalle
                             </button>
                         </td>
@@ -135,17 +147,46 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header">
-                <h6 class="modal-title">Detalles del pago</h6>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <h6 class="modal-title mt-3">Detalles del pago</h6>
+                <!-- button type="button" class="close mt-1" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button -->
             </div>
             <div class="modal-body">
-                <h6>Desglose del pago</h6>
-                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+                <table class="table">
+                    <thead>
+                        <tr style="text-align:center !important">
+                            <th>Monto</th>
+                            <th>$1</th>
+                            <th>$3</th>
+                            <th>$5</th>
+                            <th>$10</th>
+                            <th>$20</th>
+                            <th>$50</th>
+                            <th>$100</th>
+                            <th>$200</th>
+                            <th>$500</th>
+                            <th>$1000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="total" style="text-align:center !important"></td>
+                            <td id="1" style="text-align:center !important"></td>
+                            <td id="3" style="text-align:center !important"></td>
+                            <td id="5" style="text-align:center !important"></td>
+                            <td id="10" style="text-align:center !important"></td>
+                            <td id="20" style="text-align:center !important"></td>
+                            <td id="50" style="text-align:center !important"></td>
+                            <td id="100" style="text-align:center !important"></td>
+                            <td id="200" style="text-align:center !important"></td>
+                            <td id="500" style="text-align:center !important"></td>
+                            <td id="1000" style="text-align:center !important"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div><!-- modal-body -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-indigo">Save changes</button>
                 <button type="button" data-bs-dismiss="modal" class="btn btn-outline-light">Close</button>
             </div>
         </div>
@@ -241,5 +282,87 @@
       });
 
     });
+
+    function billetes(id) {
+        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
+        let url = '/api/contador_billetes/' + id;
+        let total = document.getElementById('total')
+        let uno = document.getElementById('1')
+        let tres = document.getElementById('3')
+        let cinco = document.getElementById('5')
+        let diez = document.getElementById('10')
+        let veinte = document.getElementById('20')
+        let cincuenta = document.getElementById('50')
+        let cien = document.getElementById('100')
+        let doscientos = document.getElementById('200')
+        let quinientos = document.getElementById('500')
+        let mil = document.getElementById('1000')
+
+        fetch(url)
+        .then(res => res.json())
+        .then(dat => {
+            // console.log(`lo que llega del fetch: ${dat.total}`)
+            // const totall = dat.total
+            /*
+            if (totall > 0) {
+                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
+            } else {
+                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
+            }
+            */
+            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
+            uno.innerHTML = dat.un_peso
+            tres.innerHTML = dat.tres_pesos
+            cinco.innerHTML = dat.cinco_pesos
+            diez.innerHTML = dat.diez_pesos
+            veinte.innerHTML = dat.veinte_pesos
+            cincuenta.innerHTML = dat.cincuenta_pesos
+            cien.innerHTML = dat.cien_pesos
+            doscientos.innerHTML = dat.doscientos_pesos
+            quinientos.innerHTML = dat.quinientos_pesos
+            mil.innerHTML = dat.mil_pesos
+        })
+    }
+
+    function total_billetes() {
+        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
+        let url = '/api/saldo_efectivo/';
+        let total = document.getElementById('total')
+        let uno = document.getElementById('1')
+        let tres = document.getElementById('3')
+        let cinco = document.getElementById('5')
+        let diez = document.getElementById('10')
+        let veinte = document.getElementById('20')
+        let cincuenta = document.getElementById('50')
+        let cien = document.getElementById('100')
+        let doscientos = document.getElementById('200')
+        let quinientos = document.getElementById('500')
+        let mil = document.getElementById('1000')
+
+        fetch(url)
+        .then(res => res.json())
+        .then(dat => {
+            // console.log(`lo que llega del fetch: ${dat.total}`)
+            /*
+            const totall = dat.total
+            if (totall > 0) {
+                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
+            } else {
+                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
+            }
+            */
+            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat[0].saldo)
+            uno.innerHTML = dat[0].un_peso
+            tres.innerHTML = dat[0].tres_pesos
+            cinco.innerHTML = dat[0].cinco_pesos
+            diez.innerHTML = dat[0].diez_pesos
+            veinte.innerHTML = dat[0].veinte_pesos
+            cincuenta.innerHTML = dat[0].cincuenta_pesos
+            cien.innerHTML = dat[0].cien_pesos
+            doscientos.innerHTML = dat[0].doscientos_pesos
+            quinientos.innerHTML = dat[0].quinientos_pesos
+            mil.innerHTML = dat[0].mil_pesos
+        })
+    }
   </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete
 from compras.models import Almacen, Producto, PrecioProducto, Compra
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from django.db.models import Count
@@ -284,4 +284,25 @@ class SaldoEfectivoSerializer(serializers.ModelSerializer):
                 'quinientos_pesos',
                 'mil_pesos'
                 ]
-        
+
+
+class CuentaBilletesSerializer(serializers.ModelSerializer):
+    """
+    Saldo de Efectivo Serializer
+    """
+    # saldo = serializers.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        model = Contador_billete
+        fields = ['id',
+                'total',
+                'un_peso',
+                'tres_pesos',
+                'cinco_pesos',
+                'diez_pesos',
+                'veinte_pesos',
+                'cincuenta_pesos',
+                'cien_pesos',
+                'doscientos_pesos',
+                'quinientos_pesos',
+                'mil_pesos'
+                ]

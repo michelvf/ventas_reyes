@@ -478,33 +478,46 @@ class CalculadoraBilletes(View):
         form = CalculadoraBilletesForm(request.POST)
         # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
+    
+    # def form_valid(self, form):
+    #     # Asignar el valor del campo 'total' antes de guardar
+    #     form.instance.sub_total = self.calcular_total(form.cleaned_data)
+    #     return super().form_valid(form)
 
-        sub_total = CalculadoraBilletes.objects.last()
+    # def calcular_total(self, data):
+    #     # Lógica para calcular el total (puedes modificar según lo necesites)
+    #     return data.get('campo1', 0) + data.get('campo2', 0)  # Ejemplo
+
+        # sub_total = CalculadoraBilletes.objects.last()
         if form.is_valid():
             
             # Validar los datos llegados del formulario
             form.cleaned_data
             #form('sub_total') = form.total + sub_total.sub_total
+            
+            saldo = Cuenta.objects.get(cuenta="Efectivo")
+            registro = form.cleaned_data['total']
+
+            form.instance.sub_total = registro + saldo.saldo
+            
             # Guardar los datos del formulario
             form.save()
             print(f"Lo que se guardó del formulario: {form}")
             
-            saldo = Cuenta.objects.get(cuenta="Efectivo")
-            registro = form.cleaned_data['total']
             # tipo = form.cleaned_data['tipo_cuenta']
             tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
-            un = request.POST.get('un_peso')
-            tres = request.POST.get('tres_pesos')
-            cinco = request.POST.get('cinco_pesos')
-            diez = request.POST.get('diez_pesos')
-            veinte = request.POST.get('veinte_pesos')
-            cincuenta = request.POST.get('cincuenta_pesos')
-            cien = request.POST.get('cien_pesos')
-            doscientos = request.POST.get('doscientos_pesos')
-            quinientos = request.POST.get('quinientos_pesos')
-            mil = request.POST.get('mil_pesos')
+            un = int(request.POST.get('un_peso'))
+            tres = int(request.POST.get('tres_pesos'))
+            cinco = int(request.POST.get('cinco_pesos'))
+            diez = int(request.POST.get('diez_pesos'))
+            veinte = int(request.POST.get('veinte_pesos'))
+            cincuenta = int(request.POST.get('cincuenta_pesos'))
+            cien = int(request.POST.get('cien_pesos'))
+            doscientos = int(request.POST.get('doscientos_pesos'))
+            quinientos = int(request.POST.get('quinientos_pesos'))
+            mil = int(request.POST.get('mil_pesos'))
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
             # print(f"lo que llega del formulario: {form}")
@@ -514,30 +527,30 @@ class CalculadoraBilletes(View):
                 print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
                 # saldo.sub_cuenta += form.total
-                saldo.un += un if un is not None else 0
-                saldo.tres += tres if tres is not None else 0
-                saldo.cinco += cinco if cinco is not None else 0
-                saldo.diez += diez if diez is not None else 0
-                saldo.veinte += veinte if veinte is not None else 0
-                saldo.cincuenta += cincuenta if cincuenta is not None else 0
-                saldo.cien += cien if cien is not None else 0
-                saldo.doscientos += doscientos if doscientos is not None else 0
-                saldo.quinientos += quinientos if quinientos is not None else 0
-                saldo.mil += mil if mil is not None else 0
+                saldo.un_peso += un if un is not None else 0
+                saldo.tres_pesos += tres if tres is not None else 0
+                saldo.cinco_pesos += cinco if cinco is not None else 0
+                saldo.diez_pesos += diez if diez is not None else 0
+                saldo.veinte_pesos += veinte if veinte is not None else 0
+                saldo.cincuenta_pesos += cincuenta if cincuenta is not None else 0
+                saldo.cien_pesos += cien if cien is not None else 0
+                saldo.doscientos_pesos += doscientos if doscientos is not None else 0
+                saldo.quinientos_pesos += quinientos if quinientos is not None else 0
+                saldo.mil_pesos += mil if mil is not None else 0
             else:
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
                 # saldo.sub_cuenta -= form.total
-                saldo.un -= un if un is not None else 0
-                saldo.tres -= tres if tres is not None else 0
-                saldo.cinco -= cinco if cinco is not None else 0
-                saldo.diez -= diez if diez is not None else 0
-                saldo.veinte -= veinte if veinte is not None else 0
-                saldo.cincuenta -= cincuenta if cincuenta is not None else 0
-                saldo.cien -= cien if cien is not None else 0
-                saldo.doscientos -= doscientos if doscientos is not None else 0
-                saldo.quinientos -= quinientos if quinientos is not None else 0
-                saldo.mil -= mil if mil is not None else 0
+                saldo.un_pesos -= un if un is not None else 0
+                saldo.tres_pesos -= tres if tres is not None else 0
+                saldo.cinco_pesos -= cinco if cinco is not None else 0
+                saldo.diez_pesos -= diez if diez is not None else 0
+                saldo.veinte_pesos -= veinte if veinte is not None else 0
+                saldo.cincuenta_pesos -= cincuenta if cincuenta is not None else 0
+                saldo.cien_pesos -= cien if cien is not None else 0
+                saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
+                saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
+                saldo.mil_pesos -= mil if mil is not None else 0
                 
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta

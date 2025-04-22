@@ -1,16 +1,16 @@
 import datetime
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets, generics
 from rest_framework import authentication
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Lacteos, Cuenta
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Lacteos, Cuenta, Contador_billete
 from .serializers import DepartamentoSerializer, ProductosSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer, AnnosDeVentaSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer, AnnoSerializer
-from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer
+from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer, CuentaBilletesSerializer
 from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
@@ -22,6 +22,7 @@ from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
 from datetime import timedelta, datetime
 from django.db.models.functions import ExtractYear, TruncMonth
+from django.shortcuts import get_object_or_404
 import pytz
 
 
@@ -500,4 +501,17 @@ class SaldoEfectivoView(viewsets.ReadOnlyModelViewSet):
         return Cuenta.objects.filter(cuenta='Efectivo')
     
     
+class ContadorBilleteView(ViewSet):
+    """
+    Saldo Efectivo View
+    """
     
+    def list(self, request):
+        registro = Contador_billete.objects.order_by('-id').first()
+        serializer = CuentaBilletesSerializer(registro)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        registro = get_object_or_404(Contador_billete, id=pk)
+        serializer = CuentaBilletesSerializer(registro)
+        return Response(serializer.data)
