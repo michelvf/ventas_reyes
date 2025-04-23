@@ -407,16 +407,16 @@ class NominaDePagoView(View):
     The Payroll by dates
     """
     def get(self, request):
-        resumen = None
+        nomina_rango_fechas = None
         return render(
             request,
             'nomina/nomina_de_pago.html', 
-            {'resumen': resumen}
+            {'nomina_rango_fechas': nomina_rango_fechas}
             )
         
     def post(self, request):
-        form = ResumenSemanal(request.POST)
-        resumen = None
+        form = nomina_rango_fechasSemanal(request.POST)
+        nomina_rango_fechas = None
         # print(f"Lo que llega del formulario POST: {form}")
         if form.is_valid():
             llega = form.cleaned_data['datefilter']
@@ -428,15 +428,15 @@ class NominaDePagoView(View):
             hasta = fecha_informal[1]
             
             # Hacer la consultas con el rango de fechas
-            resumen = Nomina.objects.filter(
+            nomina_rango_fechas = Nomina.objects.filter(
                 fecha__range=[desde, hasta]
             ).order_by('fecha')
-            # print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
+            # print(f"Resume es: {nomina_rango_fechas} y de tamaño: {len(nomina_rango_fechas)}")
             # print()
             
             # Hacer un arreglo con las fechas
             fechas = []
-            for f in resumen:
+            for f in nomina_rango_fechas:
                 if f.fecha not in fechas:
                     fechas.append(f.fecha)
             # print(f"fechas es = {fechas}")
@@ -450,7 +450,7 @@ class NominaDePagoView(View):
             comparar = True
             
             # Comenzado a iterar en el arreglo de la consulta de rango de fechas
-            for l in resumen:
+            for l in nomina_rango_fechas:
                 # Comprobar si los nombres no se repiten
                 if l.trabajador not in nombre:
                     nombre.append(l.trabajador)
@@ -459,7 +459,7 @@ class NominaDePagoView(View):
                     
                     # Volviendo a recorre el arreglo para obtener el salarios
                     # de los trabajadores por los días trabajados
-                    for p in resumen:
+                    for p in nomina_rango_fechas:
                         if l.trabajador == p.trabajador:
                             # print('voy dentro del While')
                             while comparar:
@@ -513,7 +513,7 @@ class NominaDePagoView(View):
             request,
             'nomina/nomina_de_pago.html', 
             {
-                'resumen': resumen,
+                'nomina_rango_fechas': nomina_rango_fechas,
                 'fechas': fechas,
                 'listado': listado,
                 # 'totales_apagar': totales_apagar,
@@ -529,16 +529,16 @@ class NominaDePagoView2(View):
     The Payroll by dates 2
     """
     def get(self, request):
-        resumen = None
+        nomina_rango_fechas = None
         return render(
             request,
             'nomina/nomina_de_pago2.html', 
-            {'resumen': resumen}
+            {'nomina_rango_fechas': nomina_rango_fechas}
             )
         
     def post(self, request):
-        form = ResumenSemanal(request.POST)
-        resumen = None
+        form = nomina_rango_fechasSemanal(request.POST)
+        nomina_rango_fechas = None
         # print(f"Lo que llega del formulario POST: {form}")
         if form.is_valid():
             llega = form.cleaned_data['datefilter']
@@ -550,15 +550,15 @@ class NominaDePagoView2(View):
             hasta = fecha_informal[1]
             
             # Hacer la consultas con el rango de fechas
-            resumen = Nomina2.objects.filter(
+            nomina_rango_fechas = Nomina2.objects.filter(
                 fecha__range=[desde, hasta]
             ).order_by('fecha')
-            print(f"Resume es: {resumen} y de tamaño: {len(resumen)}")
+            # print(f"Resume es: {nomina_rango_fechas} y de tamaño: {len(nomina_rango_fechas)}")
             # print()
             
             # Hacer un arreglo con las fechas
             fechas = []
-            for f in resumen:
+            for f in nomina_rango_fechas:
                 if f.fecha not in fechas:
                     fechas.append(f.fecha)
             # print(f"fechas es = {fechas}")
@@ -572,7 +572,7 @@ class NominaDePagoView2(View):
             comparar = True
             
             # Comenzado a iterar en el arreglo de la consulta de rango de fechas
-            for l in resumen:
+            for l in nomina_rango_fechas:
                 # Comprobar si los nombres no se repiten
                 if l.trabajador not in nombre:
                     nombre.append(l.trabajador)
@@ -581,7 +581,7 @@ class NominaDePagoView2(View):
                     
                     # Volviendo a recorre el arreglo para obtener el salarios
                     # de los trabajadores por los días trabajados
-                    for p in resumen:
+                    for p in nomina_rango_fechas:
                         if l.trabajador == p.trabajador:
                             # print('voy dentro del While')
                             while comparar:
@@ -635,7 +635,7 @@ class NominaDePagoView2(View):
             request,
             'nomina/nomina_de_pago.html', 
             {
-                'resumen': resumen,
+                'nomina_rango_fechas': nomina_rango_fechas,
                 'fechas': fechas,
                 'listado': listado,
                 # 'totales_apagar': totales_apagar,

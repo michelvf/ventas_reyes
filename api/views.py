@@ -2,9 +2,9 @@ import datetime
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, generics
 from rest_framework import authentication
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Lacteos
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Lacteos, Cuenta
 from .serializers import DepartamentoSerializer, ProductosSerializer
 from .serializers import VentaSerializer, VentasPorFechasSerializer, AnnosDeVentaSerializer
 from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
@@ -15,8 +15,8 @@ from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
-from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
+from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar, SaldoEfectivoSerializer
 from django.db.models import Sum, Count, Q, DateField
 from django.db.models.functions import TruncDate, Substr
 from django.utils import timezone
@@ -479,3 +479,25 @@ class AnnosDeVenta(APIView):
             # return Response(ventas_fecha.values(), status=status.HTTP_200_OK)
             return Response(serializer_other.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SaldoEfectivoView(viewsets.ReadOnlyModelViewSet):
+# class SaldoEfectivoView(generics.ListAPIView):
+    """
+    Saldo Efectivo View
+    """
+    queryset = Cuenta.objects.get(cuenta="Efectivo")
+    serializer_class = SaldoEfectivoSerializer
+    # def get(self, request):
+        # Filtrar la cuenta llamada "Efectivo"
+        # efectivo = Cuenta.objects.filter(cuenta='Efectivo')
+        # if efectivo:
+        #     serializer = SaldoEfectivoSerializer(efectivo)
+        #     return Response(serializer.data)
+        # else:
+        #     return Response({"error": "Cuenta Efectivo no se encuentra"}, status=404)
+    def get_queryset(self):
+        return Cuenta.objects.filter(cuenta='Efectivo')
+    
+    
+    

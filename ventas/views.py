@@ -12,7 +12,7 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
-from .models import Lacteos
+from .models import Lacteos, Cuenta, Tipo_cuenta
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -473,15 +473,32 @@ class CalculadoraBilletes(View):
         # billetes = Contador_billete.objects.all()
         form = CalculadoraBilletesForm()
         return render(request, 'ventas/contador_billete_form.html', {'form': form})
-    
+
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
         billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
-        
+
         if form.is_valid():
             form.cleaned_data
             form.save()
+
+            saldo = Cuenta.objects.get(cuenta="Efectivo")
+            registro = form.cleaned_data['total']
+            # tipo = form.cleaned_data['tipo_cuenta']
+            tipo = int(request.POST.get("tipo_cuenta"))
+            # print(f"Registro: {registro}")
+            # print(f"Saldo de Efectivo: {saldo.saldo}")
+            if tipo == "1":
+                print(f"Es de tipo {tipo}, es un Crédito se suman: {registro}")
+                saldo.saldo += registro
+            else:
+                print(f"Es de tipo {tipo}, es un Débito se resta: {registro}")
+                saldo.saldo -= registro
+
+            # print(f"Saldo actualizado: {saldo.saldo}")
+            saldo.save()
+
             return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')
         else:
             return render(request, self.template_name, {'form': form})
