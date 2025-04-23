@@ -30,7 +30,7 @@
     .ancho {
         /* Asegurar que la segunda columna tenga un ancho fijo */
         td:nth-child(2), th:nth-child(2) {
-            width: 540px !important;
+            width: 450px !important;
         }
     }
 </style>
@@ -146,7 +146,7 @@
 <div id="detalles" class="modal">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content modal-content-demo">
-            <div class="modal-header">
+            <div class="modal-header" style="justify-content: start !important;">
                 <h6 class="modal-title mt-3">Detalles del pago</h6>
                 <!-- button type="button" class="close mt-1" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -218,48 +218,6 @@
         language: language,
         pageLength: 20,
         order: [[0, 'desc']],
-        /*
-        footerCallback: function (row, data, start, end, display) {
-            var api = this.api();
-     
-            // Remove the formatting to get integer data for summation
-            var intVal = function (i) {
-                return typeof i === 'string'
-                    ? i.replace(/<span class="positivo">|\$|&nbsp;|<\/span>/g, '') * 1
-                    // ? i.replace("$", "").replace(/&nbsp;/g, "").replace(/<\/?span[^>]*>/g, "")
-                    : typeof i === 'number'
-                    ? i
-                    : 0;
-            };
-
-            // Total over all pages
-            total = api
-                .column(2)
-                .data()
-                .reduce(function (a, b) {
-                    // console.log('voy por aquí1 a ver si b: ' + b + ', cómo funciona intVal(b): ' + intVal(b));
-                    return intVal(a) + intVal(b);
-                }, 0);
-            // console.log('voy por aquí2 ' + total);
-            // Total over this page
-            pageTotal = api
-                .column(2, { page: 'current' })
-                .data()
-                .reduce(function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0);
-     
-            // Update footer
-            if (pageTotal > 0) {
-                $(api.column(2).footer()).html(
-                    '<span class="positivo">$' + new Intl.NumberFormat().format(pageTotal) + '</span>'
-                );
-            } else {
-                $(api.column(2).footer()).html(
-                    '<span class="negativo">$' + new Intl.NumberFormat().format(pageTotal) + '</span>'
-                );
-            }
-        } */
     });
   </script>
 
@@ -286,6 +244,7 @@
     function billetes(id) {
         // console.log(`se le dio click a detalle para buscar el id: ${id}`)
         let url = '/api/contador_billetes/' + id;
+        // let comentario = document.getElementById('comentario')
         let total = document.getElementById('total')
         let uno = document.getElementById('1')
         let tres = document.getElementById('3')
@@ -311,6 +270,7 @@
             }
             */
             total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
+            comentario.innerHTML = dat.comentario
             uno.innerHTML = dat.un_peso
             tres.innerHTML = dat.tres_pesos
             cinco.innerHTML = dat.cinco_pesos

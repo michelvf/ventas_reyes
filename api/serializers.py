@@ -295,6 +295,7 @@ class CuentaBilletesSerializer(serializers.ModelSerializer):
         model = Contador_billete
         fields = ['id',
                 'total',
+                'comentario',
                 'un_peso',
                 'tres_pesos',
                 'cinco_pesos',
