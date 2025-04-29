@@ -86,25 +86,25 @@ class CalculadoraBilletesForm(forms.ModelForm):
         super(CalculadoraBilletesForm, self).__init__(*args, **kwargs)
         # self.fields['total'].widget = forms.HiddenInput()
         self.fields['tipo_cuenta'].widget.attrs.update({'class': 'form-control col-9 entrada'})
-        self.fields['un_peso'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['un_peso'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 1, 'value': 0, 'min': 0})
         self.fields['un_peso'].required = False
-        self.fields['tres_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['tres_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 3, 'value': 0, 'min': 0})
         self.fields['tres_pesos'].required = False
-        self.fields['cinco_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cinco_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 5, 'value': 0, 'min': 0})
         self.fields['cinco_pesos'].required = False
-        self.fields['diez_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['diez_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 10, 'value': 0, 'min': 0})
         self.fields['diez_pesos'].required = False
-        self.fields['veinte_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['veinte_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 20, 'value': 0, 'min': 0})
         self.fields['veinte_pesos'].required = False
-        self.fields['cincuenta_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cincuenta_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 50, 'value': 0, 'min': 0})
         self.fields['cincuenta_pesos'].required = False
-        self.fields['cien_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['cien_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 100, 'value': 0, 'min': 0})
         self.fields['cien_pesos'].required = False
-        self.fields['doscientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['doscientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 200, 'value': 0, 'min': 0})
         self.fields['doscientos_pesos'].required = False
-        self.fields['quinientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['quinientos_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 500, 'value': 0, 'min': 0})
         self.fields['quinientos_pesos'].required = False
-        self.fields['mil_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['mil_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 1000, 'value': 0, 'min': 0 })
         self.fields['mil_pesos'].required = False
         # self.fields['comentario'].widget = forms.Textarea(attrs={'class': 'form-control col-9', 'row': 4, 'cols': 100})
         
@@ -136,3 +136,13 @@ class DondeSeVendeMasForm(forms.Form):
     """
     anno = forms.IntegerField()
     mes = forms.IntegerField()
+
+
+class EstudioInventarioForm(forms.Form):
+    """
+    Formulario para subir ficheros excel
+    """
+    # actualizar = forms.CheckboxInput()
+    
+    ipv = forms.FileField(label="Subir Excel IPV")
+    eleventa = forms.FileField(label="Subir Excel Eleventa")

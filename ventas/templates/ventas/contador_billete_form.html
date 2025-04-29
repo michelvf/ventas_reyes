@@ -44,14 +44,14 @@
       </div>
 
       <div class="mb-3 tx-30">
-          <strong>Total: <span id="id_total_span"></span></strong>
+          <strong>Total: <span id="grandTotal"></span></strong>
           <!-- input type="hidden" name="total" value="" id="id_total" required / -->
           {{ form.total }}
       </div>
       <div class="row">
 	<div class="col-sm-6 mb-3">
 	  <div class="input-group">
-	    <span class="input-group-text">Tipo de cuenta: {{ form.tipo_cuenta }}</span>
+	    <span class="input-group-text">Operación: {{ form.tipo_cuenta }}</span>
 	  </div>
 	</div>
       </div>
@@ -61,7 +61,7 @@
                   <span class="input-group-text">$ 1  </span>
                   <!-- input id="id_un_peso" name="un_peso" type="number" class="form-control col-9 entrada" aria-label="pesos" placeholder="Billetes de $1" -->
                    {{ form.un_peso }}
-                  <span id="resultado_un_peso" class="form-control text-end"></span>
+                  <span id="subtotal-1" class="form-control text-end"></span>
                 </div>
                 {{ form.un_peso.errors }}
             </div>
@@ -70,7 +70,7 @@
                   <span class="input-group-text">$ 3   </span>
                   <!-- input id="tres_pesos" name="tres_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $3" -->
                    {{ form.tres_pesos }}
-                  <span id="resultado_tres_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-3" class="form-control text-end"></span>
                   {{ form.tres_pesos.errors }}
                 </div>
             </div>
@@ -79,7 +79,7 @@
                   <span class="input-group-text">$ 5  </span>
                   <!-- input id="cinco_pesos" name="cinco_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $5" -->
                    {{ form.cinco_pesos }}
-                  <span id="resultado_cinco_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-5" class="form-control text-end"></span>
                   {{ form.cinco_pesos.errors }}
                 </div>
             </div>
@@ -88,7 +88,7 @@
                   <span class="input-group-text">$ 10  </span>
                   <!-- input id="diez_pesos" name="diez_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $10" -->
                   {{ form.diez_pesos }}
-                  <span id="resultado_diez_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-10" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -96,7 +96,7 @@
                   <span class="input-group-text">$20 </span>
                   <!-- input id="veinte_pesos" name="veinte_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $20" -->
                   {{ form.veinte_pesos }}
-                  <span id="resultado_veinte_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-20" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -104,7 +104,7 @@
                   <span class="input-group-text">$ 50  </span>
                   <!-- input id="cincuenta_pesos" name="cincuenta_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $50" -->
                   {{ form.cincuenta_pesos }}
-                  <span id="resultado_cincuenta_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-50" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -112,7 +112,7 @@
                   <span class="input-group-text">$ 100 </span>
                   <!-- input id="cien_pesos" name="cien_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $100" -->
                   {{ form.cien_pesos }}
-                  <span id="resultado_cien_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-100" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -120,7 +120,7 @@
                   <span class="input-group-text">$ 200 </span>
                   <!-- input id="doscientos_pesos" name="doscientos_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $200" -->
                   {{ form.doscientos_pesos }}
-                  <span id="resultado_doscientos_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-200" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -128,7 +128,7 @@
                   <span class="input-group-text">$ 500 </span>
                   <!-- input id="quinientos_pesos" name="quinientos_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $500" -->
                   {{ form.quinientos_pesos }}
-                  <span id="resultado_quinientos_pesos" class="form-control text-end"></span>
+                  <span id="subtotal-500" class="form-control text-end"></span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -136,7 +136,8 @@
                   <span class="input-group-text">$ 1000 </span>
                   <!-- input id="mil_pesos" name="mil_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $1000" -->
                   {{ form.mil_pesos }}
-                  <span id="resultado_mil_pesos" class="form-control text-end"></span>
+                  <!-- span id="resultado_mil_pesos" class="form-control text-end"></span -->
+                  <span id="subtotal-1000" class="form-control text-end"></span>
                 </div>
             </div>
         </div>
@@ -146,7 +147,10 @@
         </div>
         <button class="btn btn-primary mt-5" type="submit">Agregar</button>
         <!-- button class="btn btn-primary mt-5" type="reset">Limpiar datos</button -->
-        <input class="btn btn-info mt-5" type="reset" onclick="limpiar_datos()" value="Limpiar datos"/>
+        <!-- input class="btn btn-info mt-5" type="reset" onclick="limpiar_datos()" value="Limpiar datos"/ -->
+        <button type="button" class="btn btn-danger mt-5" id="resetBtn">
+          <i class="bi bi-trash"></i>Limpiar Datos
+        </button>
     
     </form>
     {% endblock %}

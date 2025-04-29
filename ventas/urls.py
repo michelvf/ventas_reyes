@@ -32,6 +32,7 @@ urlpatterns = [
     path('reporte-mensual-departamento/', DondeSeVendeMas.as_view(), name='reporte_mensual_departamento'),
     path('reporte-venta-mensual/', DiaQueVendeMas.as_view(), name='reporte_venta_mensual'),
     path('porciento-precio/', CalculoPorcientoPrecio.as_view(), name='porciento_precio'),
+    # path('estudio-inventario/', EstudioInventario.as_view(), name='estudio_inventario'),
     
     path('listado_lacteos/', LacteosListView.as_view(), name='listado_lacteos'),
     path('crear_lacteos/', LacteosCreate.as_view(), name='crear_lacteos'),

@@ -415,7 +415,7 @@ class NominaDePagoView(View):
             )
         
     def post(self, request):
-        form = nomina_rango_fechasSemanal(request.POST)
+        form = ResumenSemanal(request.POST)
         nomina_rango_fechas = None
         # print(f"Lo que llega del formulario POST: {form}")
         if form.is_valid():

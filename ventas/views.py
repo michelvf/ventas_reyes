@@ -476,27 +476,74 @@ class CalculadoraBilletes(View):
 
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
-        billetes = request.POST
+        # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
 
         if form.is_valid():
+            
+            # Validar los datos llegados del formulario
             form.cleaned_data
-            form.save()
-
+            #form('sub_total') = form.total + sub_total.sub_total
+            
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
+
+            form.instance.sub_total = registro + saldo.saldo
+            
+            # Guardar los datos del formulario
+            form.save()
+            print(f"Lo que se guardó del formulario: {form}")
+            
             # tipo = form.cleaned_data['tipo_cuenta']
-            tipo = int(request.POST.get("tipo_cuenta"))
+            tipo = int(request.POST.get('tipo_cuenta'))
+            # print(f"tipo_cuenta llega como: {tipo1}")
+            # tipo = request.POST.get('tipo_cuenta')
+            un = int(request.POST.get('un_peso'))
+            tres = int(request.POST.get('tres_pesos'))
+            cinco = int(request.POST.get('cinco_pesos'))
+            diez = int(request.POST.get('diez_pesos'))
+            veinte = int(request.POST.get('veinte_pesos'))
+            cincuenta = int(request.POST.get('cincuenta_pesos'))
+            cien = int(request.POST.get('cien_pesos'))
+            doscientos = int(request.POST.get('doscientos_pesos'))
+            quinientos = int(request.POST.get('quinientos_pesos'))
+            mil = int(request.POST.get('mil_pesos'))
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
-            if tipo == "1":
-                print(f"Es de tipo {tipo}, es un Crédito se suman: {registro}")
+            # print(f"lo que llega del formulario: {form}")
+            print(f"Lo que llega del formulario, en tipo_cuenta es: {tipo}")
+
+            if tipo == 1:
+                print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
+                # saldo.sub_cuenta += form.total
+                saldo.un_peso += un if un is not None else 0
+                saldo.tres_pesos += tres if tres is not None else 0
+                saldo.cinco_pesos += cinco if cinco is not None else 0
+                saldo.diez_pesos += diez if diez is not None else 0
+                saldo.veinte_pesos += veinte if veinte is not None else 0
+                saldo.cincuenta_pesos += cincuenta if cincuenta is not None else 0
+                saldo.cien_pesos += cien if cien is not None else 0
+                saldo.doscientos_pesos += doscientos if doscientos is not None else 0
+                saldo.quinientos_pesos += quinientos if quinientos is not None else 0
+                saldo.mil_pesos += mil if mil is not None else 0
             else:
-                print(f"Es de tipo {tipo}, es un Débito se resta: {registro}")
+                print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
+                # saldo.sub_cuenta -= form.total
+                saldo.un_pesos -= un if un is not None else 0
+                saldo.tres_pesos -= tres if tres is not None else 0
+                saldo.cinco_pesos -= cinco if cinco is not None else 0
+                saldo.diez_pesos -= diez if diez is not None else 0
+                saldo.veinte_pesos -= veinte if veinte is not None else 0
+                saldo.cincuenta_pesos -= cincuenta if cincuenta is not None else 0
+                saldo.cien_pesos -= cien if cien is not None else 0
+                saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
+                saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
+                saldo.mil_pesos -= mil if mil is not None else 0
 
             # print(f"Saldo actualizado: {saldo.saldo}")
+            # Guardar los datos actualizados en la Cuenta
             saldo.save()
 
             return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}| Estudio Inventario{% endblock title %}
+
+{% block css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+      <h2 class="az-dashboard-title">Estudio de Inventarios</h2>
+      <p class="az-dashboard-text">Comparar los inventarios de los Puntos de Ventas con el del Eleventa.</p>
+    </div>
+    <!-- div class="az-content-header-right">
+        <a href="{% url 'calculadora_billetes' %}">
+            <button class="btn btn-primary">Agregar</button>
+        </a>
+    </div -->
+
+</div><!-- az-dashboard-one-title -->
+    <div class="row">
+        <div class="col-12">
+            <form method="post" enctype="multipart/form-data" id="formulario">
+                {% csrf_token %}
+                {% for field in form %}
+                  <div class="fieldWrapper mt-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                  </div>
+                  {% endfor %}
+                <br />
+                <div class="col-12 d-flex">
+                  <button class="btn btn-primary btn-block w-25" type="submit">Subir</button>
+                </div>
+              </form>
+              {% if errores %}
+                <h3 style="color: red;">Errores:</h3>
+                <p>{{ errores }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% if resultados1 is not None and resultados2 is not None %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <p class="display-3">Diferencias</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Productos</th>
+                        <th>Inv_Final</th>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Existencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for valor in resultados2.itertuples %}
+                    <tr>
+                        <td>{{ valor.Codigo }}</td>
+                        <td>{{ valor.Productos }}</td>
+                        <td>{{ valor.Inv_Final }}</td>
+                        <td>{{ valor.Código }}</td>
+                        <td>{{ valor.Producto }}</td>
+                        <td>{{ valor.Existencia }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p>No hay tabla</p>
+    {% endif %}
+    
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+</script>
+{% endblock %}
