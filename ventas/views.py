@@ -488,14 +488,19 @@ class CalculadoraBilletes(View):
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
 
-            form.instance.sub_total = registro + saldo.saldo
+            # tipo = form.cleaned_data['tipo_cuenta']
+            tipo = int(request.POST.get('tipo_cuenta'))
             
+            if tipo == 1:
+                form.instance.sub_total = saldo.saldo + registro
+            else:
+                form.instance.sub_total = saldo.saldo - registro
+            
+
             # Guardar los datos del formulario
             form.save()
             print(f"Lo que se guardó del formulario: {form}")
             
-            # tipo = form.cleaned_data['tipo_cuenta']
-            tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
             un = int(request.POST.get('un_peso'))
@@ -531,7 +536,7 @@ class CalculadoraBilletes(View):
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
                 # saldo.sub_cuenta -= form.total
-                saldo.un_pesos -= un if un is not None else 0
+                saldo.un_peso -= un if un is not None else 0
                 saldo.tres_pesos -= tres if tres is not None else 0
                 saldo.cinco_pesos -= cinco if cinco is not None else 0
                 saldo.diez_pesos -= diez if diez is not None else 0
