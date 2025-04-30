@@ -478,17 +478,7 @@ class CalculadoraBilletes(View):
         form = CalculadoraBilletesForm(request.POST)
         # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
-    
-    # def form_valid(self, form):
-    #     # Asignar el valor del campo 'total' antes de guardar
-    #     form.instance.sub_total = self.calcular_total(form.cleaned_data)
-    #     return super().form_valid(form)
 
-    # def calcular_total(self, data):
-    #     # Lógica para calcular el total (puedes modificar según lo necesites)
-    #     return data.get('campo1', 0) + data.get('campo2', 0)  # Ejemplo
-
-        # sub_total = CalculadoraBilletes.objects.last()
         if form.is_valid():
             
             # Validar los datos llegados del formulario
@@ -551,7 +541,7 @@ class CalculadoraBilletes(View):
                 saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
                 saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
                 saldo.mil_pesos -= mil if mil is not None else 0
-                
+
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta
             saldo.save()

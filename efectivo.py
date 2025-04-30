@@ -14,6 +14,16 @@ def efectivo():
     
     montos = Contador_billete.objects.all()
     for a in montos:
+<<<<<<< HEAD
+        print(f'Tipo {a.tipo_cuenta}')
+        if a.tipo_cuenta.id == 1:
+            print(f'Es un Credito, se va a sumar: +{a.total}')
+            suma += a.total
+        else:
+           print(f'Es un Debito, se va a restar: -{a.total}')
+           suma -= a.total
+        print(f'Suma va por: $ {suma}')
+=======
         if a.tipo_cuenta.id == 1:
             print(f'Se va a sumar: {a.total:,}')
             suma += a.total
@@ -44,6 +54,7 @@ def efectivo():
         
         print(f'Suma va por: $ {suma:,}')
         print()
+>>>>>>> c3ee67cd06db7faf0551e71a65f32a2b0eb4bdf3
 
     print(f"Total: {suma:,}, $1: {un}, $3: {tres}, $5: {cinco}, $10: {diez}, $20: {veinte}")
     print(f"$50: {cincuenta}, $100: {cien}, $200: {doscientos}, $500: {quinientos}, $1000: {mil}")
