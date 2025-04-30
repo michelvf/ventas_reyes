@@ -14,16 +14,6 @@ def efectivo():
     
     montos = Contador_billete.objects.all()
     for a in montos:
-<<<<<<< HEAD
-        print(f'Tipo {a.tipo_cuenta}')
-        if a.tipo_cuenta.id == 1:
-            print(f'Es un Credito, se va a sumar: +{a.total}')
-            suma += a.total
-        else:
-           print(f'Es un Debito, se va a restar: -{a.total}')
-           suma -= a.total
-        print(f'Suma va por: $ {suma}')
-=======
         if a.tipo_cuenta.id == 1:
             print(f'Se va a sumar: {a.total:,}')
             suma += a.total
@@ -54,17 +44,17 @@ def efectivo():
         
         print(f'Suma va por: $ {suma:,}')
         print()
->>>>>>> c3ee67cd06db7faf0551e71a65f32a2b0eb4bdf3
 
     print(f"Total: {suma:,}, $1: {un}, $3: {tres}, $5: {cinco}, $10: {diez}, $20: {veinte}")
     print(f"$50: {cincuenta}, $100: {cien}, $200: {doscientos}, $500: {quinientos}, $1000: {mil}")
     print(f"Desea actualizar (y/n)", end="")
     resp = input()
-    if resp == "n":
-        update = Cuenta.objects.get(cuenta='Efectivo')
-        update(un_peso=un, tres_pesos=tres, cinco_pesos=cien, diez_pesos=diez, veinte_pesos=veinte,\
-            cincuenta_pesos=cincuenta, cien_pesos==cien, doscientos_pesos=doscientos, quinientos_pesos=quinientos, mil_pesos=mil )
-        update.save()
+    if resp == "y":
+        Efectivo = Cuenta.objects.get(cuenta='Efectivo')
+        efectivo = Efectivo(un_peso=un, tres_pesos=tres, cinco_pesos=cien, diez_pesos=diez, veinte_pesos=veinte,\
+                cincuenta_pesos=cincuenta, cien_pesos=cien, doscientos_pesos=doscientos,\
+                quinientos_pesos=quinientos, mil_pesos=mil)
+        efectivo.save()
     else:
         exit()
 # ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinie ntos_pesos;
