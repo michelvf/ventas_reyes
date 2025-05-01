@@ -131,7 +131,7 @@ class Cliente(models.Model):
     negocio = models.CharField(max_length=200, null=True, blank=True)
     direccion = models.CharField(max_length=250, null=True, blank=True)
     telefono = models.CharField(max_length=200, null=True, blank=True)
-    ci = models.IntegerField(max_length=11, min=11)
+    ci = models.IntegerField(max_length=11)
     autorizado = models.CharField(max_length=200, null=True, blank=True)
     ci = models.IntegerField()
 
@@ -141,10 +141,9 @@ class Cliente(models.Model):
         verbose_name_plural = "clientes"
         indexes = [
             models.Index(fields=["id"]),
-            models.Index(fields=["represenante"]),
+            models.Index(fields=["representante"]),
             models.Index(fields=["negocio"]),
             models.Index(fields=["telefono"]),
-            models.Index(fields=["fecha"]),
         ]
 
     def __str__(self):
