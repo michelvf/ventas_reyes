@@ -9,7 +9,7 @@ from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, Departa
 from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
 from .models import Lacteos, Cuenta, Tipo_cuenta
@@ -478,17 +478,7 @@ class CalculadoraBilletes(View):
         form = CalculadoraBilletesForm(request.POST)
         # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
-    
-    # def form_valid(self, form):
-    #     # Asignar el valor del campo 'total' antes de guardar
-    #     form.instance.sub_total = self.calcular_total(form.cleaned_data)
-    #     return super().form_valid(form)
 
-    # def calcular_total(self, data):
-    #     # Lógica para calcular el total (puedes modificar según lo necesites)
-    #     return data.get('campo1', 0) + data.get('campo2', 0)  # Ejemplo
-
-        # sub_total = CalculadoraBilletes.objects.last()
         if form.is_valid():
             
             # Validar los datos llegados del formulario
@@ -498,14 +488,19 @@ class CalculadoraBilletes(View):
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
 
-            form.instance.sub_total = registro + saldo.saldo
+            # tipo = form.cleaned_data['tipo_cuenta']
+            tipo = int(request.POST.get('tipo_cuenta'))
             
+            if tipo == 1:
+                form.instance.sub_total = saldo.saldo + registro
+            else:
+                form.instance.sub_total = saldo.saldo - registro
+            
+
             # Guardar los datos del formulario
             form.save()
             print(f"Lo que se guardó del formulario: {form}")
             
-            # tipo = form.cleaned_data['tipo_cuenta']
-            tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
             un = int(request.POST.get('un_peso'))
@@ -541,7 +536,7 @@ class CalculadoraBilletes(View):
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
                 # saldo.sub_cuenta -= form.total
-                saldo.un_pesos -= un if un is not None else 0
+                saldo.un_peso -= un if un is not None else 0
                 saldo.tres_pesos -= tres if tres is not None else 0
                 saldo.cinco_pesos -= cinco if cinco is not None else 0
                 saldo.diez_pesos -= diez if diez is not None else 0
@@ -551,7 +546,7 @@ class CalculadoraBilletes(View):
                 saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
                 saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
                 saldo.mil_pesos -= mil if mil is not None else 0
-                
+
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta
             saldo.save()
@@ -570,6 +565,14 @@ class EditarCalculadoraBilletes(UpdateView):
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+
+class BorrarCalculadoraBilletes(DeleteView):
+    """
+    Borrar un registro y devolver el dinero al total
+    """
+    model = Contador_billete
+    success_url = reverse_lazy("mostrar_conte_billetes")
 
 
 class VentasAnualesView(YearArchiveView):

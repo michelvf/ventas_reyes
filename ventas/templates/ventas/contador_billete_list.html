@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
   <style> 
-   
     .modal-header {
         background-color: #0059be;
         color: white;
@@ -40,7 +39,7 @@
 <div class="az-dashboard-one-title">
     <div>
       <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span>&nbsp;
-        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()">
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()">
         Detalle
         </button>
     </h2>
@@ -89,7 +88,7 @@
                             <a href="{% url 'editar_calculadora_billetes' billete.id %}">
                                 <button class='btn btn-primary'>Editar</button>
                             </a>
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes({{ billete.id }})">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes({{ billete.id }})">
                                 Detalle
                             </button>
                         </td>
@@ -217,7 +216,8 @@
     var table = $('#tabla').DataTable({
         language: language,
         pageLength: 20,
-        order: [[0, 'desc']],
+        // order: [[0, 'desc']],
+        // order: [[0, 'asc']],
     });
   </script>
 
@@ -270,7 +270,7 @@
             }
             */
             total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
-            comentario.innerHTML = dat.comentario
+            // comentario.innerHTML = dat.comentario
             uno.innerHTML = dat.un_peso
             tres.innerHTML = dat.tres_pesos
             cinco.innerHTML = dat.cinco_pesos
