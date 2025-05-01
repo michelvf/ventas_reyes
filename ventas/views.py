@@ -9,7 +9,7 @@ from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, Departa
 from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
 from .models import Lacteos, Cuenta, Tipo_cuenta
@@ -565,6 +565,14 @@ class EditarCalculadoraBilletes(UpdateView):
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+
+class BorrarCalculadoraBilletes(DeleteView):
+    """
+    Borrar un registro y devolver el dinero al total
+    """
+    model = Contador_billete
+    success_url = reverse_lazy("mostrar_conte_billetes")
 
 
 class VentasAnualesView(YearArchiveView):
