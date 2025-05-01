@@ -121,3 +121,31 @@ class Compra(models.Model):
 
     def __str__(self):
         return self.producto.nombre
+
+
+class Cliente(models.Model):
+    """
+    Clients model
+    """
+    representante = models.CharField(max_length=200, null=False, blank=False)
+    negocio = models.CharField(max_length=200, null=True, blank=True)
+    direccion = models.CharField(max_length=250, null=True, blank=True)
+    telefono = models.CharField(max_length=200, null=True, blank=True)
+    ci = models.IntegerField(max_length=11, min=11)
+    autorizado = models.CharField(max_length=200, null=True, blank=True)
+    ci = models.IntegerField()
+
+    class Meta:
+        ordering = ['representante']
+        verbose_name = "cliene"
+        verbose_name_plural = "clientes"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["represenante"]),
+            models.Index(fields=["negocio"]),
+            models.Index(fields=["telefono"]),
+            models.Index(fields=["fecha"]),
+        ]
+
+    def __str__(self):
+        return self.representante
