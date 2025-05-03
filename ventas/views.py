@@ -9,7 +9,7 @@ from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, Departa
 from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
 from .models import Lacteos, Cuenta, Tipo_cuenta
@@ -565,6 +565,57 @@ class EditarCalculadoraBilletes(UpdateView):
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+
+class BorrarCalculadoraBilletes(DeleteView):
+    """
+    Borrar un registro y devolver el dinero al total
+    """
+    model = Contador_billete
+    success_url = reverse_lazy("mostrar_conte_billetes")
+
+    def delete(self, request, *args, **kwargs):
+        # Obtener el objeto antes de eliminarlo
+        self.object = self.get_object()
+
+        # Realizar alguna acción antes de eliminar el objeto
+        # Por ejemplo, registrar el borrado en un log
+        efectivo = Cuenta.objects.get(cuenta="Efectivo")
+
+        if self.object.tipo_cuenta == 1:
+            efectivo.un_peso -= self.object.un_peso
+            efectivo.tres_pesos -= self.object.tres_pesos
+            efectivo.cinco_pesos -= self.object.cinco_pesos
+            efectivo.diez_pesos -= self.object.diez_pesos
+            efectivo.veinte_pesos -= self.object.veinte_pesos
+            efectivo.cincuenta_pesos -= self.object.cincuenta_pesos
+            efectivo.cien_pesos -= self.object.cien_pesos
+            efectivo.doscientos_pesos -= self.object.doscientos_pesos
+            efectivo.quinientos_pesos -= self.object.quinientos_pesos
+            efectivo.mil_pesos -= self.object.mil_pesos
+            efectivo.saldo -= self.object.sub_total
+        else:
+            efectivo.un_peso += self.object.un_peso
+            efectivo.tres_pesos += self.object.tres_pesos
+            efectivo.cinco_pesos += self.object.cinco_pesos
+            efectivo.diez_pesos += self.object.diez_pesos
+            efectivo.veinte_pesos += self.object.veinte_pesos
+            efectivo.cincuenta_pesos += self.object.cincuenta_pesos
+            efectivo.cien_pesos += self.object.cien_pesos
+            efectivo.doscientos_pesos += self.object.doscientos_pesos
+            efectivo.quinentos_pesos += self.object.quinentos_pesos
+            efectivo.saldo += self.object.sub_total
+        
+        efectivo.save()
+        # print(f"Registro eliminado: {self.object.nombre}")
+
+        # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
+
+        # Llamar al método `delete()` original
+        response = super().delete(request, *args, **kwargs)
+
+        # Si quieres cambiar la redirección, puedes hacerlo aquí
+        return response
 
 
 class VentasAnualesView(YearArchiveView):

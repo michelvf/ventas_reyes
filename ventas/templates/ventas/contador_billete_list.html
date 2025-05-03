@@ -86,34 +86,20 @@
                         </td>                        
                         <td>
                             <a href="{% url 'editar_calculadora_billetes' billete.id %}">
-                                <button class='btn btn-primary'>Editar</button>
+                                <button class='btn btn-primary'>
+                                    <i class="typcn typcn-edit"></i>
+                                </button>
                             </a>
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes({{ billete.id }})">
-                                Detalle
+                                <i class="typcn typcn-eye-outline"></i>
                             </button>
+                            <a href="{% url 'borrar_calculadora_billete' billete.id %}">
+                                <button class='btn btn-danger'><i class="typcn typcn-trash"></i></button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
-            <!-- tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot -->
         </table>
     {% else %}
         <p>Aún no hay registros.</p>
@@ -213,11 +199,15 @@
     })
 
     //new DataTable('#tabla', {
+    /*
     var table = $('#tabla').DataTable({
         language: language,
         pageLength: 20,
-        order: [[0, 'desc']],
+        // order: [[0, 'desc']],
+        // order: [[0, 'asc']],
     });
+    */
+    //$('#tabla').DataTable();
   </script>
 
   <script>

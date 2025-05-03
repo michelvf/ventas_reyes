@@ -232,7 +232,7 @@ class Contador_billete(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # ordering = ["-fecha"] # ["-fecha"] ascending
+        ordering = ["-fecha"] # ["-fecha"] ascending
         verbose_name = "contador_billete"
         verbose_name_plural = "contador_billetes"
         indexes = [
