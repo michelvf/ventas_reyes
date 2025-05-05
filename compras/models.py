@@ -1,4 +1,5 @@
 from django.db import models
+from ventas.models import Departamentos
 
 # Create your models here.
 from django.utils import timezone
@@ -54,7 +55,8 @@ class Producto(models.Model):
     """
     nombre = models.CharField(max_length=100)
     medida = models.ForeignKey(UnidadMedida, on_delete=models.CASCADE)
-    almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE)
+#    almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE)
+    almacen = models.ForeignKey(Departamentos, on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to='compras/', null=True, blank=True, default='/static/media/compras/defecto.jpg')
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)

@@ -57,8 +57,8 @@ class Departamentos(models.Model):
 
     class Meta:
         ordering = ["id"]
-        verbose_name = "departmento"
-        verbose_name_plural = "departmentos"
+        verbose_name = "departamento"
+        verbose_name_plural = "departamentos"
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["departamento"]),
