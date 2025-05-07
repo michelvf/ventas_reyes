@@ -4,7 +4,9 @@
 {% block title %}| Listado del Contador de Billetes{% endblock title %}
 
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+  <!-- link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" / -->
+  <link rel="stylesheet" href="{% static 'assets/lib/datatables/simple/datatables.min.css' %}" />
+
   <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
   <style> 
     .modal-header {
@@ -181,11 +183,41 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
+
+<!-- div class="pagination ">
+    <span class="step-links">
+        <table class="table table-bordered">
+            <tr>
+            {% if page_obj.has_previous %}
+                <td>
+                    <a href="?page=1">&laquo; Primero</a>
+                </td>
+                <td>
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </td>
+            {% endif %}
+            <td>
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+            </td>
+            {% if page_obj.has_next %}
+        <td>
+                <a href="?page={{ page_obj.next_page_number }}">Siguinte</a>
+            </td><td>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+    </span>
+</div -->
 {% endblock content %}
 
 {% block js %}
   <!-- script src="{% static 'js/jquery.min.js' %}"></script -->
-  <script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script>
+  <!-- script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script -->
+  <script src="{% static 'assets/lib/datatables/simple/datatables.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/moment.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
   <script>
@@ -203,14 +235,22 @@
     })
 
     //new DataTable('#tabla', {
-    /*
+    
     var table = $('#tabla').DataTable({
         language: language,
         pageLength: 20,
-        // order: [[0, 'desc']],
+        order: [[0, 'desc']],
         // order: [[0, 'asc']],
+        columns: [
+            { type: "date" },
+            null,
+            null,
+            null,
+            null,
+            null,
+        ],
     });
-    */
+    
     //$('#tabla').DataTable();
   </script>
 

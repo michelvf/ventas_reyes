@@ -13,47 +13,49 @@
 {% endblock css %}
 
 {% block content %}
-    <h2>Calculadora de Billetes</h2>
-    <form id="formulario" method="post">
-      {% csrf_token %}
+  <h2>Calculadora de Billetes</h2>
+  <form id="formulario" method="post">
+    {% csrf_token %}
 
-      {% if error_message %}
-        <p><strong>{{ error_message }}</strong></p>
-      {% endif %}
-      {{ field.errors }}
-      <div class="row">
-        <div class="col">
-          {% if error %}
-            <p style="color: red">{{ error }}</p>
-          {% endif %}
-          {% if form.non_field_errors %}
-            <ul> 
-              {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul> 
-          {% endif %}
-          {% for message in messages %}
-            <div>{{ message }}</div>
-          {% endfor %}
-           <div id="errorContainer" class="text-danger font-weight-bold"></div> <!-- Contenedor para mostrar errores -->
-           {% if form.errors %}
+    {% if error_message %}
+      <p>
+        <strong>{{ error_message }}</strong>
+      </p>
+    {% endif %}
+    {{ field.errors }}
+    <div class="row">
+      <div class="col">
+        {% if error %}
+          <p style="color: red">{{ error }}</p>
+        {% endif %}
+        {% if form.non_field_errors %}
+          <ul> 
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul> 
+        {% endif %}
+        {% for message in messages %}
+          <div>{{ message }}</div>
+        {% endfor %}
+        <div id="errorContainer" class="text-danger font-weight-bold"></div> <!-- Contenedor para mostrar errores -->
+          {% if form.errors %}
             <p>{{ form.errors }}.</p>
-            {% endif %}
+          {% endif %}
         </div>
       </div>
 
       <div class="mb-3 tx-30">
-          <strong>Total: <span id="grandTotal"></span></strong>
+        <strong>Total: <span id="grandTotal"></span></strong>
           <!-- input type="hidden" name="total" value="" id="id_total" required / -->
-          {{ form.total }}
+        {{ form.total }}
       </div>
       <div class="row">
-	<div class="col-sm-6 mb-3">
-	  <div class="input-group">
-	    <span class="input-group-text">Operación: {{ form.tipo_cuenta }}</span>
-	  </div>
-	</div>
+        <div class="col-sm-6 mb-3">
+          <div class="input-group">
+            <span class="input-group-text">Operación: {{ form.tipo_cuenta }}</span>
+          </div>
+        </div>
       </div>
       <div class="row">
             <div class="col-sm-6">
@@ -153,8 +155,29 @@
         </button>
     
     </form>
-    {% endblock %}
+{% endblock %}
     
-    {% block js %}
+{% block js %}
     <script type="text/javascript" src="{% static 'js/calculadora_billetes.js' %}"></script>
+    <script>
+      document.getElementById("formulario").addEventListener("submit", function(event) {
+
+      // Evite el envio de formulario
+      event.preventDefault();
+
+      // Selecciona todos los inputs del formulario
+      let inputs = document.querySelectorAll("#formulario input");
+      
+      // Recorre los inputs y coloca 0 si están vacíos
+      inputs.forEach(input => {
+         if (input.value.trim() === "") {
+           input.value = "0";
+         }
+      });
+  
+      // Ahora si, envia el formulario después de modificar los valores
+      this.submit();
+    })
+  
+      </script>
 {% endblock %}

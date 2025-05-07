@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.core.paginator import Paginator
 import pytz
 
 # Index Page
@@ -324,6 +325,7 @@ class ShowContadorBilletes(ListView):
     model = Contador_billete
     # template_name = 'ventas/contar_billetes.html'
     context_object_name = "billetes"
+    # paginate_by = 20
 
 
 class ProdxDepto(TemplateView):
@@ -472,6 +474,7 @@ class CalculadoraBilletes(View):
     def get(self, request, *args, **kawars):
         # billetes = Contador_billete.objects.all()
         form = CalculadoraBilletesForm()
+        
         return render(request, 'ventas/contador_billete_form.html', {'form': form})
 
     def post(self, request, *args, **kawars):
