@@ -14,6 +14,17 @@ from .forms import ResumenSemanal
 from rest_framework import authentication
 from operator import itemgetter, attrgetter
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.db import transaction
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+import json
+from .models import Cliente, Producto, Factura, DetalleFactura
+from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
+
 import numpy as np
 
 
@@ -234,7 +245,6 @@ class ResumenProductoSemanalView(ListView):
             .order_by('fecha'))
 
 
-
 class ResumenSemanalLecheView(View):
     """
     Weekly milk product sumary
@@ -350,3 +360,243 @@ class ResumenSemanalLecheView(View):
         )
 
 
+# Vistas para Clientes
+class ClienteListView(ListView):
+    """
+    Vista para lisrar Clientes de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_list.html'
+    context_object_name = 'clientes'
+
+
+class ClienteDetailView(DetailView):
+    """
+    Vista para el detalle de un Cliente de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_detail.html'
+    context_object_name = 'cliente'
+
+
+class ClienteCreateView(CreateView):
+    """
+    Vista para crear un Cliente de la Facturación
+    """
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'facturas/cliente_form.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente creado exitosamente.")
+        return super().form_valid(form)
+
+
+class ClienteUpdateView(UpdateView):
+    """
+    Vista para actualizar un Cliente de la Facturación
+    """
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'facturas/cliente_form.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class ClienteDeleteView(DeleteView):
+    """
+    Vista para borrar un Cliente de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_confirm_delete.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Cliente eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
+# Vistas para Productos
+class ProductoListView(ListView):
+    """
+    Vista para listar los Productos de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_list.html'
+    context_object_name = 'productos'
+
+
+class ProductoDetailView(DetailView):
+    """
+    Vista para el Detalle de un Productos de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_detail.html'
+    context_object_name = 'producto'
+
+
+class ProductoCreateView(CreateView):
+    """
+    Vista para crear un Producto de la Facturación
+    """
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'facturas/producto_form.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Producto creado exitosamente.")
+        return super().form_valid(form)
+
+
+class ProductoUpdateView(UpdateView):
+    """
+    Vista para actualizar el Producto de la Facturación
+    """
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'facturas/producto_form.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Producto actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class ProductoDeleteView(DeleteView):
+    """
+    Vista para borrar un producto de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_confirm_delete.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Producto eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
+# Vistas para Facturas
+class FacturaListView(ListView):
+    """
+    Vista para listar la Factura
+    """
+    model = Factura
+    template_name = 'facturas/factura_list.html'
+    context_object_name = 'facturas'
+    ordering = ['-fecha_emision']
+
+
+class FacturaDetailView(DetailView):
+    """
+    Vista Detalle del Detalle de la Factura
+    """
+    model = Factura
+    template_name = 'facturas/factura_detail.html'
+    context_object_name = 'factura'
+
+
+# @login_required
+def crear_factura(request):
+    if request.method == 'POST':
+        form = FacturaForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                factura = form.save()
+                formset = DetalleFacturaFormSet(request.POST, instance=factura)
+                
+                if formset.is_valid():
+                    formset.save()
+                    factura.calcular_totales()
+                    messages.success(request, "Factura creada exitosamente.")
+                    return redirect('factura_detail', pk=factura.pk)
+                else:
+                    # Si el formset no es válido, eliminamos la factura
+                    factura.delete()
+    else:
+        form = FacturaForm()
+        formset = DetalleFacturaFormSet()
+    
+    return render(request, 'facturas/factura_form.html', {
+        'form': form,
+        'formset': formset,
+    })
+
+
+# @login_required
+def editar_factura(request, pk):
+    factura = get_object_or_404(Factura, pk=pk)
+    
+    if factura.estado != 'pendiente':
+        messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
+        return redirect('factura_detail', pk=factura.pk)
+    
+    if request.method == 'POST':
+        form = FacturaForm(request.POST, instance=factura)
+        if form.is_valid():
+            with transaction.atomic():
+                factura = form.save()
+                formset = DetalleFacturaFormSet(request.POST, instance=factura)
+                
+                if formset.is_valid():
+                    formset.save()
+                    factura.calcular_totales()
+                    messages.success(request, "Factura actualizada exitosamente.")
+                    return redirect('factura_detail', pk=factura.pk)
+    else:
+        form = FacturaForm(instance=factura)
+        formset = DetalleFacturaFormSet(instance=factura)
+    
+    return render(request, 'facturas/factura_form.html', {
+        'form': form,
+        'formset': formset,
+        'factura': factura,
+    })
+
+
+# @login_required
+def cambiar_estado_factura(request, pk, estado):
+    factura = get_object_or_404(Factura, pk=pk)
+    estados_validos = [e[0] for e in Factura.ESTADO_CHOICES]
+    
+    if estado not in estados_validos:
+        messages.error(request, "Estado no válido.")
+    else:
+        factura.estado = estado
+        factura.save()
+        messages.success(request, f"Estado de factura cambiado a {estado}.")
+    
+    return redirect('factura_detail', pk=factura.pk)
+
+
+# @login_required
+def eliminar_factura(request, pk):
+    factura = get_object_or_404(Factura, pk=pk)
+    
+    if request.method == 'POST':
+        factura.delete()
+        messages.success(request, "Factura eliminada exitosamente.")
+        return redirect('factura_list')
+    
+    return render(request, 'facturas/factura_confirm_delete.html', {
+        'factura': factura,
+    })
+
+# API para obtener información de productos
+def get_producto_info(request):
+    if request.method == 'GET' and 'id' in request.GET:
+        try:
+            producto = Producto.objects.get(pk=request.GET['id'])
+            data = {
+                'precio': float(producto.precio),
+                'stock': producto.stock,
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        except Producto.DoesNotExist:
+            return HttpResponse(json.dumps({'error': 'Producto no encontrado'}), content_type='application/json')
+    
+    return HttpResponse(json.dumps({'error': 'Solicitud inválida'}), content_type='application/json')
