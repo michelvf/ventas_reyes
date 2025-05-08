@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.core.paginator import Paginator
 import pytz
 
 # Index Page
@@ -324,6 +325,7 @@ class ShowContadorBilletes(ListView):
     model = Contador_billete
     # template_name = 'ventas/contar_billetes.html'
     context_object_name = "billetes"
+    # paginate_by = 20
 
 
 class ProdxDepto(TemplateView):
@@ -472,6 +474,7 @@ class CalculadoraBilletes(View):
     def get(self, request, *args, **kawars):
         # billetes = Contador_billete.objects.all()
         form = CalculadoraBilletesForm()
+        
         return render(request, 'ventas/contador_billete_form.html', {'form': form})
 
     def post(self, request, *args, **kawars):
@@ -572,9 +575,9 @@ class BorrarCalculadoraBilletes(DeleteView):
     Borrar un registro y devolver el dinero al total
     """
     model = Contador_billete
-    success_url = reverse_lazy("mostrar_conte_billetes")
+    success_url = reverse_lazy("mostrar_conteo_billetes")
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         # Obtener el objeto antes de eliminarlo
         self.object = self.get_object()
 
@@ -583,6 +586,7 @@ class BorrarCalculadoraBilletes(DeleteView):
         efectivo = Cuenta.objects.get(cuenta="Efectivo")
 
         if self.object.tipo_cuenta == 1:
+            print("Es un Crédito, lo voy a retar")
             efectivo.un_peso -= self.object.un_peso
             efectivo.tres_pesos -= self.object.tres_pesos
             efectivo.cinco_pesos -= self.object.cinco_pesos
@@ -593,8 +597,9 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.doscientos_pesos -= self.object.doscientos_pesos
             efectivo.quinientos_pesos -= self.object.quinientos_pesos
             efectivo.mil_pesos -= self.object.mil_pesos
-            efectivo.saldo -= self.object.sub_total
+            efectivo.saldo -= self.object.total
         else:
+            print("Es un Débito, lo voy a sumar")
             efectivo.un_peso += self.object.un_peso
             efectivo.tres_pesos += self.object.tres_pesos
             efectivo.cinco_pesos += self.object.cinco_pesos
@@ -603,8 +608,8 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.cincuenta_pesos += self.object.cincuenta_pesos
             efectivo.cien_pesos += self.object.cien_pesos
             efectivo.doscientos_pesos += self.object.doscientos_pesos
-            efectivo.quinentos_pesos += self.object.quinentos_pesos
-            efectivo.saldo += self.object.sub_total
+            efectivo.quinientos_pesos += self.object.quinientos_pesos
+            efectivo.saldo += self.object.total
         
         efectivo.save()
         # print(f"Registro eliminado: {self.object.nombre}")
@@ -612,7 +617,7 @@ class BorrarCalculadoraBilletes(DeleteView):
         # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
 
         # Llamar al método `delete()` original
-        response = super().delete(request, *args, **kwargs)
+        response = super().post(request, *args, **kwargs)
 
         # Si quieres cambiar la redirección, puedes hacerlo aquí
         return response

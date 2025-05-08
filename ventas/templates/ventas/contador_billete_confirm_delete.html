@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="az-dashboard-one-title">
     <div>
-      <h2 class="az-dashboard-title">Borrar del Contador de Video<span id="efectivo"></span>&nbsp;
-    </h2>
-      <p class="az-dashboard-text">Se devolverán la cantidad al conteo total de billetes.</p>
+      <h2 class="az-dashboard-title">Borrar registro</h2>
+      <p class="az-dashboard-text">Se devolverán la cantidad al conteo total de billetes</p>
+      <form method="post">
+        {% csrf_token %}
+        <p class="mt-5">Estás seguro de borrar el registro de:  "{{ object.comentario }} con un monto de: ${{ object.total }}"?</p>
+        {{ form }}
+        <input type="submit" value="Confirm" class="btn btn-danger">
+    </form>
     </div>
-    <div class="az-content-header-right">
-        <a href="{% url 'calculadora_billetes' %}">
-            <button class="btn btn-danger">Borrar</button>
-        </a>
-    </div>
-  </div><!-- az-dashboard-one-title -->
+</div>
+
 {% endblock content %}
 
