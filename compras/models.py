@@ -171,6 +171,7 @@ class Factura(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     # iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    bonificacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     observaciones = models.TextField(blank=True, null=True)
     
@@ -182,8 +183,8 @@ class Factura(models.Model):
     def calcular_totales(self):
         detalles = self.detalles.all()
         self.subtotal = sum(detalle.subtotal for detalle in detalles)
-        self.iva = self.subtotal * 0.19  # IVA del 19%
-        self.total = self.subtotal + self.iva
+        # self.iva = self.subtotal * 0.19  # IVA del 19%
+        self.total = self.subtotal + self.bonificaion
         self.save()
     
     def __str__(self):

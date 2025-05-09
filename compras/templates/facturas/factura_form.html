@@ -30,12 +30,25 @@
             </div>
             
             <div class="row mb-3">
-                <div class="col-12">
+                <div class="col-10">
                     <label for="{{ form.observaciones.id_for_label }}" class="form-label">Observaciones</label>
                     {{ form.observaciones }}
                     {% if form.observaciones.errors %}
                     <div class="invalid-feedback d-block">
                         {{ form.observaciones.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-2">
+                    <label for="{{ form.bonificacion.id_for_label }}" class="form-label"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">Bonificación</label>
+                    <div class="input-group mb-3">
+                        {{ form.bonificacion }}
+                        <span class="input-group-text" id="basic-addon2">%</span>
+                    </div>
+                    
+                    {% if form.bonificacion.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.bonificacion.errors }}
                     </div>
                     {% endif %}
                 </div>
@@ -114,7 +127,7 @@
                 </div>
             </div>
             
-            <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex justify-content-between mb-1">
                 <button type="button" id="add-detalle" class="btn btn-success">
                     <i class="fas fa-plus-circle me-1"></i> Agregar Producto
                 </button>
@@ -126,8 +139,8 @@
                             <span id="total-subtotal">$0.00</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span>IVA (19%):</span>
-                            <span id="total-iva">$0.00</span>
+                            <span>Bonificación:</span><span id="bonificacion"></span>
+                            <span id="total-bonificacion">$0.00</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <strong>Total:</strong>
@@ -147,7 +160,7 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js %}
 <script>
     $(document).ready(function() {
         // Variables para el formset
@@ -238,6 +251,21 @@
                 
                 updateTotals();
             });
+
+            const totalBonificacion = $('#total-bonificacion')
+
+            $('#id_bonificacion').change(function() {
+                $(this).removeClass('text-success text-danger')
+                if ($(this).val() > 0) {
+                    $(this).removeClass('text-success text-danger')
+                    $(this).addClass('text-success')
+                    totalBonificacion.addClass('text-success')
+                } else {
+                    $(this).addClass('text-danger')
+                    totalBonificacion.addClass('text-danger')
+                }
+                updateTotals();
+            })
         }
         
         // Calcular totales
@@ -249,11 +277,17 @@
                 subtotal += value;
             });
             
-            const iva = subtotal * 0.19;
-            const total = subtotal + iva;
+            //const iva = subtotal * 0.19;
+            const bonificacion = parseFloat(document.getElementById('id_bonificacion').value);
+            console.log(`Bonificación: ${bonificacion} %`);
+            const por_bon = bonificacion / 100;
+            console.log(`La bonificación será de un ${por_bon}`);
+            const SubTotal = subtotal * por_bon
+            console.log(`lo que se va a descontar/aumentar es: ${SubTotal}`);
+            const total = subtotal - SubTotal;
             
             $('#total-subtotal').text('$' + subtotal.toFixed(2));
-            $('#total-iva').text('$' + iva.toFixed(2));
+            $('#total-bonificacion').text('$' + SubTotal.toFixed(2));
             $('#total-final').text('$' + total.toFixed(2));
         }
         
