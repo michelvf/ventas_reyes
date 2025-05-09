@@ -50,12 +50,14 @@
         <li class="nav-item">
           <a href="" class="nav-link with-sub">Compras</a>
           <nav class="az-menu-sub">
-            <a href="{% url 'list_almacen' %}" class="nav-link">Almacén</a>
-            <a href="{% url 'list_productos' %}" class="nav-link">Productos</a>
+            {% comment %} <a href="{% url 'list_almacen' %}" class="nav-link">Almacén</a> {% endcomment %}
+            {% comment %} <a href="{% url 'list_productos' %}" class="nav-link">Productos</a> {% endcomment %}
             <a href="{% url 'list_precio_productos' %}" class="nav-link">Precios - Productos</a>
             <a href="{% url 'list_compra' %}" class="nav-link">Compras</a>
             <a href="{% url 'resumen_productolechesemanal' %}" class="nav-link">Resumen Semanal</a>
-            <a href="{% url 'resumen_productosemanal' %}" class="nav-link">Resumen Productos Semanal</a>    
+            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
+            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
+            <a href="{% url 'factura_list' %}" class="nav-link">Facturas</a>    
           </nav>
         </li>
         <li class="nav-item">
@@ -85,14 +87,14 @@
             <a href="{% url 'detalle_venta_list' %}" class="nav-link">Detalle Ventas</a>
             <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
             {% endcomment %}
-            <a href="{% url 'almacen_list' %}" class="nav-link">Almacén</a>
+            {% comment %} <a href="{% url 'almacen_list' %}" class="nav-link">Almacén</a> {% endcomment %}
             <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
-            <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
+            {% comment %} <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a> {% endcomment %}
             <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
-            <a href="{% url 'proveedor_list' %}" class="nav-link">Proveedores</a>
-            <a href="{% url 'categoria_list' %}" class="nav-link">Categorias</a>
-            <a href="{% url 'puntodeventa_list' %}" class="nav-link">Punto de Ventas</a>
-            <a href="{% url 'envio_list' %}" class="nav-link">Envíos</a>
+            {% comment %} <a href="{% url 'proveedor_list' %}" class="nav-link">Proveedores</a> {% endcomment %}
+            {% comment %} <a href="{% url 'categoria_list' %}" class="nav-link">Categorias</a> {% endcomment %}
+            {% comment %} <a href="{% url 'puntodeventa_list' %}" class="nav-link">Punto de Ventas</a> {% endcomment %}
+            {% comment %} <a href="{% url 'envio_list' %}" class="nav-link">Envíos</a> {% endcomment %}
             
           </nav>
         </li -->
