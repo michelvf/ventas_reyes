@@ -10,6 +10,10 @@
         <a href="{% url 'factura_update' factura.id %}" class="btn btn-warning">
             <i class="fas fa-edit me-1"></i> Editar
         </a>
+        {% elif factura.estado == 'pagada' %}
+        <a href="{% url 'factura_update' factura.id %}" class="btn btn-info">
+            <i class="fas fa-edit me-1"></i> Editar
+        </a>
         {% endif %}
         <a href="{% url 'factura_list' %}" class="btn btn-secondary ms-2">
             <i class="fas fa-arrow-left me-1"></i> Volver
@@ -28,22 +32,27 @@
                 <p><strong>Fecha de emisión:</strong> {{ factura.fecha_emision|date:"d/m/Y H:i" }}</p>
                 <p><strong>Estado:</strong> 
                     {% if factura.estado == 'pendiente' %}
-                    <span class="badge bg-warning">Pendiente</span>
+                    <span class="badge bg-warning text-white">Pendiente</span>
                     {% elif factura.estado == 'pagada' %}
-                    <span class="badge bg-success">Pagada</span>
+                    <span class="badge bg-info text-white">Pagada</span>
+                    {% elif factura.estado == 'pagada-eleventa' %}
+                    <span class="badge bg-success text-white">Pagada y en Eleventa</span>
                     {% else %}
-                    <span class="badge bg-danger">Anulada</span>
+                    <span class="badge bg-danger text-white">Anulada</span>
                     {% endif %}
                 </p>
                 {% if factura.observaciones %}
                 <p><strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}</p>
                 {% endif %}
             </div>
-            {% if factura.estado == 'pendiente' %}
+            {% if factura.estado == 'pendiente' or factura.estado == 'pagada'%}
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
-                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada' %}" class="btn btn-success">
-                        <i class="fas fa-check-circle me-1"></i> Marcar como Pagada
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada' %}" class="btn btn-info">
+                        <i class="fas fa-wallet me-1"></i>Pagada
+                    </a>
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada-eleventa' %}" class="btn btn-success mx-1">
+                        <i class="fas fa-check-circle me-1"></i>Pagada y Registrada en Eleventa
                     </a>
                     <a href="{% url 'factura_cambiar_estado' factura.id 'anulada' %}" class="btn btn-danger">
                         <i class="fas fa-times-circle me-1"></i> Anular Factura

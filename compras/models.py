@@ -115,7 +115,7 @@ class Cliente(models.Model):
     
     nombre = models.CharField(max_length=200)
     apellido = models.CharField(max_length=200)
-    # documento = models.CharField(max_length=20, unique=True)
+    negocio = models.CharField(max_length=20, unique=True)
     ci = models.IntegerField(validators=[validar_longitud_11_digitos])
     direccion = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
@@ -183,7 +183,7 @@ class Factura(models.Model):
         detalles = self.detalles.all()
         self.subtotal = sum(detalle.subtotal for detalle in detalles)
         # self.iva = self.subtotal * 0.19  # IVA del 19%
-        self.total = self.subtotal + self.bonificaion
+        self.total = self.subtotal + self.bonificacion
         self.save()
     
     def __str__(self):

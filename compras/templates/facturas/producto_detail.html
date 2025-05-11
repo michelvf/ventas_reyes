@@ -16,17 +16,16 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">Información del Producto</h5>
             </div>
             <div class="card-body">
                 <p><strong>Código:</strong> {{ producto.codigo }}</p>
-                <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
-                <p><strong>Descripción:</strong> {{ producto.descripcion|default:"Sin descripción"|linebreaks }}</p>
+                <p><strong>Nombre:</strong> {{ producto.nombre|upper }}</p>
+                <p><strong>Descripción:</strong> {{ producto.descripcion|upper|default:"Sin descripción" }}</p>
                 <p><strong>Precio:</strong> ${{ producto.precio }}</p>
-                <p><strong>Stock:</strong> {{ producto.stock }} unidades</p>
                 <p><strong>Fecha de registro:</strong> {{ producto.fecha_registro|date:"d/m/Y H:i" }}</p>
                 <p><strong>Última actualización:</strong> {{ producto.fecha_actualizacion|date:"d/m/Y H:i" }}</p>
             </div>

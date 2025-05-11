@@ -24,6 +24,7 @@ from django.http import HttpResponse
 import json
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
+from .forms import UnidadMedidaForm
 
 import numpy as np
 
@@ -360,10 +361,66 @@ class ResumenSemanalLecheView(View):
         )
 
 
+# Vista Unidad de Medida
+class UnidadMedidaListView(ListView):
+    """
+    Vista para listar las Unidades de Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_list.html'
+    context_object_name = 'unidad_medidas'
+
+
+class UnidadMedidaCreateView(CreateView):
+    """
+    Vista para crear las Unidades de Medida de la Facturación
+    """
+    model = UnidadMedida
+    form_class = UnidadMedidaForm
+    template_name = 'facturas/unidadmedida_form.html'
+    success_url = reverse_lazy('unidadmedida_list')
+
+
+class UnidadMedidaDetailView(DetailView):
+    """
+    Vista para el detalle de la Unidad de Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_detail.html'
+    context_object_name = 'unidad_medidas'
+
+
+class UnidadMedidaUpdateView(UpdateView):
+    """
+    Vista para actualizar un Unidad Medida de la Facturación
+    """
+    model = UnidadMedida
+    form_class = UnidadMedidaForm
+    template_name = 'facturas/unidadmedida_form.html'
+    success_url = reverse_lazy('unidadmedida_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Unidad Medida actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class UnidadMedidaDeleteView(DeleteView):
+    """
+    Vista para borrar un Unidad Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_confirm_delete.html'
+    success_url = reverse_lazy('unidadmedida_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Unidad Medida eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
 # Vistas para Clientes
 class ClienteListView(ListView):
     """
-    Vista para lisrar Clientes de la Facturación
+    Vista para listar Clientes de la Facturación
     """
     model = Cliente
     template_name = 'facturas/cliente_list.html'
@@ -531,7 +588,7 @@ def crear_factura(request):
 def editar_factura(request, pk):
     factura = get_object_or_404(Factura, pk=pk)
     
-    if factura.estado != 'pendiente':
+    if factura.estado != 'pendiente' and factura.estado != 'pagada':
         messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
         return redirect('factura_detail', pk=factura.pk)
     

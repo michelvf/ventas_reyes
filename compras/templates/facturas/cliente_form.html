@@ -37,6 +37,18 @@
                     {% endif %}
                 </div>
             </div>
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="{{ form.negocio.id_for_label }}" class="form-label">Negocio *</label>
+                    {{ form.negocio }}
+                    {% if form.negocio.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.negocio.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
             
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -58,7 +70,6 @@
                     {% endif %}
                 </div>
             </div>
-
             
             <div class="row mb-3">
                 <div class="col-md-6">

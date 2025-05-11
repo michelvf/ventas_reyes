@@ -168,11 +168,11 @@ class ClienteForm(forms.ModelForm):
     """
     class Meta:
         model = Cliente
-        fields = ['nombre', 'apellido', 'ci', 'direccion', 'telefono', 'email']
+        fields = ['nombre', 'apellido', 'negocio', 'ci', 'direccion', 'telefono', 'email']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'documento': forms.TextInput(attrs={'class': 'form-control'}),
+            'negocio': forms.TextInput(attrs={'class': 'form-control'}),
             'ci': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '\d{11}', 'minlength': '11', 'maxlength': '11'}),
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
@@ -230,3 +230,15 @@ DetalleFacturaFormSet = forms.inlineformset_factory(
     extra=1, can_delete=True,
     min_num=1, validate_min=True
 )
+
+class UnidadMedidaForm(forms.ModelForm):
+    """
+    Formulario para las Unidades de Medida de Facturación
+    """
+    class Meta:
+        model = UnidadMedida
+        fields = ['id', 'nombre', 'sigla']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'sigla': forms.TextInput(attrs={'class': 'form-control'}),
+        }
