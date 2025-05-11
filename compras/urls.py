@@ -4,6 +4,7 @@ from .views import RegistrarPrecioProductoView, RegistrarCompraView, RegistrarPr
 from .views import AlmacenListView, PrecioProductoListView, CompraListView # ,ProductosListView
 from .views import ActualizarAlmacen, ActualizarProducto, ActualizarPrecioProducto, ActualizarCompra
 from .views import BorrarAlmacen, BorrarCompra
+from .views import UnidadMedidaListView, UnidadMedidaCreateView, UnidadMedidaDetailView, UnidadMedidaUpdateView, UnidadMedidaDeleteView
 from .views import ResumeSemanalView, ResumenProductoSemanalView, ResumenSemanalLecheView
 from .views import ClienteListView, ClienteCreateView, ClienteUpdateView, ClienteDetailView, ClienteDeleteView
 from .views import ProductoCreateView, ProductoDeleteView, ProductoDetailView, ProductoListView, ProductosListView, ProductoUpdateView, get_producto_info
@@ -38,6 +39,13 @@ urlpatterns = [
     path('api_ultimoprecio/', UltimoPrecio.as_view(), name='ultimoprecio'),
     path('api_compralechesemana/', CompraLecheSemana.as_view(), name='api_compralechesemana'),
 
+    # Unidad de Medida
+    path('unidadmedida/', UnidadMedidaListView.as_view(), name='unidadmedida_list'),
+    path('unidadmedida/<int:pk>/', UnidadMedidaDetailView.as_view(), name='unidadmedida_detail'),
+    path('unidadmedida/nuevo/', UnidadMedidaCreateView.as_view(), name='unidadmedida_create'),
+    path('unidadmedida/<int:pk>/editar/', UnidadMedidaUpdateView.as_view(), name='unidadmedida_update'),
+    path('unidadmedida/<int:pk>/eliminar/', UnidadMedidaDeleteView.as_view(), name='unidadmedida_delete'),
+    
     # Clientes
     path('clientes/', ClienteListView.as_view(), name='cliente_list'),
     path('clientes/<int:pk>/', ClienteDetailView.as_view(), name='cliente_detail'),

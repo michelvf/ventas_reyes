@@ -230,3 +230,15 @@ DetalleFacturaFormSet = forms.inlineformset_factory(
     extra=1, can_delete=True,
     min_num=1, validate_min=True
 )
+
+class UnidadMedidaForm(forms.ModelForm):
+    """
+    Formulario para las Unidades de Medida de Facturación
+    """
+    class Meta:
+        model = UnidadMedida
+        fields = ['id', 'nombre', 'sigla']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'sigla': forms.TextInput(attrs={'class': 'form-control'}),
+        }

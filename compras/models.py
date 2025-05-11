@@ -184,7 +184,7 @@ class Factura(models.Model):
         detalles = self.detalles.all()
         self.subtotal = sum(detalle.subtotal for detalle in detalles)
         # self.iva = self.subtotal * 0.19  # IVA del 19%
-        self.total = self.subtotal + self.bonificaion
+        self.total = self.subtotal + self.bonificacion
         self.save()
     
     def __str__(self):

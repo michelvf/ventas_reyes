@@ -43,7 +43,10 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
                     <a href="{% url 'factura_cambiar_estado' factura.id 'pagada' %}" class="btn btn-success">
-                        <i class="fas fa-check-circle me-1"></i> Marcar como Pagada
+                        <i class="fas fa-check-circle me-1"></i>Pagada
+                    </a>
+                    <a href="{% url 'factura_cambiar_estado' factura.id ' pagada-eleventa' %}" class="btn btn-success mx-1">
+                        <i class="fas fa-check-circle me-1"></i>Pagada y Registrada en Eleventa
                     </a>
                     <a href="{% url 'factura_cambiar_estado' factura.id 'anulada' %}" class="btn btn-danger">
                         <i class="fas fa-times-circle me-1"></i> Anular Factura
