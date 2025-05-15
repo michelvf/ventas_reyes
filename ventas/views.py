@@ -559,6 +559,11 @@ class CalculadoraBilletes(View):
             return render(request, self.template_name, {'form': form})
 
 
+class CalculadoraBilletes2(TemplateView):
+    """Calculadorade Billetes List View 2"""
+    template_name = 'ventas/contador_billete_list2.html'
+
+
 class EditarCalculadoraBilletes(UpdateView):
     """
     Editar calculadora de billetes

@@ -2,11 +2,11 @@ from django.urls import path
 from .views import ExcelUploadView, ShowVentas, SumarPorFechas, ProdxDepto
 from .views import ShowDepartamentos, ShowProductos, ShowEntreFechas
 from .views import LacteosVendidos, ProdMasVendido, ListadoFicherosSubidos
-from .views import  BackupRestoreSQLiteView, CalculadoraBilletes, DepartamentoUpdateView
+from .views import BackupRestoreSQLiteView, CalculadoraBilletes, DepartamentoUpdateView
 from .views import VentasAnualesView, VentasMensualesView, VentasSemanalesView
 from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVendeMas
 from .views import DiaQueVendeMas, LacteosListView, LacteosCreate, LacteosUpdate
-from .views import CalculoPorcientoPrecio, BorrarCalculadoraBilletes
+from .views import CalculoPorcientoPrecio, BorrarCalculadoraBilletes, CalculadoraBilletes2
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI, DondeSeVendeMasAPI
@@ -28,6 +28,7 @@ urlpatterns = [
     path('calculadora_billetes/', CalculadoraBilletes.as_view(), name='calculadora_billetes'),
     path('actualizar_departamentos/', DepartamentoUpdateView.as_view(), name='actualizar_departamentos'),
     path('mostrar_conteo_billetes/', ShowContadorBilletes.as_view(), name='mostrar_conteo_billetes'),
+    path('mostrar_conteo_billetes2/', CalculadoraBilletes2.as_view(), name='mostrar_conteo_billetes2'),
     path('editar_calculadora_billetes/<int:pk>/', EditarCalculadoraBilletes.as_view(), name='editar_calculadora_billetes'),
     path("calculadora_billetes/<int:pk>/borrar/", BorrarCalculadoraBilletes.as_view(), name="borrar_calculadora_billete"),
     path('reporte-mensual-departamento/', DondeSeVendeMas.as_view(), name='reporte_mensual_departamento'),

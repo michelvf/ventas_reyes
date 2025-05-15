@@ -137,7 +137,7 @@ class Ventas(models.Model):
 
 class Tipo_cuenta(models.Model):
     """
-    Tipo de cuenta, de crédio o débito
+    Modelo Tipo de cuenta, de crédio o débito
     """
     tipo = models.CharField(max_length=100, blank=False, null=False)
     siglas = models.CharField(max_length=2, blank=False, null=False)
@@ -201,7 +201,7 @@ class Contador_billete(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     tipo_cuenta = models.ForeignKey(
         Tipo_cuenta,
-        related_name="tipo_cuenta",
+        related_name="tipos_cuentas",
         on_delete=models.PROTECT,
         blank=False,
         null=False
