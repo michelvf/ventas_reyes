@@ -13,14 +13,15 @@ from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
 from .forms import ResumenSemanal
 from rest_framework import authentication
 from operator import itemgetter, attrgetter
-
+from django.template.loader import render_to_string
+from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
@@ -435,6 +436,12 @@ class ClienteDetailView(DetailView):
     template_name = 'facturas/cliente_detail.html'
     context_object_name = 'cliente'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
+        context['facturas'] = self.object.facturas.all().select_related('cliente').order_by('-fecha_emision')
+        return context
+
 
 class ClienteCreateView(CreateView):
     """
@@ -557,6 +564,14 @@ class FacturaDetailView(DetailView):
     context_object_name = 'factura'
 
 
+# Clase personalizada para serializar Decimal a JSON
+class DecimalEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super().default(obj)
+
+
 # @login_required
 def crear_factura(request):
     if request.method == 'POST':
@@ -625,7 +640,16 @@ def cambiar_estado_factura(request, pk, estado):
     else:
         factura.estado = estado
         factura.save()
-        messages.success(request, f"Estado de factura cambiado a {estado}.")
+        # Mensaje personalizado según el estado
+        if estado == 'pagada':
+            messages.success(request, "Factura marcada como pagada.")
+        elif estado == 'pagada-eleventa':
+            messages.success(request, "Factura marcada como pagada en Eleventa.")
+        elif estado == 'anulada':
+            messages.success(request, "Factura anulada correctamente.")
+        else:
+            messages.success(request, f"Estado de factura cambiado a {estado}.")
+
     
     return redirect('factura_detail', pk=factura.pk)
 
@@ -658,3 +682,105 @@ def get_producto_info(request):
             return HttpResponse(json.dumps({'error': 'Producto no encontrado'}), content_type='application/json')
     
     return HttpResponse(json.dumps({'error': 'Solicitud inválida'}), content_type='application/json')
+
+
+# API para obtener facturas actualizadas
+def get_facturas_json(request):
+    facturas = Factura.objects.all().order_by('-fecha_emision')
+    
+    data = []
+    for factura in facturas:
+        # Determinar el HTML del estado para mantener consistencia con la vista
+        if factura.estado == 'pendiente':
+            estado_html = '<span class="badge bg-warning">Pendiente</span>'
+        elif factura.estado == 'pagada':
+            estado_html = '<span class="badge bg-info">Pagada</span>'
+        elif factura.estado == 'pagada-eleventa':
+            estado_html = '<span class="badge bg-success">Pagada en Eleventa</span>'
+        else:
+            estado_html = '<span class="badge bg-danger">Anulada</span>'
+        
+        # Generar HTML para los botones de acción
+        acciones_html = f'''
+        <div class="btn-group" role="group">
+            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+        '''
+        
+        if factura.estado == 'pendiente':
+            acciones_html += f'''
+            <a href="{reverse('factura_update', args=[factura.id])}" class="btn btn-sm btn-warning">
+                <i class="fas fa-edit"></i>
+            </a>
+            '''
+            
+        acciones_html += f'''
+            <a href="{reverse('factura_delete', args=[factura.id])}" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+        '''
+        
+        data.append({
+            'DT_RowId': f'factura-{factura.id}',
+            'numero': factura.numero,
+            'cliente': f"{factura.cliente.nombre} {factura.cliente.apellido}",
+            'fecha': {
+                'display': factura.fecha_emision.strftime("%d/%m/%Y %H:%M"),
+                'timestamp': factura.fecha_emision.timestamp()
+            },
+            'total': {
+                'display': f"$ {factura.total}",
+                'value': float(factura.total)
+            },
+            'estado': {
+                'display': estado_html,
+                'value': factura.estado
+            },
+            'acciones': acciones_html
+        })
+    
+    return JsonResponse({'data': data})
+
+
+# API para obtener facturas de un cliente específico
+def get_facturas_cliente_json(request, cliente_id):
+    cliente = get_object_or_404(Cliente, pk=cliente_id)
+    facturas = cliente.facturas.all().order_by('-fecha_emision')
+    
+    data = []
+    for factura in facturas:
+        # Determinar el HTML del estado
+        if factura.estado == 'pendiente':
+            estado_html = '<span class="badge bg-warning">Pendiente</span>'
+        elif factura.estado == 'pagada':
+            estado_html = '<span class="badge bg-info">Pagada</span>'
+        elif factura.estado == 'pagada-eleventa':
+            estado_html = '<span class="badge bg-success">Pagada en Eleventa</span>'
+        else:
+            estado_html = '<span class="badge bg-danger">Anulada</span>'
+        
+        data.append({
+            'DT_RowId': f'factura-cliente-{factura.id}',
+            'numero': factura.numero,
+            'fecha': {
+                'display': factura.fecha_emision.strftime("%d/%m/%Y"),
+                'timestamp': factura.fecha_emision.timestamp()
+            },
+            'total': {
+                'display': f"$ {factura.total}",
+                'value': float(factura.total)
+            },
+            'estado': {
+                'display': estado_html,
+                'value': factura.estado
+            },
+            'acciones': f'''
+            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+            '''
+        })
+    
+    return JsonResponse({'data': data})

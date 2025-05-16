@@ -10,6 +10,7 @@ from .views import ClienteListView, ClienteCreateView, ClienteUpdateView, Client
 from .views import ProductoCreateView, ProductoDeleteView, ProductoDetailView, ProductoListView, ProductosListView, ProductoUpdateView, get_producto_info
 from .views import FacturaListView, FacturaDetailView, crear_factura, editar_factura, eliminar_factura, cambiar_estado_factura
 from api.views import UltimoPrecio, CompraLecheSemana
+from . import views
 
 
 urlpatterns = [
@@ -69,4 +70,8 @@ urlpatterns = [
     path('facturas/<int:pk>/eliminar/', eliminar_factura, name='factura_delete'),
     path('facturas/<int:pk>/estado/<str:estado>/', cambiar_estado_factura, name='factura_cambiar_estado'),
     
+    # API para actualización en tiempo real
+    path('api/facturas/', views.get_facturas_json, name='api_facturas'),
+    path('api/clientes/<int:cliente_id>/facturas/', views.get_facturas_cliente_json, name='api_facturas_cliente'),
+
 ]

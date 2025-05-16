@@ -181,6 +181,10 @@
   <script src="{% static 'js/moment.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
   <script>
+    function formatCurrency(value) {
+        return '$' + value //.toFixed(2);
+    }
+
     // Mostrar Efectivo
     var Efectivo = document.getElementById('efectivo')
     fetch('/api/saldo_efectivo/')
@@ -211,24 +215,29 @@
             },
             { data: 'comentario' },
             { data: 'tipo_cuenta.siglas',
+                // let tipo = data
                 render: function(data) {
                     if (data == 'CR') {
                         return `<span class="positivo">${data}</span>`
+                        //return '<span class="positivo">' + formatCurrency(data) + '</span>'
                     } else {
                         return `<span class="negativo">${data}</span>`
+                        //return '<span class="negativo">' + formatCurrency(data) + '</span>'
                     }
                 }
             },
             { data: 'total',
-            /*
+            
                 render: function(data, type, row) {
                     if (data > 0) {
-                        return `<span class="positivo">${data}</span>`
+                       // return `<span class="positivo">${data}</span>`
+                        return '<span class="positivo">' + formatCurrency(data) + '</span>'
                     } else if (data < 0) {
-                        return `<span class="negativo">${data}</span>`
+                        // return `<span class="negativo">${data}</span>`
+                        return '<span class="negativo">' + formatCurrency(data) + '</span>'
                     }
                 }
-            */
+            
             },
             { data: 'sub_total' },
             {
@@ -241,20 +250,20 @@
                 }
             }
         ],
-        columnDefs: [
+        //columnDefs: [
             //{
             //    targets: 0,
             //    render: DataTable.render.datetime('D MMM YYYY', 'MMM D, YY', 'es')
             //},
-            {
-                target: 3,
-                render: DataTable.render.number(null, null, 0, '$')
-            },
-            {
-                target: 4,
-                render: DataTable.render.number(null, null, 0, '$')
-            }
-        ],
+        //    {
+        //        target: 3,
+        //        render: DataTable.render.number(null, null, 0, '$')
+        //    },
+        //    {
+        //        target: 4,
+        //        render: DataTable.render.number(null, null, 0, '$')
+        //    }
+        //],
         language: language,
         pageLength: 20,
         order: [[0, 'desc']],

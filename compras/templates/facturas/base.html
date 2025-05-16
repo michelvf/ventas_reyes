@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Facturación{% endblock %}</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <!-- link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <!-- link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" -->
+    <link href="{% static 'assets/lib/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <!-- link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" -->
+    <link href="{% static 'assets/lib/datatables/full/datatables.min.css' %}" rel="stylesheet">
+    <!-- link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" -->
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+        }
+        .content {
+            padding: 20px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .dataTables_wrapper .dataTables_length, 
+        .dataTables_wrapper .dataTables_filter, 
+        .dataTables_wrapper .dataTables_info, 
+        .dataTables_wrapper .dataTables_processing, 
+        .dataTables_wrapper .dataTables_paginate {
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                Sistema de Facturación
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'factura_list' %}">Facturas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cliente_list' %}">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'producto_list' %}">Productos</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{% url 'factura_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus-circle me-1"></i> Nueva Factura
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'factura_list' %}">
+                                <i class="fas fa-file-invoice me-2"></i> Facturas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'factura_create' %}">
+                                <i class="fas fa-plus-circle me-2"></i> Nueva Factura
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cliente_list' %}">
+                                <i class="fas fa-users me-2"></i> Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cliente_create' %}">
+                                <i class="fas fa-user-plus me-2"></i> Nuevo Cliente
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'producto_list' %}">
+                                <i class="fas fa-box me-2"></i> Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'producto_create' %}">
+                                <i class="fas fa-plus me-2"></i> Nuevo Producto
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+                <!-- Messages -->
+                {% if messages %}
+                    <div class="messages mt-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Page content -->
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle with Popper -->
+    <!-- script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script -->
+    <link href="{% static 'js/bootstrap.bundle.min.js' %}" rel="stylesheet">
+    <!-- jQuery -->
+    <!-- script src="https://code.jquery.com/jquery-3.6.0.min.js"></script -->
+    <link href="{% static 'assets/lib/jquery/jquery-3.5.0.min.js' %}" rel="stylesheet">
+    <!-- DataTables JS -->
+    <!-- script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script -->
+    <link href="{% static 'assets/lib/datatables/full/datatables.min.js' %}" rel="stylesheet">
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

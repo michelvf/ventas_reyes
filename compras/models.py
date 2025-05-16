@@ -3,7 +3,8 @@ from ventas.models import Departamentos
 
 # Create your models here.
 from django.utils import timezone
-import uuid
+# import uuid
+import datetime
 
 
 class PrecioProducto(models.Model):
@@ -176,7 +177,26 @@ class Factura(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.numero:
-            self.numero = f"F-{uuid.uuid4().hex[:8].upper()}"
+            # Obtener el año actual
+            current_year = datetime.datetime.now().year
+            
+            # Buscar la última factura del año actual
+            last_invoice = Factura.objects.filter(
+                numero__startswith=f'F-{current_year}-'
+            ).order_by('numero').last()
+            
+            # Determinar el siguiente número
+            if last_invoice:
+                # Extraer el número secuencial de la última factura
+                last_number = int(last_invoice.numero.split('-')[-1])
+                next_number = last_number + 1
+            else:
+                # Si no hay facturas para este año, comenzar desde 1
+                next_number = 1
+            
+            # Formatear el nuevo número de factura
+            self.numero = f'F-{current_year}-{next_number:03d}'
+
         super().save(*args, **kwargs)
     
     def calcular_totales(self):
