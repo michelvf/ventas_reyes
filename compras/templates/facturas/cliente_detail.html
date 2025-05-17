@@ -12,6 +12,23 @@
 
 {% include "facturas/alert.html" %}
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+    <div>
+        <div class="form-check form-switch d-inline-block me-3">
+            <input class="form-check-input" type="checkbox" id="autoRefreshSwitch" checked>
+            <label class="form-check-label" for="autoRefreshSwitch">Actualización automática</label>
+        </div>
+        <a href="{% url 'cliente_update' cliente.id %}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i> Editar
+        </a>
+        <a href="{% url 'cliente_list' %}" class="btn btn-secondary ms-2">
+            <i class="fas fa-arrow-left me-1"></i> Volver
+        </a>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-md-4">
         <div class="card mb-4">
@@ -32,7 +49,7 @@
     
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title mb-0">Facturas del Cliente</h5>
                 <a href="{% url 'factura_create' %}" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus-circle me-1"></i> Nueva Factura
@@ -78,6 +95,19 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Notificación de actualización -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="updateToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <i class="fas fa-sync-alt me-2"></i>
+            <strong class="me-auto">Actualización</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Las facturas del cliente han sido actualizadas.
         </div>
     </div>
 </div>
@@ -134,7 +164,7 @@
             });
             
             // Toast para notificaciones
-            //const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
+            const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
             
             // Variable para controlar el intervalo de actualización
             let refreshInterval;
@@ -148,7 +178,9 @@
                     success: function(response) {
                         // Verificar si hay cambios comparando los datos
                         const currentData = table.data().toArray();
+                        console.log('lo que tiene la tabla: ' + currentData)
                         const newData = response.data;
+                        console.log('lo que llega del ajax: ' + JSON.stringify(newData))
                         
                         // Si hay diferencias, actualizar la tabla
                         if (JSON.stringify(currentData) !== JSON.stringify(newData)) {
@@ -159,7 +191,7 @@
                             console.log("se regera la tabla")
                             
                             // Mostrar notificación
-                            //updateToast.show();
+                            updateToast.show();
                         }
                     },
                     error: function(xhr, status, error) {
