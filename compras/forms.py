@@ -203,9 +203,10 @@ class FacturaForm(forms.ModelForm):
     """
     class Meta:
         model = Factura
-        fields = ['cliente', 'observaciones', 'bonificacion']
+        fields = ['cliente', 'observaciones', 'bonificacion', 'tipo']
         widgets = {
             'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'tipo': forms.Select(attrs={'class': 'form-control'}),
             'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
             'bonificacion': forms.NumberInput(attrs={'class': 'form-control'}),
         }

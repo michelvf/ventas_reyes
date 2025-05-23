@@ -18,7 +18,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -784,3 +784,12 @@ def get_facturas_cliente_json(request, cliente_id):
         })
     
     return JsonResponse({'data': data})
+
+
+class VerFactura(DetailView):
+    """
+    Ver la factura que hizo la IA
+    """
+    model = Factura
+    template_name = "facturas/Factura.html"
+    context_object_name = 'factura'

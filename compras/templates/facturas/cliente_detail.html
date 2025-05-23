@@ -190,7 +190,7 @@
                         const currentData = table.data().toArray();
                         //console.log('lo que tiene la tabla: ' + currentData)
                         const newData = response.data;
-                        console.log('lo que llega del ajax: ' + JSON.stringify(newData))
+                        //console.log('lo que llega del ajax: ' + JSON.stringify(newData))
                         
                         // Si hay diferencias, actualizar la tabla
                         if (JSON.stringify(currentData) !== JSON.stringify(newData)) {
@@ -212,7 +212,7 @@
             
             // Iniciar actualización automática
             function startAutoRefresh() {
-                //refreshInterval = setInterval(refreshTable, 10000); // Actualizar cada 10 segundos
+                refreshInterval = setInterval(refreshTable, 10000); // Actualizar cada 10 segundos
             }
             
             // Detener actualización automática

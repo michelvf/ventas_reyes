@@ -115,11 +115,11 @@ class Cliente(models.Model):
     
     
     nombre = models.CharField(max_length=200)
-    apellido = models.CharField(max_length=200)
-    negocio = models.CharField(max_length=250, unique=True)
-    ci = models.IntegerField(validators=[validar_longitud_11_digitos])
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
+    apellido = models.CharField(max_length=200, blank=True, null=True)
+    negocio = models.CharField(max_length=250, unique=True, blank=True, null=True )
+    ci = models.IntegerField(validators=[validar_longitud_11_digitos], blank=True, null=True)
+    direccion = models.CharField(max_length=255, blank=True, null=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     
@@ -165,9 +165,15 @@ class Factura(models.Model):
         ('anulada', 'Anulada'),
     )
     
+    TIPO_FACTURA = (
+        ('c', 'Compra'),
+        ('v', 'Venta'),
+    )
+    
     numero = models.CharField(max_length=20, unique=True, editable=False)
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
     fecha_emision = models.DateTimeField(default=timezone.now)
+    tipo = models.CharField(max_length=1,choices=TIPO_FACTURA, default='v')
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     # iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)

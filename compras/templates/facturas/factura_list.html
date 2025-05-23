@@ -1,4 +1,4 @@
-{% extends 'facturas/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Facturas - Sistema de Facturación{% endblock %}
@@ -26,6 +26,7 @@
                     <tr>
                         <th>Número</th>
                         <th>Cliente</th>
+                        <th>Tipo</th>
                         <th>Fecha</th>
                         <th>Total</th>
                         <th>Estado</th>
@@ -37,6 +38,13 @@
                     <tr>
                         <td>{{ factura.numero }}</td>
                         <td>{{ factura.cliente.nombre|upper }} {{ factura.cliente.apellido|upper }}</td>
+                        <td>
+                            {% if factura.tipo == 'c' %}
+                                <span class=""><i class="fas fa-eye"></i>COMPRA</span>
+                            {% elif factura.tipo == 'v' %}
+                                <span class=""><i class="fas fa-eye"></i>VENTA</span>
+                            {% endif %}
+                        </td>
                         <td>{{ factura.fecha_emision|date:"d/m/Y H:i" }}</td>
                         <td>${{ factura.total }}</td>
                         <td>
@@ -84,9 +92,15 @@
 
 {% block js %}
     <script type="text/javascript" src="{% static 'js/datatables-full.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datatables-full.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
-    <!-- script>
-        const tabla = $('#table').DataTables(); 
-    </script -->
+    <!-- script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script -->
+    <script>
+        const tabla = $('#table').DataTable({
+            language: language,
+            pageLength: 20,
+            // ordering: false,
+            order: [[2, 'desc']],
+        }); 
+    </script>
 {% endblock js %}
