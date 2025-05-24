@@ -26,7 +26,7 @@ activeSheetIndex = iSh;
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt'>
  <col class='x21' style='background:none;width:36pt'>
- <col class='x21' style='background:none;width:105pt'>
+ <col class='x21' style='background:none;width:200pt'>
  <col class='x21' style='background:none;width:21pt'>
  <col class='x21' style='background:none;width:28.5pt'>
  <col class='x21' style='background:none;width:27pt'>
@@ -34,8 +34,8 @@ activeSheetIndex = iSh;
  <col class='x21' style='background:none;width:61.5pt'>
  <col class='x21' style='background:none;width:10.5pt'>
  <col class='x21' style='background:none;width:34.5pt'>
- <col class='x21' style='background:none;width:42.75pt'>
- <col class='x21' style='background:none;width:97.5pt'>
+ <col class='x21' style='background:none;width:47pt'>
+ <col class='x21' style='background:none;width:110pt'>
  <tr style='height:14.25pt'>
  <td style='text-align: left;height:14.25pt;width:36pt;vertical-align:top;' align='left'>
   <span style='position:absolute;z-index:7;margin-left:0px;margin-top:1px;width:126px;height:54px'>
@@ -115,20 +115,20 @@ activeSheetIndex = iSh;
  </tr>
  <tr style='height:14.25pt'>
   <td colspan='2' class='x78' style='height:14.25pt;'>Facturado a:</td>
-  <td class='x79'>COD.</td>
-  <td class='x170'>{{ factura.cliente.id }}</td>
+  <td class='x78'></td>
+  <td class='x78'></td>
   <td colspan='3' class='x81'>Suministrador:</td>
   <td colspan='4' class='x49'></td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Nombre:</td>
-  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>{{ factura.cliente.nombre }}</td>
+  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}</td>
   <td colspan='5' class='x127'>Alberto M. Reyes Nicot</td>
   <td colspan='2' class='x23'><font class="font15" style="text-decoration: none;">Ctta. CUP:&nbsp;</font><font class="font4" style="text-decoration: none;">1289-6540-0068-8411</font></td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Negocio:</td>
-  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>{{ factura.cliente.negocio }}</td>
+  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.negocio }}</td>
   <td colspan='5' class='x127'>Mini Industria A&amp;A Reyes s.r.l.</td>
   <td colspan='2' class='x23'><font class="font15" style="text-decoration: none;">Ctta. MLC:</font><font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font></td>
  </tr>
@@ -140,8 +140,8 @@ activeSheetIndex = iSh;
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Teléfono:</td>
-  <td colspan='3' class='x113' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>{{ factura.cliente.telefono }}</td>
-  <td colspan='5' class='x124'>59889677</td>
+  <td colspan='3' class='x113' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.telefono }}</td>
+  <td colspan='5' class='x124'>+53 59889677</td>
   <td colspan='2' class='x23'></td>
  </tr>
  <tr style='height:3.75pt'>
@@ -182,7 +182,7 @@ activeSheetIndex = iSh;
  {% if forloop.counter0|divisibleby:2 %}
   <tr style='height:14.25pt'>
     <td class='x69' style='height:14.25pt;'>00{{ forloop.counter }}</td>
-    <td colspan='3' class='x136'>{{ detalle.producto.nombre }}</td>
+    <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
     <td class='x74'>{{ detalle.producto.codigo }}</td>
     <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
     <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>
@@ -192,7 +192,7 @@ activeSheetIndex = iSh;
   {% else %}
   <tr style='height:14.25pt'>
     <td class='x70' style='height:14.25pt;'>00{{  forloop.counter }}</td>
-    <td colspan='3' class='x142'>{{ detalle.producto.nombre }}</td>
+    <td colspan='3' class='x142'>{{ detalle.producto.nombre|upper }}</td>
     <td class='x73'>{{ detalle.producto.codigo }}</td>
     <td class='x64'>{{ detalle.producto.unidadmedida.sigla }}</td>
     <td colspan='2' class='x143'>{{ detalle.cantidad }}</td>
@@ -204,15 +204,6 @@ activeSheetIndex = iSh;
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
- <!-- tr style='height:14.25pt'>
-  <td class='x71' style='height:13.5pt;'>002</td>
-  <td colspan='3' class='x137' style='border-bottom:1px solid #0070C0;'></td>
-  <td class='x75'>--</td>
-  <td class='x67'>--</td>
-  <td colspan='2' class='x129' style='border-bottom:1px solid #0070C0;'></td>
-  <td colspan='2' class='x126' style='border-bottom:1px solid #0070C0;'>&nbsp;--&nbsp;</td>
-  <td class='x68'>&nbsp;--&nbsp;</td>
- </tr -->
  <tr style='height:14.25pt'>
 <td colspan='2' class='x108' style='height:14.25pt;'>Suministra:</td>
 <td class='x21'></td>
@@ -234,7 +225,7 @@ activeSheetIndex = iSh;
  <tr style='height:12.75pt'>
   <td colspan='2' class='x111' style='height:12.75pt;'>89012247469</td>
   <td class='x109'></td>
-  <td colspan='4' class='x112'>--</td>
+  <td colspan='4' class='x112'>{{ factura.cliente.ci|floatformat:"0"}}</td>
   <td class='x21'></td>
   <td class='x95'></td>
   <td class='x95'>TOTAL:</td>
