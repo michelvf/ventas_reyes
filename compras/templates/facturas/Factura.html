@@ -181,7 +181,15 @@ activeSheetIndex = iSh;
  {% for detalle in factura.detalles.all %}
  {% if forloop.counter0|divisibleby:2 %}
   <tr style='height:14.25pt'>
-    <td class='x69' style='height:14.25pt;'>00{{ forloop.counter }}</td>
+    <td class='x69' style='height:14.25pt;'>
+      {% if forloop.counter > 9 %}
+        0{{ forloop.counter }}
+      {% elif forloop.counter > 99 %}
+        {{ forloop.counter }}
+      {% else %}
+        00{{ forloop.counter }}
+      {% endif %}
+    </td>
     <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
     <td class='x74'>{{ detalle.producto.codigo }}</td>
     <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
@@ -191,7 +199,15 @@ activeSheetIndex = iSh;
   </tr>
   {% else %}
   <tr style='height:14.25pt'>
-    <td class='x70' style='height:14.25pt;'>00{{  forloop.counter }}</td>
+    <td class='x70' style='height:14.25pt;'>
+      {% if forloop.counter > 9 %}
+        0{{ forloop.counter }}
+      {% elif forloop.counter > 99 %}
+        {{ forloop.counter }}
+      {% else %}
+        00{{ forloop.counter }}
+      {% endif %}
+    </td>
     <td colspan='3' class='x142'>{{ detalle.producto.nombre|upper }}</td>
     <td class='x73'>{{ detalle.producto.codigo }}</td>
     <td class='x64'>{{ detalle.producto.unidadmedida.sigla }}</td>
