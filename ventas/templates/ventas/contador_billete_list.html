@@ -4,7 +4,8 @@
 {% block title %}| Listado del Contador de Billetes{% endblock title %}
 
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+  <!-- link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" / -->
+  <link rel="stylesheet" href="{% static 'assets/lib/datatables/full/datatables.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
   <style> 
    
@@ -54,7 +55,7 @@
   </div><!-- az-dashboard-one-title -->
  <div>
     {% if billetes %}
-        <table class="table ancho" id="tabla">
+        <table id="tabla">
             <thead>
                 <tr>
                     <th>Fecha</th>
@@ -96,25 +97,6 @@
                     </tr>
                 {% endfor %}
             </tbody>
-            <!-- tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot -->
         </table>
     {% else %}
         <p>Aún no hay registros.</p>
@@ -153,7 +135,7 @@
                 </button -->
             </div>
             <div class="modal-body">
-                <table class="table">
+                <table id="" class="table">
                     <thead>
                         <tr style="text-align:center !important">
                             <th>Monto</th>
@@ -196,11 +178,13 @@
 
 {% block js %}
   <!-- script src="{% static 'js/jquery.min.js' %}"></script -->
-  <script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script>
+  <!-- script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></!-- -->
+  <scrip src="{% static 'assets/lib/datatables/full/datatables.min.js' %}" type="text/javascript"></scrip>
   <script src="{% static 'js/moment.min.js' %}" type="text/javascript"></script>
-  <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></sc>
   <script>
     // Mostrar Efectivo
+    /*
     var Efectivo = document.getElementById('efectivo')
     fetch('/api/saldo_efectivo/')
     .then(rest => rest.json())
@@ -212,117 +196,20 @@
             Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
         }
     })
+    */
 
-    //new DataTable('#tabla', {
-    var table = $('#tabla').DataTable({
-        language: language,
-        pageLength: 20,
-        order: [[0, 'desc']],
-    });
+    new DataTable('#tabla');
+
+    // new DataTable('#tabla', {
+    // var table = $('#tabla').DataTable({
+    // $('#tabla').DataTable({
+    //    language: language,
+    //    pageLength: 20,
+    //    order: [[0, 'desc']],
+    //});
   </script>
 
   <script>
-    $(function(){
-      'use strict'
-
-      // showing modal with effect
-      $('.modal-effect').on('click', function(e){
-        e.preventDefault();
-        var effect = $(this).attr('data-effect');
-        $('#modaldemo8').addClass(effect);
-      });
-
-      // hide modal with effect
-      $('#modaldemo8').on('hidden.bs.modal', function (e) {
-        $(this).removeClass (function (index, className) {
-            return (className.match (/(^|\s)effect-\S+/g) || []).join(' ');
-        });
-      });
-
-    });
-
-    function billetes(id) {
-        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
-        let url = '/api/contador_billetes/' + id;
-        // let comentario = document.getElementById('comentario')
-        let total = document.getElementById('total')
-        let uno = document.getElementById('1')
-        let tres = document.getElementById('3')
-        let cinco = document.getElementById('5')
-        let diez = document.getElementById('10')
-        let veinte = document.getElementById('20')
-        let cincuenta = document.getElementById('50')
-        let cien = document.getElementById('100')
-        let doscientos = document.getElementById('200')
-        let quinientos = document.getElementById('500')
-        let mil = document.getElementById('1000')
-
-        fetch(url)
-        .then(res => res.json())
-        .then(dat => {
-            // console.log(`lo que llega del fetch: ${dat.total}`)
-            // const totall = dat.total
-            /*
-            if (totall > 0) {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            } else {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            }
-            */
-            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
-            comentario.innerHTML = dat.comentario
-            uno.innerHTML = dat.un_peso
-            tres.innerHTML = dat.tres_pesos
-            cinco.innerHTML = dat.cinco_pesos
-            diez.innerHTML = dat.diez_pesos
-            veinte.innerHTML = dat.veinte_pesos
-            cincuenta.innerHTML = dat.cincuenta_pesos
-            cien.innerHTML = dat.cien_pesos
-            doscientos.innerHTML = dat.doscientos_pesos
-            quinientos.innerHTML = dat.quinientos_pesos
-            mil.innerHTML = dat.mil_pesos
-        })
-    }
-
-    function total_billetes() {
-        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
-        let url = '/api/saldo_efectivo/';
-        let total = document.getElementById('total')
-        let uno = document.getElementById('1')
-        let tres = document.getElementById('3')
-        let cinco = document.getElementById('5')
-        let diez = document.getElementById('10')
-        let veinte = document.getElementById('20')
-        let cincuenta = document.getElementById('50')
-        let cien = document.getElementById('100')
-        let doscientos = document.getElementById('200')
-        let quinientos = document.getElementById('500')
-        let mil = document.getElementById('1000')
-
-        fetch(url)
-        .then(res => res.json())
-        .then(dat => {
-            // console.log(`lo que llega del fetch: ${dat.total}`)
-            /*
-            const totall = dat.total
-            if (totall > 0) {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            } else {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            }
-            */
-            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat[0].saldo)
-            uno.innerHTML = dat[0].un_peso
-            tres.innerHTML = dat[0].tres_pesos
-            cinco.innerHTML = dat[0].cinco_pesos
-            diez.innerHTML = dat[0].diez_pesos
-            veinte.innerHTML = dat[0].veinte_pesos
-            cincuenta.innerHTML = dat[0].cincuenta_pesos
-            cien.innerHTML = dat[0].cien_pesos
-            doscientos.innerHTML = dat[0].doscientos_pesos
-            quinientos.innerHTML = dat[0].quinientos_pesos
-            mil.innerHTML = dat[0].mil_pesos
-        })
-    }
+    
   </script>
 {% endblock %}

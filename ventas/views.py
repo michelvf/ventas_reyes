@@ -644,11 +644,9 @@ class DondeSeVendeMas(View):
         inicio_mes = fecha_entrada.replace(day=1, hour=1, minute=0, second=0)
         fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1, hour=23, minute=59, second=59) - datetime.timedelta(days=1)
         # print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
-
-
-#        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
-#        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
-#        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+        #        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
+        #        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
+        #        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
         # Obtener ventas del mes actual
         ventas_mensuales = Ventas.objects.filter(
             #fecha__gte=inicio_mes,
@@ -715,8 +713,8 @@ class DondeSeVendeMas(View):
             fecha = datetime.datetime(year=anno, month=mes,day=1,tzinfo=zona_horaria)
 
             print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
-#            fecha1 = timezone.now()
-#            fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
+        #     fecha1 = timezone.now()
+        #     fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
             # fecha = datetime.datetime(year=anno, month=mes,day=1)
             #print(f"fecha a enviar para procesamiento: {fecha}")
             context = {}
