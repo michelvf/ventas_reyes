@@ -9,7 +9,7 @@ from .forms import ExcelUploadForm, UploadSQLFileForm, ArchivoExcelForm, Departa
 from .forms import CalculadoraBilletesForm, LacteosForm, DondeSeVendeMasForm
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
 from .models import Lacteos, Cuenta, Tipo_cuenta
@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.core.paginator import Paginator
 import pytz
 
 # Index Page
@@ -324,6 +325,7 @@ class ShowContadorBilletes(ListView):
     model = Contador_billete
     # template_name = 'ventas/contar_billetes.html'
     context_object_name = "billetes"
+    # paginate_by = 20
 
 
 class ProdxDepto(TemplateView):
@@ -472,23 +474,14 @@ class CalculadoraBilletes(View):
     def get(self, request, *args, **kawars):
         # billetes = Contador_billete.objects.all()
         form = CalculadoraBilletesForm()
+        
         return render(request, 'ventas/contador_billete_form.html', {'form': form})
 
     def post(self, request, *args, **kawars):
         form = CalculadoraBilletesForm(request.POST)
         # billetes = request.POST
         # print(f"llegaron del POST: {billetes}")
-    
-    # def form_valid(self, form):
-    #     # Asignar el valor del campo 'total' antes de guardar
-    #     form.instance.sub_total = self.calcular_total(form.cleaned_data)
-    #     return super().form_valid(form)
 
-    # def calcular_total(self, data):
-    #     # Lógica para calcular el total (puedes modificar según lo necesites)
-    #     return data.get('campo1', 0) + data.get('campo2', 0)  # Ejemplo
-
-        # sub_total = CalculadoraBilletes.objects.last()
         if form.is_valid():
             
             # Validar los datos llegados del formulario
@@ -498,14 +491,19 @@ class CalculadoraBilletes(View):
             saldo = Cuenta.objects.get(cuenta="Efectivo")
             registro = form.cleaned_data['total']
 
-            form.instance.sub_total = registro + saldo.saldo
+            # tipo = form.cleaned_data['tipo_cuenta']
+            tipo = int(request.POST.get('tipo_cuenta'))
             
+            if tipo == 1:
+                form.instance.sub_total = saldo.saldo + registro
+            else:
+                form.instance.sub_total = saldo.saldo - registro
+            
+
             # Guardar los datos del formulario
             form.save()
             print(f"Lo que se guardó del formulario: {form}")
             
-            # tipo = form.cleaned_data['tipo_cuenta']
-            tipo = int(request.POST.get('tipo_cuenta'))
             # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
             un = int(request.POST.get('un_peso'))
@@ -541,7 +539,7 @@ class CalculadoraBilletes(View):
                 print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
                 # saldo.sub_cuenta -= form.total
-                saldo.un_pesos -= un if un is not None else 0
+                saldo.un_peso -= un if un is not None else 0
                 saldo.tres_pesos -= tres if tres is not None else 0
                 saldo.cinco_pesos -= cinco if cinco is not None else 0
                 saldo.diez_pesos -= diez if diez is not None else 0
@@ -551,7 +549,7 @@ class CalculadoraBilletes(View):
                 saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
                 saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
                 saldo.mil_pesos -= mil if mil is not None else 0
-                
+
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta
             saldo.save()
@@ -559,6 +557,11 @@ class CalculadoraBilletes(View):
             return HttpResponseRedirect('/ventas/mostrar_conteo_billetes/')
         else:
             return render(request, self.template_name, {'form': form})
+
+
+class CalculadoraBilletes2(TemplateView):
+    """Calculadorade Billetes List View 2"""
+    template_name = 'ventas/contador_billete_list2.html'
 
 
 class EditarCalculadoraBilletes(UpdateView):
@@ -570,6 +573,59 @@ class EditarCalculadoraBilletes(UpdateView):
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+
+class BorrarCalculadoraBilletes(DeleteView):
+    """
+    Borrar un registro y devolver el dinero al total
+    """
+    model = Contador_billete
+    success_url = reverse_lazy("mostrar_conteo_billetes")
+
+    def post(self, request, *args, **kwargs):
+        # Obtener el objeto antes de eliminarlo
+        self.object = self.get_object()
+
+        # Realizar alguna acción antes de eliminar el objeto
+        # Por ejemplo, registrar el borrado en un log
+        efectivo = Cuenta.objects.get(cuenta="Efectivo")
+
+        if self.object.tipo_cuenta == 1:
+            print("Es un Crédito, lo voy a retar")
+            efectivo.un_peso -= self.object.un_peso
+            efectivo.tres_pesos -= self.object.tres_pesos
+            efectivo.cinco_pesos -= self.object.cinco_pesos
+            efectivo.diez_pesos -= self.object.diez_pesos
+            efectivo.veinte_pesos -= self.object.veinte_pesos
+            efectivo.cincuenta_pesos -= self.object.cincuenta_pesos
+            efectivo.cien_pesos -= self.object.cien_pesos
+            efectivo.doscientos_pesos -= self.object.doscientos_pesos
+            efectivo.quinientos_pesos -= self.object.quinientos_pesos
+            efectivo.mil_pesos -= self.object.mil_pesos
+            efectivo.saldo -= self.object.total
+        else:
+            print("Es un Débito, lo voy a sumar")
+            efectivo.un_peso += self.object.un_peso
+            efectivo.tres_pesos += self.object.tres_pesos
+            efectivo.cinco_pesos += self.object.cinco_pesos
+            efectivo.diez_pesos += self.object.diez_pesos
+            efectivo.veinte_pesos += self.object.veinte_pesos
+            efectivo.cincuenta_pesos += self.object.cincuenta_pesos
+            efectivo.cien_pesos += self.object.cien_pesos
+            efectivo.doscientos_pesos += self.object.doscientos_pesos
+            efectivo.quinientos_pesos += self.object.quinientos_pesos
+            efectivo.saldo += self.object.total
+        
+        efectivo.save()
+        # print(f"Registro eliminado: {self.object.nombre}")
+
+        # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
+
+        # Llamar al método `delete()` original
+        response = super().post(request, *args, **kwargs)
+
+        # Si quieres cambiar la redirección, puedes hacerlo aquí
+        return response
 
 
 class VentasAnualesView(YearArchiveView):

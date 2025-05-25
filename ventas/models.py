@@ -57,8 +57,8 @@ class Departamentos(models.Model):
 
     class Meta:
         ordering = ["id"]
-        verbose_name = "departmento"
-        verbose_name_plural = "departmentos"
+        verbose_name = "departamento"
+        verbose_name_plural = "departamentos"
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["departamento"]),
@@ -137,7 +137,7 @@ class Ventas(models.Model):
 
 class Tipo_cuenta(models.Model):
     """
-    Tipo de cuenta, de crédio o débito
+    Modelo Tipo de cuenta, de crédio o débito
     """
     tipo = models.CharField(max_length=100, blank=False, null=False)
     siglas = models.CharField(max_length=2, blank=False, null=False)
@@ -176,16 +176,6 @@ class Cuenta(models.Model):
     quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     comentario = models.TextField(null=True, blank=True)
-    un_peso = models.IntegerField(default=0)
-    tres_pesos = models.IntegerField(default=0)
-    cinco_pesos = models.IntegerField(default=0)
-    diez_pesos = models.IntegerField(default=0)
-    veinte_pesos = models.IntegerField(default=0)
-    cincuenta_pesos = models.IntegerField(default=0)
-    cien_pesos = models.IntegerField(default=0)
-    doscientos_pesos = models.IntegerField(default=0)
-    quinientos_pesos = models.IntegerField(default=0)
-    mil_pesos = models.IntegerField(default=0)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     
@@ -211,7 +201,7 @@ class Contador_billete(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     tipo_cuenta = models.ForeignKey(
         Tipo_cuenta,
-        related_name="tipo_cuenta",
+        related_name="tipos_cuentas",
         on_delete=models.PROTECT,
         blank=False,
         null=False

@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import DepartamentoApiView, ProductosApiView, VentaApiView, ProductXDeptoListView
 from .views import FicherosSubidosApiView, SaldoEfectivoView, ContadorBilleteView
-from .views import AlmacenApiView, ProductoApiView, PrecioProductoApiView
+from .views import AlmacenApiView, ProductoApiView, PrecioProductoApiView, ContadorBilleteListView
 from .views import CompraApiView, NominaDepartamentosApiView, NominaCargoApiView
 
 router = DefaultRouter()
@@ -23,9 +23,10 @@ router.register(prefix="compra", viewset=CompraApiView, basename="compra")
 router.register(prefix="nomina_departamentos", viewset=NominaDepartamentosApiView, basename="nomina_departamentos")
 router.register(prefix="nomina_cargos", viewset=NominaCargoApiView, basename="nomina_cargos")
 
-######## Saldos Cuentas #########
+######## Saldos Cuentas y Contador de Billetes  #########
 router.register(prefix="saldo_efectivo", viewset=SaldoEfectivoView, basename="saldoefectivo")
 router.register(prefix="contador_billetes", viewset=ContadorBilleteView, basename="contadorbilletes")
+router.register(prefix="contador_billetes_list", viewset=ContadorBilleteListView, basename="contadorbilleteslist")
 
 
 

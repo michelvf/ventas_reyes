@@ -49,20 +49,20 @@ def efectivo():
     print(f"$50: {cincuenta}, $100: {cien}, $200: {doscientos}, $500: {quinientos}, $1000: {mil}")
     print(f"Desea actualizar (y/n)", end="")
     resp = input()
-    if resp == "n":
-        update = Cuenta.objects.get(cuenta='Efectivo')
-        update(un_peso=un, tres_pesos=tres, cinco_pesos=cien, diez_pesos=diez, veinte_pesos=veinte,\
-            cincuenta_pesos=cincuenta, cien_pesos==cien, doscientos_pesos=doscientos, quinientos_pesos=quinientos, mil_pesos=mil )
-        update.save()
+    if resp == "y":
+        Efectivo = Cuenta.objects.get(cuenta='Efectivo')
+        efectivo = Efectivo(un_peso=un, tres_pesos=tres, cinco_pesos=cien, diez_pesos=diez, veinte_pesos=veinte,\
+                cincuenta_pesos=cincuenta, cien_pesos=cien, doscientos_pesos=doscientos,\
+                quinientos_pesos=quinientos, mil_pesos=mil)
+        efectivo.save()
     else:
         exit()
-# ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinie ntos_pesos;
+# ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinientos_pesos;
 # ALTER TABLE ventas_cuenta ADD un_peso NULL DEFAULT 0;
-
 # ALTER TABLE ventas_cuenta ADD tres_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cinco_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD diez_pesos NULL DEFAULT 0;
-# ALTER TABLE ventas_cuenta ADD viente_pesos NULL DEFAULT 0;
+# ALTER TABLE ventas_cuenta ADD veinte_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cincuenta_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cien_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD mil_pesos NULL DEFAULT 0;

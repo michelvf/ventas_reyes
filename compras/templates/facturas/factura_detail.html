@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Factura #{{ factura.numero }} - Sistema de Facturación{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Factura #{{ factura.numero }}</h1>
+    <div>
+        {% if factura.tipo == 'v' %}
+            <h2>Venta</h2>
+        {% elif factura.tipo == 'c' %}
+            <h2>Compra</h2>
+        {% endif %}
+    </div>
+    <div>
+        {% if factura.estado == 'pendiente' %}
+        <a href="{% url 'factura_update' factura.id %}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i> Editar
+        </a>
+        {% elif factura.estado == 'pagada' %}
+        <a href="{% url 'factura_update' factura.id %}" class="btn btn-info">
+            <i class="fas fa-edit me-1"></i> Editar
+        </a>
+        {% endif %}
+        <a href="{% url 'factura_list' %}" class="btn btn-secondary ms-2">
+            <i class="fas fa-arrow-left me-1"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Información de la Factura</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Número:</strong> {{ factura.numero }}</p>
+                <p><strong>Fecha de emisión:</strong> {{ factura.fecha_emision|date:"d/m/Y H:i" }}</p>
+                <p><strong>Estado:</strong> 
+                    {% if factura.estado == 'pendiente' %}
+                    <span class="badge bg-warning text-white">Pendiente</span>
+                    {% elif factura.estado == 'pagada' %}
+                    <span class="badge bg-info text-white">Pagada</span>
+                    {% elif factura.estado == 'pagada-eleventa' %}
+                    <span class="badge bg-success text-white">Pagada y en Eleventa</span>
+                    {% else %}
+                    <span class="badge bg-danger text-white">Anulada</span>
+                    {% endif %}
+                </p>
+                {% if factura.observaciones %}
+                <p><strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}</p>
+                {% endif %}
+            </div>
+            {% if factura.estado == 'pendiente' or factura.estado == 'pagada'%}
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada' %}" class="btn btn-info">
+                        <i class="fas fa-wallet me-1"></i>Pagada
+                    </a>
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada-eleventa' %}" class="btn btn-success mx-1">
+                        <i class="fas fa-check-circle me-1"></i>Pagada y Registrada en Eleventa
+                    </a>
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'anulada' %}" class="btn btn-danger">
+                        <i class="fas fa-times-circle me-1"></i> Anular Factura
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Información del Cliente</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ factura.cliente.nombre }} {{ factura.cliente.apellido }}</p>
+                <p><strong>Documento:</strong> {{ factura.cliente.documento }}</p>
+                <p><strong>Dirección:</strong> {{ factura.cliente.direccion }}</p>
+                <p><strong>Teléfono:</strong> {{ factura.cliente.telefono }}</p>
+                {% if factura.cliente.email %}
+                <p><strong>Email:</strong> {{ factura.cliente.email }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Detalles de la Factura</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in factura.detalles.all %}
+                    <tr>
+                        <td>{{ detalle.producto.nombre }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>${{ detalle.precio_unitario }}</td>
+                        <td>${{ detalle.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                        <td>${{ factura.subtotal }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Bonificación (0%):</strong></td>
+                        <td>${{ factura.iva }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>${{ factura.total }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end">
+    <button class="btn btn-primary" onclick="window.print()">
+        <i class="fas fa-print me-1"></i> Imprimir Factura
+    </button>
+</div>
+{% endblock %}
