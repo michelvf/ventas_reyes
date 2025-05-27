@@ -1,0 +1,159 @@
+from django.db import models
+
+class Producto(models.Model):
+    nombre = models.CharField(max_length=255)
+    categoria = models.CharField(max_length=100, blank=True, null=True)
+    stock_actual = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.nombre
+        
+
+class Produccion(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.cantidad} de {self.producto.nombre} producidos el {self.fecha_hora}"
+    
+    def save(self, *args, **kwargs):
+        # Actualizar stock al guardar
+        self.producto.stock_actual += self.cantidad
+        self.producto.save()
+        super().save(*args, **kwargs)
+        
+
+
+class Salida(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    destino = models.CharField(max_length=255)
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.cantidad} de {self.producto.nombre} enviados a {self.destino}"
+
+    def save(self, *args, **kwargs):
+        # Disminuir stock al guardar
+        if self.producto.stock_actual >= self.cantidad:
+            self.producto.stock_actual -= self.cantidad
+            self.producto.save()
+            super().save(*args, **kwargs)
+        else:
+            raise ValueError("No hay suficiente stock disponible")
+
+
+---
+Vistas
+
+from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy
+from django.shortcuts import render
+from .models import Producto, Produccion, Salida
+from .forms import ProduccionForm, SalidaForm
+
+# Vista para listar productos y su stock
+class ProductoListView(ListView):
+    model = Producto
+    template_name = "productos/lista.html"
+    context_object_name = "productos"
+
+# Vista para registrar producción
+class ProduccionCreateView(CreateView):
+    model = Produccion
+    form_class = ProduccionForm
+    template_name = "produccion/formulario.html"
+    success_url = reverse_lazy("productos_list")
+
+# Vista para registrar salida de productos
+class SalidaCreateView(CreateView):
+    model = Salida
+    form_class = SalidaForm
+    template_name = "salidas/formulario.html"
+    success_url = reverse_lazy("productos_list")
+    
+
+----
+Formularios 
+
+from django import forms
+from .models import Produccion, Salida
+
+class ProduccionForm(forms.ModelForm):
+    class Meta:
+        model = Produccion
+        fields = ['producto', 'cantidad']
+        widgets = {
+            'producto': forms.Select(attrs={'class': 'form-select'}),
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+
+class SalidaForm(forms.ModelForm):
+    class Meta:
+        model = Salida
+        fields = ['producto', 'cantidad', 'destino']
+        widgets = {
+            'producto': forms.Select(attrs={'class': 'form-select'}),
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'destino': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+
+def clean_cantidad(self):
+    cantidad = self.cleaned_data.get("cantidad")
+    producto = self.cleaned_data.get("producto")
+    if cantidad > producto.stock_actual:
+        raise forms.ValidationError("No hay suficiente stock disponible")
+    return cantidad
+
+
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Producción</h2>
+    <form method="POST" class="shadow p-4 rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_producto" class="form-label">Producto</label>
+            {{ form.producto }}
+        </div>
+        <div class="mb-3">
+            <label for="id_cantidad" class="form-label">Cantidad Elaborada</label>
+            {{ form.cantidad }}
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Producción</button>
+    </form>
+</div>
+{% endblock %}
+
+
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Salida de Producto</h2>
+    <form method="POST" class="shadow p-4 rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_producto" class="form-label">Producto</label>
+            {{ form.producto }}
+        </div>
+        <div class="mb-3">
+            <label for="id_cantidad" class="form-label">Cantidad a Enviar</label>
+            {{ form.cantidad }}
+        </div>
+        <div class="mb-3">
+            <label for="id_destino" class="form-label">Destino</label>
+            {{ form.destino }}
+        </div>
+        <button type="submit" class="btn btn-success">Registrar Salida</button>
+    </form>
+</div>
+{% endblock %}
+
+
