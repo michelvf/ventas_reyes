@@ -27,6 +27,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Precio</th>
+                        <th>Unidad de Medida</th>
                         <th>Última actualización</th>
                         <th>Acciones</th>
                     </tr>
@@ -37,6 +38,7 @@
                         <td>{{ producto.codigo }}</td>
                         <td>{{ producto.nombre|upper }}</td>
                         <td>${{ producto.precio|upper }}</td>
+                        <td class="text-center">{{ producto.unidadmedida.sigla }}</td>
                         <td>{{ producto.fecha_actualizacion|date:"d/m/Y H:i" }}</td>
                         <td>
                             <div class="btn-group" role="group">

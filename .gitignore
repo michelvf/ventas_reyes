@@ -59,6 +59,7 @@ cover/
 *.log
 local_settings.py
 db.sqlite*
+db.sqlite
 db.sqlite3
 db.sqlite3-journal
 
@@ -163,3 +164,4 @@ cython_debug/
 .idea/
 
 .DB_Store
+.qodo
