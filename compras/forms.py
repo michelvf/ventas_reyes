@@ -197,7 +197,20 @@ class ProductoForm(forms.ModelForm):
         }
 
 
-
+class FacturaForm(forms.ModelForm):
+    """
+    Forumario para la Factura
+    """
+    class Meta:
+        model = Factura
+        fields = ['cliente', 'observaciones', 'bonificacion', 'tipo']
+        widgets = {
+            'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'tipo': forms.Select(attrs={'class': 'form-control'}),
+            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
+            'bonificacion': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        
         # self.fields['subtotal'].widget.attrs['readonly'] = True  # Solo lectura
         # self.fields['total'].widget.attrs['readonly'] = True  # Solo lectura
 
