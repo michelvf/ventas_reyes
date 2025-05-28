@@ -250,3 +250,20 @@ class DetalleFactura(models.Model):
     class Meta:
         verbose_name = "Detalle de Factura"
         verbose_name_plural = "Detalles de Facturas"
+
+
+class Entidad(models.Model):
+    """
+    Modelo para registrar los datos de la Entidad
+    """
+    nombre = models.CharField(max_length=255, unique=True)
+    director = models.CharField(max_length=255)
+    dirección = models.CharField(max_lenght=255)
+    telefono = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = "Datos de la Entidad"
+        verbose_name_plural = "Datos de la Entidad"

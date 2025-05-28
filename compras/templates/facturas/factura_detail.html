@@ -35,22 +35,37 @@
                 <h5 class="card-title mb-0">Información de la Factura</h5>
             </div>
             <div class="card-body">
-                <p><strong>Número:</strong> {{ factura.numero }}</p>
-                <p><strong>Fecha de emisión:</strong> {{ factura.fecha_emision|date:"d/m/Y H:i" }}</p>
-                <p><strong>Estado:</strong> 
-                    {% if factura.estado == 'pendiente' %}
-                    <span class="badge bg-warning text-white">Pendiente</span>
-                    {% elif factura.estado == 'pagada' %}
-                    <span class="badge bg-info text-white">Pagada</span>
-                    {% elif factura.estado == 'pagada-eleventa' %}
-                    <span class="badge bg-success text-white">Pagada y en Eleventa</span>
-                    {% else %}
-                    <span class="badge bg-danger text-white">Anulada</span>
-                    {% endif %}
-                </p>
-                {% if factura.observaciones %}
-                <p><strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}</p>
-                {% endif %}
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>Número:</strong> {{ factura.numero }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fecha de emisión:</strong> {{ factura.fecha_emision|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Estado:</strong> 
+                                {% if factura.estado == 'pendiente' %}
+                                <span class="badge bg-warning text-white">Pendiente</span>
+                                {% elif factura.estado == 'pagada' %}
+                                <span class="badge bg-info text-white">Pagada</span>
+                                {% elif factura.estado == 'pagada-eleventa' %}
+                                <span class="badge bg-success text-white">Pagada y en Eleventa</span>
+                                {% else %}
+                                <span class="badge bg-danger text-white">Anulada</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if factura.observaciones %}
+                        <tr>
+                            <td>
+                                <strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
             {% if factura.estado == 'pendiente' or factura.estado == 'pagada'%}
             <div class="card-footer">
