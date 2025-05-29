@@ -13,7 +13,7 @@
         <h3 class="my-3">Listado de Productos</h3>
     </div>
     <div class="az-content-header-right">
-        <a href="{% url 'calculadora_billetes' %}" alt="Agregar">
+        <a href="{% url 'productos_nuevos' %}" alt="Agregar">
             <button class="btn btn-primary">
                 <i class="typcn typcn-plus" title="Agregar"></i>
             </button>
@@ -28,6 +28,7 @@
                     <th>Producto</th>
                     <th>Categoría</th>
                     <th>Stock</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,16 +46,20 @@
 <script>
     new DataTable('#venta', {
         language: language,
-        /*
         ajax: {
-            url: '/api/productos/',
+            url: '/api/produccion_producto/',
             dataSrc: ''
         },
-        */
         columns: [
             { data: 'nombre' },
             { data: 'categoria'},
-            { data: 'stock_actual'}
+            { data: 'stock_actual'},
+            { data: 'id', render: function(data, type, row) {
+                return `
+                    <a href="${row.id}/actualizar" class="btn btn-primary btn-sm">Actualizar</a>
+                    <a href="${row.id}/eliminar" class="btn btn-danger btn-sm">Eliminar</a>
+                `;
+            }}
         ],
     });
 </script>

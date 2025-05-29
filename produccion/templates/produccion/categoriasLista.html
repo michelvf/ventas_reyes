@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Listado de Categorías{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+{% endblock css%}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+        <h3 class="my-3">Listado de Categorías</h3>
+    </div>
+    <div class="az-content-header-right">
+        <a href="{% url 'categorias_nuevos' %}" alt="Agregar">
+            <button class="btn btn-primary">
+                <i class="typcn typcn-plus" title="Agregar"></i>
+            </button>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table id="venta" class="table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+<script>
+    new DataTable('#venta', {
+        language: language,
+        ajax: {
+            url: '/api/produccion_categoria/',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'nombre' },
+            { data: 'id', render: function(data, type, row) {
+                return `
+                    <a href="${row.id}/actualizar" class="btn btn-primary btn-sm">Actualizar</a>
+                    <a href="${row.id}/eliminar" class="btn btn-danger btn-sm">Eliminar</a>
+                `;
+            }}
+        ],
+    });
+</script>
+{% endblock %}

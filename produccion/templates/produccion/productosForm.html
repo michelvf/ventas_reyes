@@ -1,1 +1,31 @@
-<h1>Formulario de Productos</h1>
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}| {{ titulo }}{% endblock title %}
+
+{% block content %}
+ <style>
+    .errorlist {
+        color: red;
+    }
+ </style>
+<h3 class="">{{ texto1 }}</h3>
+<p>{{ texto2 }}</p>
+<form class="form-class" method="post">
+    <div class="row">
+        <div class="col-lg-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </div>
+    </div>
+    <div>
+        <input class="btn btn-outline-primary btn-rounded" type="submit" value="Actualizar" />
+        <button class="btn btn-outline-warning btn-rounded" type="reset">Limpiar</button>
+        {% comment %} <a href="javascript: history.back(-1)">
+            <button class="btn btn-outline-danger btn-rounded" type="cancel">Cancelar</button>
+        </a> {% endcomment %}
+        <input class="btn btn-outline-danger btn-rounded" type="button" value="Cancelar" onClick="history.go(-1);" />
+    </div>
+</form>
+{% endblock %}

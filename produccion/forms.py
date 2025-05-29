@@ -22,7 +22,7 @@ class ProduccionForm(forms.ModelForm):
         model = Produccion
         fields = ['producto', 'cantidad']
         widgets = {
-            'producto': forms.Select(attrs={'class': 'form-select'}),
+            'producto': forms.Select(attrs={'class': 'form-control'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
 
@@ -50,6 +50,6 @@ class ProductoForm(forms.ModelForm):
         fields = ['nombre', 'categoria', 'stock_actual']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'categoria': forms.Select(attrs={'class': 'form-select'}),
+            'categoria': forms.Select(attrs={'class': 'form-control'}),
             'stock_actual': forms.NumberInput(attrs={'class': 'form-control'})
         }

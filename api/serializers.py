@@ -2,6 +2,7 @@ from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta
 from compras.models import Almacen, Producto, PrecioProducto, Compra
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
+from produccion.models import Categoria, Producto, Produccion, Salida
 from django.db.models import Count
 
 
@@ -334,3 +335,39 @@ class ContadorBilleteListSerializer(serializers.ModelSerializer):
                 'tipo_cuenta',
                 'fecha'
                 ]
+
+
+class CategoriaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Categorias Serializer
+    """
+    class Meta:
+        model = Categoria
+        fields = ['id', 'nombre']
+
+
+class ProduccionProductoSerializer(serializers.ModelSerializer):
+    """
+    Listado de Productos Serializer
+    """
+    class Meta:
+        model = Producto
+        fields = ['id', 'nombre', 'categoria']
+    
+
+class ProduccionSerializer(serializers.ModelSerializer):
+    """
+    Listado de Produccion Serializer
+    """
+    class Meta:
+        model = Produccion
+        fields = ['id', 'producto', 'cantidad', 'fecha']
+    
+
+class SalidaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Salida Serializer
+    """
+    class Meta:
+        model = Salida
+        fields = ['id', 'producto', 'cantidad', 'fecha']
