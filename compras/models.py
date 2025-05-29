@@ -3,6 +3,7 @@ from ventas.models import Departamentos
 
 # Create your models here.
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 # import uuid
 import datetime
 
@@ -146,7 +147,8 @@ class Producto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.codigo} - {self.nombre}"
+        # return f"{self.codigo} - {self.nombre}"
+        return f"{self.nombre}"
     
     class Meta:
         verbose_name = "Producto"
@@ -227,8 +229,9 @@ class DetalleFactura(models.Model):
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
-    cantidad = models.PositiveIntegerField(default=1)
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
+    # cantidad = models.PositiveIntegerField(default=1)
+    cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self, *args, **kwargs):
@@ -258,7 +261,7 @@ class Entidad(models.Model):
     """
     nombre = models.CharField(max_length=255, unique=True)
     director = models.CharField(max_length=255)
-    dirección = models.CharField(max_lenght=255)
+    dirección = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
     
     def __str__(self):

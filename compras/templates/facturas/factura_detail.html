@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Factura #{{ factura.numero }} - Sistema de Facturación{% endblock %}
+{% block title %}Factura: {{ factura.numero }} - Sistema de Facturación{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Factura #{{ factura.numero }}</h1>
+    <h1>Factura: {{ factura.numero }}</h1>
     <div>
         {% if factura.tipo == 'v' %}
             <h2>Venta</h2>
@@ -47,6 +47,7 @@
                             <td>
                                 <strong>Estado:</strong> 
                                 {% if factura.estado == 'pendiente' %}
+<<<<<<< HEAD
                                 <span class="badge bg-warning text-white">Pendiente</span>
                                 {% elif factura.estado == 'pagada' %}
                                 <span class="badge bg-info text-white">Pagada</span>
@@ -54,15 +55,28 @@
                                 <span class="badge bg-success text-white">Pagada y en Eleventa</span>
                                 {% else %}
                                 <span class="badge bg-danger text-white">Anulada</span>
+=======
+                                    <span class="badge bg-warning text-white">Pendiente</span>
+                                {% elif factura.estado == 'pagada' %}
+                                    <span class="badge bg-info text-white">Pagada</span>
+                                {% elif factura.estado == 'pagada-eleventa' %}
+                                    <span class="badge bg-success text-white">Pagada y en Eleventa</span>
+                                {% else %}
+                                    <span class="badge bg-danger text-white">Anulada</span>
+>>>>>>> b37efe003c4819b9ebbbdddc39bfe8b3082071df
                                 {% endif %}
                             </td>
                         </tr>
                         {% if factura.observaciones %}
+<<<<<<< HEAD
                         <tr>
                             <td>
                                 <strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}
                             </td>
                         </tr>
+=======
+                            <tr><td><strong>Observaciones:</strong> {{ factura.observaciones }}</td></tr>
+>>>>>>> b37efe003c4819b9ebbbdddc39bfe8b3082071df
                         {% endif %}
                     </tbody>
                 </table>
@@ -91,13 +105,21 @@
                 <h5 class="card-title mb-0">Información del Cliente</h5>
             </div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> {{ factura.cliente.nombre }} {{ factura.cliente.apellido }}</p>
-                <p><strong>Documento:</strong> {{ factura.cliente.documento }}</p>
-                <p><strong>Dirección:</strong> {{ factura.cliente.direccion }}</p>
-                <p><strong>Teléfono:</strong> {{ factura.cliente.telefono }}</p>
-                {% if factura.cliente.email %}
-                <p><strong>Email:</strong> {{ factura.cliente.email }}</p>
-                {% endif %}
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nombre:</strong> {{ factura.cliente.nombre }} {{ factura.cliente.apellido }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Documento:</strong> {{ factura.cliente.documento }}</td>
+                        </tr>
+                        <tr><td><strong>Dirección:</strong> {{ factura.cliente.direccion }}</td></tr>
+                        <tr><td><strong>Teléfono:</strong> {{ factura.cliente.telefono }}</td></tr>
+                        {% if factura.cliente.email %}
+                            <tr><td><strong>Email:</strong> {{ factura.cliente.email }}</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

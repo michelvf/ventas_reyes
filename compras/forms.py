@@ -228,8 +228,10 @@ class DetalleFacturaForm(forms.ModelForm):
 DetalleFacturaFormSet = forms.inlineformset_factory(
     Factura, DetalleFactura,
     form=DetalleFacturaForm,
-    extra=1, can_delete=True,
-    min_num=1, validate_min=True
+    extra=0,
+    can_delete=True,
+    min_num=1,
+    validate_min=True
 )
 
 class UnidadMedidaForm(forms.ModelForm):
