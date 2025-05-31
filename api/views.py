@@ -545,7 +545,7 @@ class ProduccionProductoListView(viewsets.ReadOnlyModelViewSet):
     """
     Listado de Produccion Producto View
     """
-    queryset = Produccion.objects.all()
+    queryset = Producto.objects.all()
     serializer_class = ProduccionProductoSerializer
 
 

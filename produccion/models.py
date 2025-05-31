@@ -2,6 +2,28 @@ from django.db import models
 from django.db.models import indexes
 
 
+class Destino(models.Model):
+    """
+    Modelo Destino, de la app Producion
+    """
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "Destino"
+        verbose_name_plural = "Destinos"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["nombre"]),
+        ]
+
+    def __str__(self):
+        return self.nombre
+    
+
+
 class Categoria(models.Model):
     """
     Modelo Categoría, de la app Producion
@@ -60,17 +82,11 @@ class Produccion(models.Model):
 
     def __str__(self):
         return f"{self.cantidad} de {self.producto.nombre} producidos el {self.fecha_hora}"
-    
-    def save(self, *args, **kwargs):
-        # Actualizar stock al guardar
-        self.producto.stock_actual += self.cantidad
-        self.producto.save()
-        super().save(*args, **kwargs)
         
     class Meta:
         ordering = ['producto']
-        verbose_name = "producto"
-        verbose_name_plural = "productos"
+        verbose_name = "produccion"
+        verbose_name_plural = "produccion"
         indexes = [
             models.Index(fields=['id']),
             models.Index(fields=['producto']),
@@ -83,7 +99,7 @@ class Salida(models.Model):
     """
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    destino = models.CharField(max_length=255)
+    destino = models.ForeignKey(Destino, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

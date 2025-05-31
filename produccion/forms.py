@@ -35,9 +35,9 @@ class SalidaForm(forms.ModelForm):
         model = Salida
         fields = ['producto', 'cantidad', 'destino']
         widgets = {
-            'producto': forms.Select(attrs={'class': 'form-select'}),
+            'producto': forms.Select(attrs={'class': 'form-control'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
-            'destino': forms.TextInput(attrs={'class': 'form-control'}),
+            'destino': forms.Select(attrs={'class': 'form-control'}),
         }
 
 

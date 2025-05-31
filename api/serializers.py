@@ -2,7 +2,7 @@ from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta
 from compras.models import Almacen, Producto, PrecioProducto, Compra
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
-from produccion.models import Categoria, Producto, Produccion, Salida
+from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from django.db.models import Count
 
 
@@ -350,24 +350,42 @@ class ProduccionProductoSerializer(serializers.ModelSerializer):
     """
     Listado de Productos Serializer
     """
+    categoria = CategoriaSerializer(read_only=True)
+    
     class Meta:
         model = Producto
-        fields = ['id', 'nombre', 'categoria']
+        fields = ['id', 'nombre', 'categoria', 'stock_actual']
     
 
 class ProduccionSerializer(serializers.ModelSerializer):
     """
     Listado de Produccion Serializer
     """
+    producto = ProduccionProductoSerializer(read_only=True)
     class Meta:
         model = Produccion
-        fields = ['id', 'producto', 'cantidad', 'fecha']
+        fields = ['id', 'producto', 'cantidad', 'fecha_hora']
     
+
+class DestinoSerializer(serializers.ModelSerializer):
+    """
+    Listado de Destinos Serializer
+    """
+    class Meta:
+        model = Destino
+        fields = ['id', 'nombre']
+
 
 class SalidaSerializer(serializers.ModelSerializer):
     """
     Listado de Salida Serializer
     """
+    producto = ProduccionProductoSerializer(read_only=True)
+    destino = DestinoSerializer(read_only=True)
     class Meta:
         model = Salida
-        fields = ['id', 'producto', 'cantidad', 'fecha']
+        fields = ['id', 'producto', 'cantidad', 'fecha_hora', 'destino']
+
+
+
+    

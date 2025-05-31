@@ -50,14 +50,15 @@
             url: '/api/produccion_producto/',
             dataSrc: ''
         },
+        pageLength: 20,
         columns: [
             { data: 'nombre' },
-            { data: 'categoria'},
+            { data: 'categoria.nombre'},
             { data: 'stock_actual'},
             { data: 'id', render: function(data, type, row) {
                 return `
-                    <a href="${row.id}/actualizar" class="btn btn-primary btn-sm">Actualizar</a>
-                    <a href="${row.id}/eliminar" class="btn btn-danger btn-sm">Eliminar</a>
+                    <a href="actualizar/${row.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                    <a href="eliminar/${row.id}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
                 `;
             }}
         ],

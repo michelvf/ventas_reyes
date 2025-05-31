@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import ProductoListView, ProductoCreateView, ProductoUpdateView, ProductoDeleteView
 from .views import CategoriaListView, CategoriaCreateView, CategoriaUpdateView, CategoriaDeleteView
-from .views import ProduccionCreateView
+from .views import ProduccionListView, ProduccionCreateView, ProduccionUpdateView, ProduccionDeleteView
+from .views import SalidaListView, SalidaCreateView, SalidaUpdateView, SalidaDeleteView
 
 urlpatterns = [
     ### Listdos
@@ -15,4 +16,16 @@ urlpatterns = [
     path('categorias/nuevos/', CategoriaCreateView.as_view(), name='categorias_nuevos'),
     path('categorias/actualizar/<int:pk>/', CategoriaUpdateView.as_view(), name='categorias_actualizar'),
     path('categorias/eliminar/<int:pk>/', CategoriaDeleteView.as_view(), name='categorias_eliminar'),
+
+    ### Producción
+    path('produccion/', ProduccionListView.as_view(), name='produccion_list'),
+    path('produccion/nuevos/', ProduccionCreateView.as_view(), name='produccion_nuevos'),
+    path('produccion/actualizar/<int:pk>', ProduccionUpdateView.as_view(), name='produccion_actualizar'),
+    path('produccion/eliminar/<int:pk>', ProduccionDeleteView.as_view(), name='produccion_eliminar'),
+    
+    ### Salida
+    path('salida/', SalidaListView.as_view(), name='salida_list'),
+    path('salida/nuevos/', SalidaCreateView.as_view(), name='salida_nuevos'),
+    path('salida/actualizar/<int:pk>', SalidaUpdateView.as_view(), name='salida_actualizar'),
+    path('salida/eliminar/<int:pk>', SalidaDeleteView.as_view(), name='salida_eliminar'),
 ]   
