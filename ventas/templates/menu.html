@@ -70,19 +70,19 @@
           </nav>
         </li>
         <li class="nav-item">
-          <a href="" class="nav-link with-sub">Facturas</a>
+          <a href="" class="nav-link with-sub">Recepciones</a>
           <nav class="az-menu-sub">
-            <a href="{% url 'factura_list' %}" class="nav-link">Facturas</a>
-            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
-            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
             <a href="{% url 'unidadmedida_list' %}" class="nav-link">Unidad de Medida</a>
+            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
+            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
+            <a href="{% url 'factura_list' %}" class="nav-link">Recepción</a>
           </nav>
         </li>
         <li class="nav-item">
           <a href="" class="nav-link with-sub">Producción</a>
           <nav class="az-menu-sub">
-	          <a href="{% url 'productos_list' %}" class="nav-link">Pruductos</a>
             <a href="{% url 'categorias_list' %}" class="nav-link">Categorias</a>
+	          <a href="{% url 'productos_list' %}" class="nav-link">Pruductos</a>
             <a href="{% url 'produccion_list' %}" class="nav-link">Producción</a>
             <a href="{% url 'salida_list' %}" class="nav-link">Salida</a>
             <a href="{% url 'destino_list' %}" class="nav-link">Destino</a>

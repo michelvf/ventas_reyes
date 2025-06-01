@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 
 {% block title %}
-    {% if factura %}Editar Factura{% else %}Nueva Factura{% endif %} - Sistema de Facturación
+    {% if factura %}Editar Recepción{% else %}Nueva Recepción{% endif %} - Sistema de Recepción
 {% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{% if factura %}Editar Factura{% else %}Nueva Factura{% endif %}</h1>
+    <h1>{% if factura %}Editar Factura{% else %}Nueva Recepción{% endif %}</h1>
     <a href="{% url 'factura_list' %}" class="btn btn-secondary">
         <i class="fas fa-arrow-left me-1"></i> Volver
     </a>
@@ -28,7 +28,7 @@
                     {% endif %}
                 </div>
                 <div class="col-md-6">
-                    <label for="{{ form.tipo.id_for_label }}" class="form-label">Tipo de Factura <span class="text-danger">*</span></label>
+                    <label for="{{ form.tipo.id_for_label }}" class="form-label">Tipo de Recepción <span class="text-danger">*</span></label>
                     {{ form.tipo }}
                     {% if form.tipo.errors %}
                     <div class="invalid-feedback d-block">
@@ -63,7 +63,7 @@
                 </div>
             </div>
             
-            <h4 class="mt-4 mb-3">Detalles de la Factura</h4>
+            <h4 class="mt-4 mb-3">Detalles de la Recepción</h4>
             
             {{ formset.management_form }}
             
@@ -165,7 +165,7 @@
             
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i> Guardar Factura
+                    <i class="fas fa-save me-1"></i> Guardar Recepción
                 </button>
             </div>
         </form>
@@ -242,8 +242,9 @@
                             row.find('.precio-unitario').text('$' + data.precio.toFixed(2));
                             
                             // Actualizar subtotal
-                            const cantidad = parseFloat(row.find('input[id$="-cantidad"]').val()) || 0;
+                            const cantidad = parseFloat(row.find('input[id$="-cantidad"]').val()).toFixed(2) || 0;
                             const subtotal = cantidad * data.precio;
+                            console.log(`BindEvents> el subtotal del calculo: ${subtotal}`)
                             row.find('.subtotal').text('$' + subtotal.toFixed(2));
                             
                             updateTotals();
@@ -255,13 +256,13 @@
             // Actualizar subtotal al cambiar cantidad
             $('input[id$="-cantidad"]').change(function() {
                 const row = $(this).closest('tr');
-                const cantidad = parseFloat($(this).val()) || 0;
+                const cantidad = parseFloat($(this).val()).toFixed(2) || 0;
                 const precioText = row.find('.precio-unitario').text().replace('$', '');
-                const precio = parseFloat(precioText) || 0;
+                const precio = parseFloat(precioText).toFixed(2) || 0;
                 
                 const subtotal = cantidad * precio;
-                row.find('.subtotal').text('$' + subtotal);
-                //row.find('.subtotal').text('$' + subtotal.toFixed(2));
+                console.log(`Del producto, la cantidad es: ${cantidad}, el precio es: ${precio}, y el subtotal: ${subtotal.toFixed(2)}`)
+                row.find('.subtotal').text('$' + subtotal.toFixed(2));
                 
                 updateTotals();
             });
@@ -292,7 +293,7 @@
                 subtotal += value;
             });
 
-            console.log(`Subtotal: ${subtotal}`);
+            console.log(`Subtotal: ${subtotal.toFixed(2)}`);
 
             //const iva = subtotal * 0.19;
             const bonificacion = parseFloat(document.getElementById('id_bonificacion').value);

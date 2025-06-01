@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Factura: {{ factura.numero }} - Sistema de Facturación{% endblock %}
+{% block title %}Recepción: {{ factura.numero }} - Sistema de Recepción{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Factura: {{ factura.numero }}</h1>
+    <h1>Recepción: {{ factura.numero }}</h1>
     <div>
         {% if factura.tipo == 'v' %}
             <h2>Venta</h2>
@@ -32,7 +32,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0">Información de la Factura</h5>
+                <h5 class="card-title mb-0">Información de la Recepción</h5>
             </div>
             <div class="card-body">
                 <table>
@@ -58,6 +58,11 @@
                             </td>
                         </tr>
                         {% if factura.observaciones %}
+                        <tr>
+                            <td>
+                                <strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}
+                            </td>
+                        </tr>
                             <tr>
                                 <td>
                                     <strong>Observaciones:</strong> {{ factura.observaciones }}
@@ -77,7 +82,7 @@
                         <i class="fas fa-check-circle me-1"></i>Pagada y Registrada en Eleventa
                     </a>
                     <a href="{% url 'factura_cambiar_estado' factura.id 'anulada' %}" class="btn btn-danger">
-                        <i class="fas fa-times-circle me-1"></i> Anular Factura
+                        <i class="fas fa-times-circle me-1"></i> Anular Recepción
                     </a>
                 </div>
             </div>
@@ -113,7 +118,7 @@
 
 <div class="card mb-4">
     <div class="card-header">
-        <h5 class="card-title mb-0">Detalles de la Factura</h5>
+        <h5 class="card-title mb-0">Detalles de la Recepción</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -157,7 +162,7 @@
 
 <div class="d-flex justify-content-end">
     <button class="btn btn-primary" onclick="window.print()">
-        <i class="fas fa-print me-1"></i> Imprimir Factura
+        <i class="fas fa-print me-1"></i> Imprimir Recepción
     </button>
 </div>
 {% endblock %}

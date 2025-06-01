@@ -7,7 +7,7 @@
 </head>
 <body link='blue' vlink='purple' bgcolor='white'>
 <div id='section'>
-<div id='table_0' sheetName='Factura'>
+<div id='table_0' sheetName='Recepción'>
 <bodyclass='x21'>
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt'>
@@ -37,7 +37,7 @@
  <tr style='height:14.25pt'>
     <td colspan='6' class='x21' style='height:14.25pt;'></td>
     <td colspan='3' class='x146'>&lt;&lt; Original &gt;&gt;</td>
-    <td class='x48'>Factura No.</td>
+    <td class='x48'>Recepción No.</td>
     <td class='x105' align='right'>{{ factura.numero }}</td>
  </tr>
  <tr style='height:14.25pt'>
@@ -78,7 +78,7 @@
     </td>
  </tr>
  <tr style='height:9.75pt'>
-    <td colspan='2' rowspan='2' class='x138' style='border-bottom:1px solid #0070C0;height:21pt;'>ENTREGA</td>
+    <td colspan='2' rowspan='2' class='x138' style='border-bottom:1px solid #0070C0;height:21pt;'>RECEPCIÓN</td>
     <td class='x86'></td>
     <td class='x87'>DÍA</td>
     <td class='x87'>MES</td>
@@ -100,10 +100,19 @@
   </td>
  </tr>
  <tr style='height:14.25pt'>
-  <td colspan='2' class='x78' style='height:14.25pt;'>Facturado a:</td>
+  {% if factura.tipo == 'c' %}
+    <td colspan='2' class='x78' style='height:14.25pt;'>Suministrado por:</td>
+  {% else %}
+    <td colspan='2' class='x78' style='height:14.25pt;'>Recepcionado por:</td>
+  {% endif %}
   <td class='x78'></td>
   <td class='x78'></td>
-  <td colspan='3' class='x81'>Suministrador:</td>
+  {% if factura.tipo == 'c' %}
+    <td colspan='3' class='x81'>Recepcionado por:</td>
+  {% else %}
+    <td colspan='3' class='x81'>Suministrador:</td>
+  {% endif %}
+  
   <td colspan='4' class='x49'></td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
@@ -1991,7 +2000,7 @@ ruby
  }
 .x138
  {
- text-align:left;
+ text-align:center;
  vertical-align:middle;
  white-space:nowrap;
  background:#0070C0;
