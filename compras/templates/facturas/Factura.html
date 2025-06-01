@@ -1,23 +1,9 @@
 ﻿<!DOCTYPE html>
-
-<html lang="">
+<html lang="es">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="ProgId" content="Excel.Sheet">
-<meta name="Generator" content="Aspose.Cells 25.4">
-<script language="JavaScript" type="text/javascript">
-<!--
-var activeSheetIndex = 0;
-function fnSetActiveSheet(iSh)
-{
-if(activeSheetIndex == iSh) return;
-document.getElementById('table_' + iSh).style.display = "block";
-document.getElementById('table_' + activeSheetIndex).style.display = "none";
-activeSheetIndex = iSh;
-}
-//-->
-</script>
+
 </head>
 <body link='blue' vlink='purple' bgcolor='white'>
 <div id='section'>
@@ -122,25 +108,49 @@ activeSheetIndex = iSh;
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Nombre:</td>
-  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}</td>
+  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
   <td colspan='5' class='x127'>Alberto M. Reyes Nicot</td>
-  <td colspan='2' class='x23'><font class="font15" style="text-decoration: none;">Ctta. CUP:&nbsp;</font><font class="font4" style="text-decoration: none;">1289-6540-0068-8411</font></td>
+  <td colspan='2' class='x23'>
+    <font class="font15" style="text-decoration: none;">Ctta. CUP:&nbsp;</font>
+    <font class="font4" style="text-decoration: none;">1289-6540-0068-8411</font>
+  </td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Negocio:</td>
-  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.negocio }}</td>
-  <td colspan='5' class='x127'>Mini Industria A&amp;A Reyes s.r.l.</td>
-  <td colspan='2' class='x23'><font class="font15" style="text-decoration: none;">Ctta. MLC:</font><font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font></td>
+  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
+    {% if factura.cliente.negocio %}
+      &nbsp;{{ factura.cliente.negocio }}
+    {% else %}
+      &nbsp;--
+    {% endif %}
+  </td>
+  <td colspan='5' class='x127'>Mini Industria A&amp;A Reyes S.U.R.L.</td>
+  <td colspan='2' class='x23'>
+    <font class="font15" style="text-decoration: none;">Ctta. MLC:</font>
+    <font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font>
+  </td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;overflow:hidden;'>Dirección:</td>
-  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.direccion }}</td>
+  <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
+    {% if factura.cliente.direccion %}
+      &nbsp;{{ factura.cliente.direccion }}
+    {% else %}
+      &nbsp;--
+    {% endif %}
+  </td>
   <td colspan='5' class='x127'>Carretera Sur Km. 2 1/2 Presa La Jagua</td>
   <td colspan='2' class='x23'></td>
  </tr>
  <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Teléfono:</td>
-  <td colspan='3' class='x113' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.telefono }}</td>
+  <td colspan='3' class='x113' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
+    {% if factura.cliente.telefono %}
+      &nbsp;{{ factura.cliente.telefono }}
+    {% else %}
+      &nbsp;--
+    {% endif %}
+  </td>
   <td colspan='5' class='x124'>+53 59889677</td>
   <td colspan='2' class='x23'></td>
  </tr>
@@ -206,7 +216,7 @@ activeSheetIndex = iSh;
         {{ forloop.counter }}
       {% else %}
         00{{ forloop.counter }}
-      {% endif %}
+      {% endif %} 
     </td>
     <td colspan='3' class='x142'>{{ detalle.producto.nombre|upper }}</td>
     <td class='x73'>{{ detalle.producto.codigo }}</td>
@@ -227,21 +237,27 @@ activeSheetIndex = iSh;
 <td colspan='3' class='x21'></td>
 <td class='x49'></td>
 <td class='x50'>Subtotal:</td>
-<td class='x174' align='right' >$<span style='mso-spacerun:yes;'>{{ factura.subtotal }}</span>  <span style='mso-spacerun:yes;'></span></td>
+<td class='x174'>$<span>{{ factura.subtotal }}</span><span style='mso-spacerun:yes;'></span></td>
  </tr>
  <tr style='height:12.75pt'>
   <td colspan='2' class='x110' style='height:12.75pt;'>Alberto M. Reyes Nicot</td>
   <td class='x21'></td>
-  <td class='x110'>{{ factura.cliente.nombre }}</td>
+  <td class='x110'>{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
   <td colspan='4' class='x110'></td>
   <td class='x49'></td>
   <td class='x51'><div style='float:right'>Bonificación:</div></td>
-  <td class='x173' align='right'>{{ factura.bonificaion }} %</td>
+  <td class='x173' align='right'>{{ factura.bonificacion }} %</td>
  </tr>
  <tr style='height:12.75pt'>
   <td colspan='2' class='x111' style='height:12.75pt;'>89012247469</td>
   <td class='x109'></td>
-  <td colspan='4' class='x112'>{{ factura.cliente.ci|floatformat:"0"}}</td>
+  <td colspan='4' class='x112 ci'>
+    {% if factura.cliente.ci %}
+      {{ factura.cliente.ci }}
+    {% else %}
+      --
+    {% endif %}
+  </td>
   <td class='x21'></td>
   <td class='x95'></td>
   <td class='x95'>TOTAL:</td>
@@ -1343,7 +1359,7 @@ ruby
  }
 .x95
  {
- text-align:general;
+ text-align:right;
  vertical-align:bottom;
  white-space:nowrap;
  background:#DCEAF7;
@@ -2483,7 +2499,7 @@ ruby
  }
 .x174
  {
- text-align:general;
+ text-align:right;
  vertical-align:bottom;
  white-space:nowrap;
  background:auto;
@@ -2523,6 +2539,11 @@ text-align:left;
 padding:5px;
 position: fixed;
 bottom:0px;
+}
+@media print {
+    header, footer {
+        display: none;
+    }
 }
 
 </style>
