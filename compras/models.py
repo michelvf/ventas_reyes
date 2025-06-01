@@ -147,10 +147,14 @@ class Producto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
+<<<<<<< HEAD
         # return f"{self.codigo} - {self.nombre}"
+=======
+>>>>>>> produccion
         return f"{self.nombre}"
     
     class Meta:
+        ordering = ['-nombre']
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['nombre']
@@ -175,7 +179,7 @@ class Factura(models.Model):
     numero = models.CharField(max_length=20, unique=True, editable=False)
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
     fecha_emision = models.DateTimeField(default=timezone.now)
-    tipo = models.CharField(max_length=1,choices=TIPO_FACTURA, default='v')
+    tipo = models.CharField(max_length=1,choices=TIPO_FACTURA, default='c')
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     # iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -229,9 +233,14 @@ class DetalleFactura(models.Model):
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
+<<<<<<< HEAD
     # cantidad = models.PositiveIntegerField(default=1)
     cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
+=======
+    cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
+>>>>>>> produccion
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self, *args, **kwargs):

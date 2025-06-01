@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | Listado de Producciones{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+{% endblock css%}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+        <h3 class="my-3">Listado de Producciones</h3>
+    </div>
+    <div class="az-content-header-right">
+        <a href="{% url 'produccion_nuevos' %}" alt="Agregar">
+            <button class="btn btn-primary">
+                <i class="typcn typcn-plus" title="Agregar"></i>
+            </button>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table id="venta" class="table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
+<script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
+<script>
+    new DataTable('#venta', {
+        language: language,
+        ajax: {
+            url: '/api/produccion_produccion/',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'producto.nombre' },
+            { data: 'cantidad' },
+            { data: 'fecha_hora',
+                "render": function (data, type, full) {
+                    return moment(data).format('D/M/Y');
+                } },
+            { data: 'id', render: function(data, type, row) {
+                return `
+                    <a href="/produccion/produccion/actualizar/${row.id}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="/produccion/produccion/eliminar/${row.id}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                `;
+            }}
+        ],
+    });
+</script>
+{% endblock %}

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "easy_select2",
     "resumen.apps.ResumenConfig",
     "codigosbarra.apps.CodigosbarraConfig",
+    "produccion.apps.ProduccionConfig",
 ]
 
 MIDDLEWARE = [

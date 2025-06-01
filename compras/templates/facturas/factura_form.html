@@ -242,7 +242,7 @@
                             row.find('.precio-unitario').text('$' + data.precio.toFixed(2));
                             
                             // Actualizar subtotal
-                            const cantidad = parseInt(row.find('input[id$="-cantidad"]').val()) || 0;
+                            const cantidad = parseFloat(row.find('input[id$="-cantidad"]').val()) || 0;
                             const subtotal = cantidad * data.precio;
                             row.find('.subtotal').text('$' + subtotal.toFixed(2));
                             
@@ -255,7 +255,7 @@
             // Actualizar subtotal al cambiar cantidad
             $('input[id$="-cantidad"]').change(function() {
                 const row = $(this).closest('tr');
-                const cantidad = parseInt($(this).val()) || 0;
+                const cantidad = parseFloat($(this).val()) || 0;
                 const precioText = row.find('.precio-unitario').text().replace('$', '');
                 const precio = parseFloat(precioText) || 0;
                 
@@ -298,9 +298,9 @@
             const bonificacion = parseFloat(document.getElementById('id_bonificacion').value);
             // console.log(`Bonificación: ${bonificacion} %`);
             const por_bon = bonificacion / 100;
-            console.log(`La bonificación será de un ${por_bon}`);
+            // console.log(`La bonificación será de un ${por_bon}`);
             const SubTotal = subtotal * por_bon
-            console.log(`lo que se va a descontar/aumentar es: ${SubTotal}`);
+            // console.log(`lo que se va a descontar/aumentar es: ${SubTotal}`);
             const total = subtotal - SubTotal;
             
             $('#total-subtotal').text('$' + subtotal.toFixed(2));
