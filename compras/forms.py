@@ -210,7 +210,9 @@ class FacturaForm(forms.ModelForm):
             'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
             'bonificacion': forms.NumberInput(attrs={'class': 'form-control'}),
         }
-
+        
+        # self.fields['subtotal'].widget.attrs['readonly'] = True  # Solo lectura
+        # self.fields['total'].widget.attrs['readonly'] = True  # Solo lectura
 
 class DetalleFacturaForm(forms.ModelForm):
     """

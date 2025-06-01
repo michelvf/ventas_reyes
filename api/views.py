@@ -15,6 +15,8 @@ from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar,
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
+from .serializers import CategoriaSerializer, ProduccionProductoSerializer, ProduccionSerializer, SalidaSerializer, DestinoSerializer
+from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar, SaldoEfectivoSerializer
 from django.db.models import Sum, Count, Q, DateField
@@ -521,3 +523,44 @@ class ContadorBilleteListView(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Contador_billete.objects.all()
     serializer_class = ContadorBilleteListSerializer
+
+# App Produccion
+class ProduccionListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Produccion View
+    """
+    queryset = Produccion.objects.all()
+    serializer_class = ProduccionSerializer
+    
+
+class SalidaListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Salida View
+    """
+    queryset = Salida.objects.all()
+    serializer_class = SalidaSerializer 
+
+
+class ProduccionProductoListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Produccion Producto View
+    """
+    queryset = Producto.objects.all()
+    serializer_class = ProduccionProductoSerializer
+
+
+class CategoriaListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Categoria View
+    """
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+
+
+class DestinoListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Destino View
+    """
+    queryset = Destino.objects.all()
+    serializer_class = DestinoSerializer
+    

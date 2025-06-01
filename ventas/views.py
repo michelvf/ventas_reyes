@@ -569,10 +569,95 @@ class EditarCalculadoraBilletes(UpdateView):
     Editar calculadora de billetes
     """
     model = Contador_billete
-    # fields = ['total', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+    def form_valid(self, form):
+        """
+        Override form_valid to update Cuenta model when there are changes
+        """
+        # Get the current instance
+        instance = self.get_object()
+        
+        # Get the current Cuenta
+        cuenta = Cuenta.objects.get(cuenta="Efectivo")
+        
+        # Get the cleaned data from the form
+        cleaned_data = form.cleaned_data
+        
+        # Get the current values from the database
+        current_values = {
+            'un_peso': instance.un_peso,
+            'tres_pesos': instance.tres_pesos,
+            'cinco_pesos': instance.cinco_pesos,
+            'diez_pesos': instance.diez_pesos,
+            'veinte_pesos': instance.veinte_pesos,
+            'cincuenta_pesos': instance.cincuenta_pesos,
+            'cien_pesos': instance.cien_pesos,
+            'doscientos_pesos': instance.doscientos_pesos,
+            'quinientos_pesos': instance.quinientos_pesos,
+            'mil_pesos': instance.mil_pesos
+        }
+        
+        # Get the new values from the form
+        new_values = {
+            'un_peso': cleaned_data.get('un_peso', 0),
+            'tres_pesos': cleaned_data.get('tres_pesos', 0),
+            'cinco_pesos': cleaned_data.get('cinco_pesos', 0),
+            'diez_pesos': cleaned_data.get('diez_pesos', 0),
+            'veinte_pesos': cleaned_data.get('veinte_pesos', 0),
+            'cincuenta_pesos': cleaned_data.get('cincuenta_pesos', 0),
+            'cien_pesos': cleaned_data.get('cien_pesos', 0),
+            'doscientos_pesos': cleaned_data.get('doscientos_pesos', 0),
+            'quinientos_pesos': cleaned_data.get('quinientos_pesos', 0),
+            'mil_pesos': cleaned_data.get('mil_pesos', 0)
+        }
+        
+        # Calculate differences and update Cuenta
+        for denomination, new_value in new_values.items():
+            current_value = current_values[denomination]
+            difference = new_value - current_value
+            
+            if difference != 0:  # Only update if there's a change
+                if denomination == 'un_peso':
+                    cuenta.un_peso += difference
+                elif denomination == 'tres_pesos':
+                    cuenta.tres_pesos += difference
+                elif denomination == 'cinco_pesos':
+                    cuenta.cinco_pesos += difference
+                elif denomination == 'diez_pesos':
+                    cuenta.diez_pesos += difference
+                elif denomination == 'veinte_pesos':
+                    cuenta.veinte_pesos += difference
+                elif denomination == 'cincuenta_pesos':
+                    cuenta.cincuenta_pesos += difference
+                elif denomination == 'cien_pesos':
+                    cuenta.cien_pesos += difference
+                elif denomination == 'doscientos_pesos':
+                    cuenta.doscientos_pesos += difference
+                elif denomination == 'quinientos_pesos':
+                    cuenta.quinientos_pesos += difference
+                elif denomination == 'mil_pesos':
+                    cuenta.mil_pesos += difference
+        
+        # Update saldo based on changes
+        cuenta.saldo = (cuenta.un_peso * 1 +
+                       cuenta.tres_pesos * 3 +
+                       cuenta.cinco_pesos * 5 +
+                       cuenta.diez_pesos * 10 +
+                       cuenta.veinte_pesos * 20 +
+                       cuenta.cincuenta_pesos * 50 +
+                       cuenta.cien_pesos * 100 +
+                       cuenta.doscientos_pesos * 200 +
+                       cuenta.quinientos_pesos * 500 +
+                       cuenta.mil_pesos * 1000)
+        
+        # Save the Cuenta instance
+        cuenta.save()
+        
+        # Call the parent form_valid method to save the Contador_billete instance
+        return super().form_valid(form)
 
 
 class BorrarCalculadoraBilletes(DeleteView):

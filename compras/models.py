@@ -147,10 +147,10 @@ class Producto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        # return f"{self.codigo} - {self.nombre}"
         return f"{self.nombre}"
     
     class Meta:
+        ordering = ['-nombre']
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['nombre']
@@ -179,7 +179,8 @@ class Factura(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     subtotal = models.FloatField( default=0)
     # iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    bonificacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    #bonificacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    bonificacion = models.FloatField(default=0)
     total = models.FloatField(default=0)
     observaciones = models.TextField(blank=True, null=True)
     
@@ -231,8 +232,12 @@ class DetalleFactura(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     # cantidad = models.PositiveIntegerField(default=1)
     cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
-    precio_unitario = models.FloatField()  # Precio histórico
-    subtotal = models.FloatField()
+    # precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
+    # cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+    precio_unitario = models.FloatField(validators=[MinValueValidator(0.0)])
+    # precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
+    #subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.FloatField(validators=[MinValueValidator(0.0)])
     
     def save(self, *args, **kwargs):
         # Si es un nuevo detalle, guardar el precio actual del producto
