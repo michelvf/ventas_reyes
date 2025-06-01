@@ -147,10 +147,7 @@ class Producto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-<<<<<<< HEAD
         # return f"{self.codigo} - {self.nombre}"
-=======
->>>>>>> produccion
         return f"{self.nombre}"
     
     class Meta:
@@ -233,14 +230,8 @@ class DetalleFactura(models.Model):
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
-<<<<<<< HEAD
-    # cantidad = models.PositiveIntegerField(default=1)
-    cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
-=======
     cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
->>>>>>> produccion
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self, *args, **kwargs):
