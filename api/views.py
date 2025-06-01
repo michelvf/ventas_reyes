@@ -15,8 +15,8 @@ from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar,
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
-from .serializers import CategoriaSerializer, ProduccionProductoSerializer, ProduccionSerializer, SalidaSerializer
-from produccion.models import Categoria, Producto, Produccion, Salida
+from .serializers import CategoriaSerializer, ProduccionProductoSerializer, ProduccionSerializer, SalidaSerializer, DestinoSerializer
+from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar, SaldoEfectivoSerializer
 from django.db.models import Sum, Count, Q, DateField
@@ -555,4 +555,12 @@ class CategoriaListView(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
+
+
+class DestinoListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Destino View
+    """
+    queryset = Destino.objects.all()
+    serializer_class = DestinoSerializer
     

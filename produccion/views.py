@@ -2,8 +2,8 @@ from ast import Del, List
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.shortcuts import render
-from .models import Producto, Produccion, Salida, Categoria
-from .forms import ProduccionForm, SalidaForm, ProductoForm, CategoriaForm
+from .models import Producto, Produccion, Salida, Categoria, Destino
+from .forms import ProduccionForm, SalidaForm, ProductoForm, CategoriaForm, DestinoForm
 
 # Categoría
 class CategoriaListView(ListView):
@@ -275,6 +275,74 @@ class SalidaDeleteView(DeleteView):
         return context
 
 
+### Destino
+class DestinoListView(ListView):
+    """
+    Vista DestinoList, en app Produccion
+    """
+    model = Destino
+    template_name = "produccion/destinoLista.html"
+    context_object_name = "destinos"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titulo"] = "Listado de Destinos"
+        context["texto1"] = "Listado de Destinos"
+        context["texto2"] = "Se listan los destinos."
+        
+        return context
+
+
+class DestinoCreateView(CreateView):
+    """
+    Vista DestinoCreate, en app Produccion
+    """
+    model = Destino
+    form_class = DestinoForm
+    template_name = "produccion/productosForm.html"
+    success_url = reverse_lazy("destino_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titulo"] = "Agregar un Destino"
+        context["texto1"] = "Agregar un Destino"
+        context["texto2"] = "Se agrega un nuevo destino."
+        
+        return context
+
+
+class DestinoUpdateView(UpdateView):
+    """
+    Vista DestinoUpdate, en app Produccion
+    """
+    model = Destino
+    form_class = DestinoForm
+    template_name = "produccion/productosForm.html"
+    success_url = reverse_lazy("destino_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["texto1"] = "Actualizar un Destino"
+        context["texto2"] = "Se actualiza un destino."
+        
+        return context
+
+
+class DestinoDeleteView(DeleteView):
+    """
+    Vista DestinoDelete, en app Produccion
+    """
+    model = Destino
+    template_name = "produccion/Borrar.html"
+    success_url = reverse_lazy("destino_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titulo"] = "Eliminar un Destino"
+        context["texto1"] = "Eliminar un Destino"
+        context["texto2"] = "Se elimina un destino."
+        
+        return context
 
 
 # def clean_cantidad(self):

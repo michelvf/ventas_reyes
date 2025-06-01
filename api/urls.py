@@ -4,7 +4,7 @@ from .views import DepartamentoApiView, ProductosApiView, VentaApiView, ProductX
 from .views import FicherosSubidosApiView, SaldoEfectivoView, ContadorBilleteView
 from .views import AlmacenApiView, ProductoApiView, PrecioProductoApiView, ContadorBilleteListView
 from .views import CompraApiView, NominaDepartamentosApiView, NominaCargoApiView
-from .views import ProduccionListView, SalidaListView, ProduccionProductoListView, CategoriaListView
+from .views import ProduccionListView, SalidaListView, ProduccionProductoListView, CategoriaListView, DestinoListView
 
 router = DefaultRouter()
 
@@ -35,6 +35,7 @@ router.register(prefix="produccion_produccion", viewset=ProduccionListView, base
 router.register(prefix="produccion_salida", viewset=SalidaListView, basename="salida")
 router.register(prefix="produccion_producto", viewset=ProduccionProductoListView, basename="produccion_producto")
 router.register(prefix="produccion_categoria", viewset=CategoriaListView, basename="categoria")
+router.register(prefix="produccion_destino", viewset=DestinoListView, basename="destino")
 
 # Están en ventas.urls
 # urlpatterns = [

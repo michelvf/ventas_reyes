@@ -56,7 +56,7 @@ class Producto(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} (Stock: {self.stock_actual})"
     
     class Meta:
         ordering = ['nombre']
@@ -67,7 +67,6 @@ class Producto(models.Model):
             models.Index(fields=["nombre"]),
             models.Index(fields=["stock_actual"]),
         ]
-    
 
 
 class Produccion(models.Model):
@@ -92,6 +91,7 @@ class Produccion(models.Model):
             models.Index(fields=['producto']),
             models.Index(fields=['cantidad']),
         ]
+
 
 class Salida(models.Model):
     """

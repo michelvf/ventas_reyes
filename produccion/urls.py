@@ -2,6 +2,7 @@ from django.urls import path
 from .views import ProductoListView, ProductoCreateView, ProductoUpdateView, ProductoDeleteView
 from .views import CategoriaListView, CategoriaCreateView, CategoriaUpdateView, CategoriaDeleteView
 from .views import ProduccionListView, ProduccionCreateView, ProduccionUpdateView, ProduccionDeleteView
+from .views import DestinoListView, DestinoCreateView, DestinoUpdateView, DestinoDeleteView
 from .views import SalidaListView, SalidaCreateView, SalidaUpdateView, SalidaDeleteView
 
 urlpatterns = [
@@ -28,4 +29,10 @@ urlpatterns = [
     path('salida/nuevos/', SalidaCreateView.as_view(), name='salida_nuevos'),
     path('salida/actualizar/<int:pk>', SalidaUpdateView.as_view(), name='salida_actualizar'),
     path('salida/eliminar/<int:pk>', SalidaDeleteView.as_view(), name='salida_eliminar'),
+    
+    ### Destino
+    path('destino/', DestinoListView.as_view(), name='destino_list'),
+    path('destino/nuevos/', DestinoCreateView.as_view(), name='destino_nuevos'),
+    path('destino/actualizar/<int:pk>', DestinoUpdateView.as_view(), name='destino_actualizar'),
+    path('destino/eliminar/<int:pk>', DestinoDeleteView.as_view(), name='destino_eliminar'),
 ]   
