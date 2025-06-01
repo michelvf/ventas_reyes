@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 
 {% block title %}
     {% if factura %}Editar Factura{% else %}Nueva Factura{% endif %} - Sistema de Facturación
@@ -238,7 +238,9 @@
                             
                             // Actualizar subtotal
                             const cantidad = parseInt(row.find('input[id$="-cantidad"]').val()) || 0;
+                            console.log(`La cantidad de producto es: ${cantidad}`)
                             const subtotal = cantidad * data.precio;
+                            console.log(`BindEvents> el subtotal del calculo: ${subtotal}`)
                             row.find('.subtotal').text('$' + subtotal.toFixed(2));
                             
                             updateTotals();
@@ -250,11 +252,12 @@
             // Actualizar subtotal al cambiar cantidad
             $('input[id$="-cantidad"]').change(function() {
                 const row = $(this).closest('tr');
-                const cantidad = parseInt($(this).val()) || 0;
+                const cantidad = parseFloat($(this).val()) || 0;
                 const precioText = row.find('.precio-unitario').text().replace('$', '');
                 const precio = parseFloat(precioText) || 0;
                 
                 const subtotal = cantidad * precio;
+                console.log(`Del producto, la cantidad es: ${cantidad}, el precio es: ${precio}, y el subtotal: ${subtotal}`)
                 row.find('.subtotal').text('$' + subtotal.toFixed(2));
                 
                 updateTotals();
@@ -287,11 +290,11 @@
             
             //const iva = subtotal * 0.19;
             const bonificacion = parseFloat(document.getElementById('id_bonificacion').value);
-            console.log(`Bonificación: ${bonificacion} %`);
+            // console.log(`Bonificación: ${bonificacion} %`);
             const por_bon = bonificacion / 100;
-            console.log(`La bonificación será de un ${por_bon}`);
+            // console.log(`La bonificación será de un ${por_bon}`);
             const SubTotal = subtotal * por_bon
-            console.log(`lo que se va a descontar/aumentar es: ${SubTotal}`);
+            // console.log(`lo que se va a descontar/aumentar es: ${SubTotal}`);
             const total = subtotal - SubTotal;
             
             $('#total-subtotal').text('$' + subtotal.toFixed(2));

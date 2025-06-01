@@ -47,15 +47,6 @@
                             <td>
                                 <strong>Estado:</strong> 
                                 {% if factura.estado == 'pendiente' %}
-<<<<<<< HEAD
-                                <span class="badge bg-warning text-white">Pendiente</span>
-                                {% elif factura.estado == 'pagada' %}
-                                <span class="badge bg-info text-white">Pagada</span>
-                                {% elif factura.estado == 'pagada-eleventa' %}
-                                <span class="badge bg-success text-white">Pagada y en Eleventa</span>
-                                {% else %}
-                                <span class="badge bg-danger text-white">Anulada</span>
-=======
                                     <span class="badge bg-warning text-white">Pendiente</span>
                                 {% elif factura.estado == 'pagada' %}
                                     <span class="badge bg-info text-white">Pagada</span>
@@ -63,20 +54,15 @@
                                     <span class="badge bg-success text-white">Pagada y en Eleventa</span>
                                 {% else %}
                                     <span class="badge bg-danger text-white">Anulada</span>
->>>>>>> b37efe003c4819b9ebbbdddc39bfe8b3082071df
                                 {% endif %}
                             </td>
                         </tr>
                         {% if factura.observaciones %}
-<<<<<<< HEAD
                         <tr>
                             <td>
                                 <strong>Observaciones:</strong> {{ factura.observaciones|linebreaks }}
                             </td>
                         </tr>
-=======
-                            <tr><td><strong>Observaciones:</strong> {{ factura.observaciones }}</td></tr>
->>>>>>> b37efe003c4819b9ebbbdddc39bfe8b3082071df
                         {% endif %}
                     </tbody>
                 </table>
