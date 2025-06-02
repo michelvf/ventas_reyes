@@ -204,7 +204,7 @@ class Factura(models.Model):
                 next_number = 1
             
             # Formatear el nuevo número de factura
-            self.numero = f'F-{current_year}-{next_number:03d}'
+            self.numero = f'R-{current_year}-{next_number:03d}'
 
         super().save(*args, **kwargs)
     

@@ -674,8 +674,9 @@ class BorrarCalculadoraBilletes(DeleteView):
         # Realizar alguna acción antes de eliminar el objeto
         # Por ejemplo, registrar el borrado en un log
         efectivo = Cuenta.objects.get(cuenta="Efectivo")
+        tipo_cuenta = str(self.object.tipo_cuenta)
 
-        if self.object.tipo_cuenta == 1:
+        if tipo_cuenta == 'Entrada':
             print("Es un Crédito, lo voy a retar")
             efectivo.un_peso -= self.object.un_peso
             efectivo.tres_pesos -= self.object.tres_pesos
@@ -702,7 +703,11 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.saldo += self.object.total
         
         efectivo.save()
-        # print(f"Registro eliminado: {self.object.nombre}")
+
+        print(f"Registro eliminado id: {self.object.id}")
+        print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
+        comprobar = str(tipo_cuenta) == 'Entrada'
+        print(f"Comprobación si es Entrada: {comprobar}")
 
         # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
 

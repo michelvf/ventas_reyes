@@ -20,6 +20,7 @@
 
 <div class="card">
     <div class="card-body">
+        {% if clientes %}
         <div class="table-responsive">
             <table id="clientes-table" class="table table-striped table-hover display responsive nowrap" width="100%">
                 <thead>
@@ -58,6 +59,9 @@
                 </tbody>
             </table>
         </div>
+        {% else %}
+        <p>Aún no hay datos para mostrar    </p>
+        {% endif  %}
     </div>
 </div>
 {% endblock %}

@@ -78,7 +78,13 @@
     </td>
  </tr>
  <tr style='height:9.75pt'>
-    <td colspan='2' rowspan='2' class='x138' style='border-bottom:1px solid #0070C0;height:21pt;'>RECEPCIÓN</td>
+    <td colspan='2' rowspan='2' class='x138' style='border-bottom:1px solid #0070C0;height:21pt;'>
+      {% if factura.tipo == "c" %}
+        INFORME DE RECEPCIÓN
+      {% else %}
+        FACTURA
+      {% endif %}
+    </td>
     <td class='x86'></td>
     <td class='x87'>DÍA</td>
     <td class='x87'>MES</td>
