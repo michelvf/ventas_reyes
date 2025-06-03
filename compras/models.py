@@ -150,11 +150,12 @@ class Producto(models.Model):
         return f"{self.nombre}"
     
     def save(self, *args, **kwargs):
+       
         if not self.codigo:
             last_codigo = Producto.objects.all().order_by('codigo').last()
-
+            
             if last_codigo:
-                self.codigo = last_codigo + 1
+                self.codigo = int(last_codigo.id) + 1
             else:
                 self.codigo = 100
         
