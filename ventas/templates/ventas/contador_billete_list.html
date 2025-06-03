@@ -4,7 +4,8 @@
 {% block title %}| Listado del Contador de Billetes{% endblock title %}
 
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
+  <!-- link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" / -->
+  <link rel="stylesheet" href="{% static 'assets/lib/datatables/simple/datatables.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
   <style> 
     .modal-header {
@@ -40,20 +41,22 @@
     <div>
       <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span>&nbsp;
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()">
-        Detalle
+            <i class="typcn typcn-eye" title="Detalles de todo el Efectivo"></i>
         </button>
-    </h2>
+      </h2>
       <p class="az-dashboard-text">Las veces que contaste los billetes, ordenados por fechas.</p>
     </div>
     <div class="az-content-header-right">
-        <a href="{% url 'calculadora_billetes' %}">
-            <button class="btn btn-primary">Agregar</button>
+        <a href="{% url 'calculadora_billetes' %}" alt="Agregar">
+            <button class="btn btn-primary">
+                <i class="typcn typcn-plus" title="Agregar"></i>
+            </button>
         </a>
     </div>
   </div><!-- az-dashboard-one-title -->
  <div>
     {% if billetes %}
-        <table class="table ancho" id="tabla">
+        <table id="tabla">
             <thead>
                 <tr>
                     <th>Fecha</th>
@@ -85,62 +88,28 @@
                             {% endif %}
                         </td>                        
                         <td>
-                            <a href="{% url 'editar_calculadora_billetes' billete.id %}">
-                                <button class='btn btn-primary'>Editar</button>
+                            <a href="{% url 'editar_calculadora_billetes' billete.id %}" alt="Editar">
+                                <button class='btn btn-primary'>
+                                    <i class="typcn typcn-edit" title="Editar"></i>
+                                </button>
                             </a>
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes({{ billete.id }})">
-                                Detalle
+                                <i class="typcn typcn-eye" title="Ver Desglose"></i>
                             </button>
+                            <a href="{% url 'borrar_calculadora_billete' billete.id %}">
+                                <button class='btn btn-danger'>
+                                    <i class="typcn typcn-trash" title="Borrar registro"></i>
+                                </button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
-            <!-- tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot -->
         </table>
     {% else %}
         <p>Aún no hay registros.</p>
     {% endif %}
- </div> 
-<!-- BASIC MODAL -->
-<div id="modaldemo1" class="modal" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content modal-content-demo">
-        <div class="modal-header">
-          <h6 class="modal-title">Message Preview</h6>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <h6>Why We Use Electoral College, Not Popular Vote</h6>
-          <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-indigo">Save changes</button>
-          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div><!-- modal-dialog -->
-  </div>
-
+ </div>
 <!-- LARGE MODAL -->
 <div id="detalles" class="modal">
     <div class="modal-dialog modal-xl" role="document">
@@ -152,7 +121,7 @@
                 </button -->
             </div>
             <div class="modal-body">
-                <table class="table">
+                <table id="" class="table">
                     <thead>
                         <tr style="text-align:center !important">
                             <th>Monto</th>
@@ -191,15 +160,46 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
+
+<!-- div class="pagination ">
+    <span class="step-links">
+        <table class="table table-bordered">
+            <tr>
+            {% if page_obj.has_previous %}
+                <td>
+                    <a href="?page=1">&laquo; Primero</a>
+                </td>
+                <td>
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </td>
+            {% endif %}
+            <td>
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+            </td>
+            {% if page_obj.has_next %}
+        <td>
+                <a href="?page={{ page_obj.next_page_number }}">Siguinte</a>
+            </td><td>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+    </span>
+</div -->
 {% endblock content %}
 
 {% block js %}
   <!-- script src="{% static 'js/jquery.min.js' %}"></script -->
-  <script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script>
+  <!-- script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script -->
+  <script src="{% static 'assets/lib/datatables/simple/datatables.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/moment.min.js' %}" type="text/javascript"></script>
-  <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></sc>
   <script>
     // Mostrar Efectivo
+    /*
     var Efectivo = document.getElementById('efectivo')
     fetch('/api/saldo_efectivo/')
     .then(rest => rest.json())
@@ -211,15 +211,23 @@
             Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
         }
     })
-
+    */
     //new DataTable('#tabla', {
+    
     var table = $('#tabla').DataTable({
         language: language,
         pageLength: 20,
+<<<<<<< HEAD
 	ordering: false,
         order: [[0, 'desc']],
         // order: [[0, 'asc']],
 	columns: [
+=======
+        ordering: false,
+        order: [[0, 'desc']],
+        // order: [[0, 'asc']],
+        columns: [
+>>>>>>> e9db41849f748eb0c7df52b04e97d88e87d073fb
             { type: "date" },
             null,
             null,
@@ -228,6 +236,8 @@
             null,
         ],
     });
+    
+    //$('#tabla').DataTable();
   </script>
 
   <script>
@@ -269,15 +279,6 @@
         fetch(url)
         .then(res => res.json())
         .then(dat => {
-            // console.log(`lo que llega del fetch: ${dat.total}`)
-            // const totall = dat.total
-            /*
-            if (totall > 0) {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            } else {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            }
-            */
             total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
             // comentario.innerHTML = dat.comentario
             uno.innerHTML = dat.un_peso
@@ -311,15 +312,6 @@
         fetch(url)
         .then(res => res.json())
         .then(dat => {
-            // console.log(`lo que llega del fetch: ${dat.total}`)
-            /*
-            const totall = dat.total
-            if (totall > 0) {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            } else {
-                total.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(totall) + '</span>'
-            }
-            */
             total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat[0].saldo)
             uno.innerHTML = dat[0].un_peso
             tres.innerHTML = dat[0].tres_pesos
@@ -334,4 +326,5 @@
         })
     }
   </script>
+  
 {% endblock %}

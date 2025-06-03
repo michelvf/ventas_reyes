@@ -47,10 +47,12 @@ INSTALLED_APPS = [
     "compras.apps.ComprasConfig",
     "django.contrib.humanize",
     "nomina.apps.NominaConfig",
-    "punto_venta.apps.PuntoVentaConfig",
+    # "punto_venta.apps.PuntoVentaConfig",
     "easy_select2",
     "resumen.apps.ResumenConfig",
     "codigosbarra.apps.CodigosbarraConfig",
+    "produccion.apps.ProduccionConfig",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -159,3 +161,12 @@ CELERY_BEAT_SCHEDULE = {
 
 # Consultas asincrónias
 # DJANGO_ALLOW_ASYNC_UNSAFE = True
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}

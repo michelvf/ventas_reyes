@@ -57,13 +57,12 @@ def efectivo():
         efectivo.save()
     else:
         exit()
-# ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinie ntos_pesos;
+# ALTER TABLE ventas_cuenta RENAME quientos_pesos TO quinientos_pesos;
 # ALTER TABLE ventas_cuenta ADD un_peso NULL DEFAULT 0;
-
 # ALTER TABLE ventas_cuenta ADD tres_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cinco_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD diez_pesos NULL DEFAULT 0;
-# ALTER TABLE ventas_cuenta ADD viente_pesos NULL DEFAULT 0;
+# ALTER TABLE ventas_cuenta ADD veinte_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cincuenta_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD cien_pesos NULL DEFAULT 0;
 # ALTER TABLE ventas_cuenta ADD mil_pesos NULL DEFAULT 0;

@@ -4,10 +4,6 @@
 
 {% block title %}| Listado de productos{% endblock title %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
-{% endblock css %}
-
 {% block content %}
 
 <div class="az-dashboard-one-title">
@@ -53,11 +49,3 @@
     </tbody>
 </table>
 {% endblock %}
-
-{% block js %}
-    <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
-
-    <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
-    <script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script>
-
-{% endblock js %}

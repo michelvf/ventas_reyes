@@ -13,6 +13,19 @@ from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
 from .forms import ResumenSemanal
 from rest_framework import authentication
 from operator import itemgetter, attrgetter
+from django.template.loader import render_to_string
+from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.db import transaction
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+import json
+from .models import Cliente, Producto, Factura, DetalleFactura
+from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
+from .forms import UnidadMedidaForm
 
 import numpy as np
 
@@ -234,7 +247,6 @@ class ResumenProductoSemanalView(ListView):
             .order_by('fecha'))
 
 
-
 class ResumenSemanalLecheView(View):
     """
     Weekly milk product sumary
@@ -350,3 +362,434 @@ class ResumenSemanalLecheView(View):
         )
 
 
+# Vista Unidad de Medida
+class UnidadMedidaListView(ListView):
+    """
+    Vista para listar las Unidades de Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_list.html'
+    context_object_name = 'unidad_medidas'
+
+
+class UnidadMedidaCreateView(CreateView):
+    """
+    Vista para crear las Unidades de Medida de la Facturación
+    """
+    model = UnidadMedida
+    form_class = UnidadMedidaForm
+    template_name = 'facturas/unidadmedida_form.html'
+    success_url = reverse_lazy('unidadmedida_list')
+
+
+class UnidadMedidaDetailView(DetailView):
+    """
+    Vista para el detalle de la Unidad de Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_detail.html'
+    context_object_name = 'unidad_medidas'
+
+
+class UnidadMedidaUpdateView(UpdateView):
+    """
+    Vista para actualizar un Unidad Medida de la Facturación
+    """
+    model = UnidadMedida
+    form_class = UnidadMedidaForm
+    template_name = 'facturas/unidadmedida_form.html'
+    success_url = reverse_lazy('unidadmedida_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Unidad Medida actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class UnidadMedidaDeleteView(DeleteView):
+    """
+    Vista para borrar un Unidad Medida de la Facturación
+    """
+    model = UnidadMedida
+    template_name = 'facturas/unidadmedida_confirm_delete.html'
+    success_url = reverse_lazy('unidadmedida_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Unidad Medida eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
+# Vistas para Clientes
+class ClienteListView(ListView):
+    """
+    Vista para listar Clientes de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_list.html'
+    context_object_name = 'clientes'
+
+
+class ClienteDetailView(DetailView):
+    """
+    Vista para el detalle de un Cliente de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_detail.html'
+    context_object_name = 'cliente'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
+        context['facturas'] = self.object.facturas.all().select_related('cliente').order_by('-fecha_emision')
+        return context
+
+
+class ClienteCreateView(CreateView):
+    """
+    Vista para crear un Cliente de la Facturación
+    """
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'facturas/cliente_form.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente creado exitosamente.")
+        return super().form_valid(form)
+
+
+class ClienteUpdateView(UpdateView):
+    """
+    Vista para actualizar un Cliente de la Facturación
+    """
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'facturas/cliente_form.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class ClienteDeleteView(DeleteView):
+    """
+    Vista para borrar un Cliente de la Facturación
+    """
+    model = Cliente
+    template_name = 'facturas/cliente_confirm_delete.html'
+    success_url = reverse_lazy('cliente_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Cliente eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
+# Vistas para Productos
+class ProductoListView(ListView):
+    """
+    Vista para listar los Productos de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_list.html'
+    context_object_name = 'productos'
+
+
+class ProductoDetailView(DetailView):
+    """
+    Vista para el Detalle de un Productos de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_detail.html'
+    context_object_name = 'producto'
+
+
+class ProductoCreateView(CreateView):
+    """
+    Vista para crear un Producto de la Facturación
+    """
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'facturas/producto_form.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Producto creado exitosamente.")
+        return super().form_valid(form)
+
+
+class ProductoUpdateView(UpdateView):
+    """
+    Vista para actualizar el Producto de la Facturación
+    """
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'facturas/producto_form.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Producto actualizado exitosamente.")
+        return super().form_valid(form)
+
+
+class ProductoDeleteView(DeleteView):
+    """
+    Vista para borrar un producto de la Facturación
+    """
+    model = Producto
+    template_name = 'facturas/producto_confirm_delete.html'
+    success_url = reverse_lazy('producto_list')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Producto eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
+
+
+# Vistas para Facturas
+class FacturaListView(ListView):
+    """
+    Vista para listar la Factura
+    """
+    model = Factura
+    template_name = 'facturas/factura_list.html'
+    context_object_name = 'facturas'
+    ordering = ['-fecha_emision']
+
+
+class FacturaDetailView(DetailView):
+    """
+    Vista Detalle del Detalle de la Factura
+    """
+    model = Factura
+    template_name = 'facturas/factura_detail.html'
+    context_object_name = 'factura'
+
+
+# Clase personalizada para serializar Decimal a JSON
+class DecimalEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super().default(obj)
+
+
+# @login_required
+def crear_factura(request):
+    if request.method == 'POST':
+        form = FacturaForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                factura = form.save()
+                formset = DetalleFacturaFormSet(request.POST, instance=factura)
+                
+                if formset.is_valid():
+                    formset.save()
+                    factura.calcular_totales()
+                    messages.success(request, "Factura creada exitosamente.")
+                    return redirect('factura_detail', pk=factura.pk)
+                else:
+                    # Si el formset no es válido, eliminamos la factura
+                    factura.delete()
+    else:
+        form = FacturaForm()
+        formset = DetalleFacturaFormSet()
+    
+    return render(request, 'facturas/factura_form.html', {
+        'form': form,
+        'formset': formset,
+    })
+
+
+# @login_required
+def editar_factura(request, pk):
+    factura = get_object_or_404(Factura, pk=pk)
+    
+    if factura.estado != 'pendiente' and factura.estado != 'pagada':
+        messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
+        return redirect('factura_detail', pk=factura.pk)
+    
+    if request.method == 'POST':
+        form = FacturaForm(request.POST, instance=factura)
+        if form.is_valid():
+            with transaction.atomic():
+                factura = form.save()
+                formset = DetalleFacturaFormSet(request.POST, instance=factura)
+                
+                if formset.is_valid():
+                    formset.save()
+                    factura.calcular_totales()
+                    messages.success(request, "Factura actualizada exitosamente.")
+                    return redirect('factura_detail', pk=factura.pk)
+    else:
+        form = FacturaForm(instance=factura)
+        formset = DetalleFacturaFormSet(instance=factura)
+    
+    return render(request, 'facturas/factura_form.html', {
+        'form': form,
+        'formset': formset,
+        'factura': factura,
+    })
+
+
+# @login_required
+def cambiar_estado_factura(request, pk, estado):
+    factura = get_object_or_404(Factura, pk=pk)
+    estados_validos = [e[0] for e in Factura.ESTADO_CHOICES]
+    
+    if estado not in estados_validos:
+        messages.error(request, "Estado no válido.")
+    else:
+        factura.estado = estado
+        factura.save()
+        # Mensaje personalizado según el estado
+        if estado == 'pagada':
+            messages.success(request, "Factura marcada como pagada.")
+        elif estado == 'pagada-eleventa':
+            messages.success(request, "Factura marcada como pagada en Eleventa.")
+        elif estado == 'anulada':
+            messages.success(request, "Factura anulada correctamente.")
+        else:
+            messages.success(request, f"Estado de factura cambiado a {estado}.")
+
+    
+    return redirect('factura_detail', pk=factura.pk)
+
+
+# @login_required
+def eliminar_factura(request, pk):
+    factura = get_object_or_404(Factura, pk=pk)
+    
+    if request.method == 'POST':
+        factura.delete()
+        messages.success(request, "Factura eliminada exitosamente.")
+        return redirect('factura_list')
+    
+    return render(request, 'facturas/factura_confirm_delete.html', {
+        'factura': factura,
+    })
+
+
+# API para obtener información de productos
+def get_producto_info(request):
+    if request.method == 'GET' and 'id' in request.GET:
+        try:
+            producto = Producto.objects.get(pk=request.GET['id'])
+            data = {
+                'precio': float(producto.precio),
+                'stock': producto.stock,
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        except Producto.DoesNotExist:
+            return HttpResponse(json.dumps({'error': 'Producto no encontrado'}), content_type='application/json')
+    
+    return HttpResponse(json.dumps({'error': 'Solicitud inválida'}), content_type='application/json')
+
+
+# API para obtener facturas actualizadas
+def get_facturas_json(request):
+    facturas = Factura.objects.all().order_by('-fecha_emision')
+    
+    data = []
+    for factura in facturas:
+        # Determinar el HTML del estado para mantener consistencia con la vista
+        if factura.estado == 'pendiente':
+            estado_html = '<span class="badge bg-warning">Pendiente</span>'
+        elif factura.estado == 'pagada':
+            estado_html = '<span class="badge bg-info">Pagada</span>'
+        elif factura.estado == 'pagada-eleventa':
+            estado_html = '<span class="badge bg-success">Pagada en Eleventa</span>'
+        else:
+            estado_html = '<span class="badge bg-danger">Anulada</span>'
+        
+        # Generar HTML para los botones de acción
+        acciones_html = f'''
+        <div class="btn-group" role="group">
+            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+        '''
+        
+        if factura.estado == 'pendiente':
+            acciones_html += f'''
+            <a href="{reverse('factura_update', args=[factura.id])}" class="btn btn-sm btn-warning">
+                <i class="fas fa-edit"></i>
+            </a>
+            '''
+            
+        acciones_html += f'''
+            <a href="{reverse('factura_delete', args=[factura.id])}" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+        '''
+        
+        data.append({
+            'DT_RowId': f'factura-{factura.id}',
+            'numero': factura.numero,
+            'cliente': f"{factura.cliente.nombre} {factura.cliente.apellido}",
+            'fecha': {
+                'display': factura.fecha_emision.strftime("%d/%m/%Y %H:%M"),
+                'timestamp': factura.fecha_emision.timestamp()
+            },
+            'total': {
+                'display': f"$ {factura.total}",
+                'value': float(factura.total)
+            },
+            'estado': {
+                'display': estado_html,
+                'value': factura.estado
+            },
+            'acciones': acciones_html
+        })
+    
+    return JsonResponse({'data': data})
+
+
+# API para obtener facturas de un cliente específico
+def get_facturas_cliente_json(request, cliente_id):
+    cliente = get_object_or_404(Cliente, pk=cliente_id)
+    facturas = cliente.facturas.all().order_by('-fecha_emision')
+    
+    data = []
+    for factura in facturas:
+        # Determinar el HTML del estado
+        if factura.estado == 'pendiente':
+            estado_html = '<span class="badge bg-warning">Pendiente</span>'
+        elif factura.estado == 'pagada':
+            estado_html = '<span class="badge bg-info">Pagada</span>'
+        elif factura.estado == 'pagada-eleventa':
+            estado_html = '<span class="badge bg-success">Pagada en Eleventa</span>'
+        else:
+            estado_html = '<span class="badge bg-danger">Anulada</span>'
+        
+        data.append({
+            'DT_RowId': f'factura-cliente-{factura.id}',
+            'numero': factura.numero,
+            'fecha': {
+                'display': factura.fecha_emision.strftime("%d/%m/%Y"),
+                'timestamp': factura.fecha_emision.timestamp()
+            },
+            'total': {
+                'display': f"$ {factura.total}",
+                'value': float(factura.total)
+            },
+            'estado': {
+                'display': estado_html,
+                'value': factura.estado
+            },
+            'acciones': f'''
+            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+            '''
+        })
+    
+    return JsonResponse({'data': data})
+
+
+class VerFactura(DetailView):
+    """
+    Ver la factura que hizo la IA
+    """
+    model = Factura
+    template_name = "facturas/Factura.html"
+    context_object_name = 'factura'

@@ -1,4 +1,7 @@
 hacer:
+- Producción, llevar lo que se produce
+  https://desarrolloweb.com/articulos/trabajar-ramas-git.html uso de ramas
+
 - Compras
 - Nomina según Administradora
 

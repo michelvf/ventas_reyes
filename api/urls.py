@@ -2,8 +2,9 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import DepartamentoApiView, ProductosApiView, VentaApiView, ProductXDeptoListView
 from .views import FicherosSubidosApiView, SaldoEfectivoView, ContadorBilleteView
-from .views import AlmacenApiView, ProductoApiView, PrecioProductoApiView
+from .views import AlmacenApiView, ProductoApiView, PrecioProductoApiView, ContadorBilleteListView
 from .views import CompraApiView, NominaDepartamentosApiView, NominaCargoApiView
+from .views import ProduccionListView, SalidaListView, ProduccionProductoListView, CategoriaListView, DestinoListView
 
 router = DefaultRouter()
 
@@ -23,11 +24,18 @@ router.register(prefix="compra", viewset=CompraApiView, basename="compra")
 router.register(prefix="nomina_departamentos", viewset=NominaDepartamentosApiView, basename="nomina_departamentos")
 router.register(prefix="nomina_cargos", viewset=NominaCargoApiView, basename="nomina_cargos")
 
-######## Saldos Cuentas #########
+######## Saldos Cuentas y Contador de Billetes  #########
 router.register(prefix="saldo_efectivo", viewset=SaldoEfectivoView, basename="saldoefectivo")
 router.register(prefix="contador_billetes", viewset=ContadorBilleteView, basename="contadorbilletes")
+router.register(prefix="contador_billetes_list", viewset=ContadorBilleteListView, basename="contadorbilleteslist")
 
 
+######## Produccion #########
+router.register(prefix="produccion_produccion", viewset=ProduccionListView, basename="produccion")
+router.register(prefix="produccion_salida", viewset=SalidaListView, basename="salida")
+router.register(prefix="produccion_producto", viewset=ProduccionProductoListView, basename="produccion_producto")
+router.register(prefix="produccion_categoria", viewset=CategoriaListView, basename="categoria")
+router.register(prefix="produccion_destino", viewset=DestinoListView, basename="destino")
 
 # Están en ventas.urls
 # urlpatterns = [

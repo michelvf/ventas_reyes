@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.core.paginator import Paginator
 import pytz
 
 # Index Page
@@ -324,6 +325,7 @@ class ShowContadorBilletes(ListView):
     model = Contador_billete
     # template_name = 'ventas/contar_billetes.html'
     context_object_name = "billetes"
+    # paginate_by = 20
 
 
 class ProdxDepto(TemplateView):
@@ -472,6 +474,7 @@ class CalculadoraBilletes(View):
     def get(self, request, *args, **kawars):
         # billetes = Contador_billete.objects.all()
         form = CalculadoraBilletesForm()
+        
         return render(request, 'ventas/contador_billete_form.html', {'form': form})
 
     def post(self, request, *args, **kawars):
@@ -556,15 +559,105 @@ class CalculadoraBilletes(View):
             return render(request, self.template_name, {'form': form})
 
 
+class CalculadoraBilletes2(TemplateView):
+    """Calculadorade Billetes List View 2"""
+    template_name = 'ventas/contador_billete_list2.html'
+
+
 class EditarCalculadoraBilletes(UpdateView):
     """
     Editar calculadora de billetes
     """
     model = Contador_billete
-    # fields = ['total', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
     template_name = 'ventas/contador_billete_form.html'
     success_url = reverse_lazy('mostrar_conteo_billetes')
     form_class = CalculadoraBilletesForm
+
+    def form_valid(self, form):
+        """
+        Override form_valid to update Cuenta model when there are changes
+        """
+        # Get the current instance
+        instance = self.get_object()
+        
+        # Get the current Cuenta
+        cuenta = Cuenta.objects.get(cuenta="Efectivo")
+        
+        # Get the cleaned data from the form
+        cleaned_data = form.cleaned_data
+        
+        # Get the current values from the database
+        current_values = {
+            'un_peso': instance.un_peso,
+            'tres_pesos': instance.tres_pesos,
+            'cinco_pesos': instance.cinco_pesos,
+            'diez_pesos': instance.diez_pesos,
+            'veinte_pesos': instance.veinte_pesos,
+            'cincuenta_pesos': instance.cincuenta_pesos,
+            'cien_pesos': instance.cien_pesos,
+            'doscientos_pesos': instance.doscientos_pesos,
+            'quinientos_pesos': instance.quinientos_pesos,
+            'mil_pesos': instance.mil_pesos
+        }
+        
+        # Get the new values from the form
+        new_values = {
+            'un_peso': cleaned_data.get('un_peso', 0),
+            'tres_pesos': cleaned_data.get('tres_pesos', 0),
+            'cinco_pesos': cleaned_data.get('cinco_pesos', 0),
+            'diez_pesos': cleaned_data.get('diez_pesos', 0),
+            'veinte_pesos': cleaned_data.get('veinte_pesos', 0),
+            'cincuenta_pesos': cleaned_data.get('cincuenta_pesos', 0),
+            'cien_pesos': cleaned_data.get('cien_pesos', 0),
+            'doscientos_pesos': cleaned_data.get('doscientos_pesos', 0),
+            'quinientos_pesos': cleaned_data.get('quinientos_pesos', 0),
+            'mil_pesos': cleaned_data.get('mil_pesos', 0)
+        }
+        
+        # Calculate differences and update Cuenta
+        for denomination, new_value in new_values.items():
+            current_value = current_values[denomination]
+            difference = new_value - current_value
+            
+            if difference != 0:  # Only update if there's a change
+                if denomination == 'un_peso':
+                    cuenta.un_peso += difference
+                elif denomination == 'tres_pesos':
+                    cuenta.tres_pesos += difference
+                elif denomination == 'cinco_pesos':
+                    cuenta.cinco_pesos += difference
+                elif denomination == 'diez_pesos':
+                    cuenta.diez_pesos += difference
+                elif denomination == 'veinte_pesos':
+                    cuenta.veinte_pesos += difference
+                elif denomination == 'cincuenta_pesos':
+                    cuenta.cincuenta_pesos += difference
+                elif denomination == 'cien_pesos':
+                    cuenta.cien_pesos += difference
+                elif denomination == 'doscientos_pesos':
+                    cuenta.doscientos_pesos += difference
+                elif denomination == 'quinientos_pesos':
+                    cuenta.quinientos_pesos += difference
+                elif denomination == 'mil_pesos':
+                    cuenta.mil_pesos += difference
+        
+        # Update saldo based on changes
+        cuenta.saldo = (cuenta.un_peso * 1 +
+                       cuenta.tres_pesos * 3 +
+                       cuenta.cinco_pesos * 5 +
+                       cuenta.diez_pesos * 10 +
+                       cuenta.veinte_pesos * 20 +
+                       cuenta.cincuenta_pesos * 50 +
+                       cuenta.cien_pesos * 100 +
+                       cuenta.doscientos_pesos * 200 +
+                       cuenta.quinientos_pesos * 500 +
+                       cuenta.mil_pesos * 1000)
+        
+        # Save the Cuenta instance
+        cuenta.save()
+        
+        # Call the parent form_valid method to save the Contador_billete instance
+        return super().form_valid(form)
 
 
 class BorrarCalculadoraBilletes(DeleteView):
@@ -572,7 +665,57 @@ class BorrarCalculadoraBilletes(DeleteView):
     Borrar un registro y devolver el dinero al total
     """
     model = Contador_billete
-    success_url = reverse_lazy("mostrar_conte_billetes")
+    success_url = reverse_lazy("mostrar_conteo_billetes")
+
+    def post(self, request, *args, **kwargs):
+        # Obtener el objeto antes de eliminarlo
+        self.object = self.get_object()
+
+        # Realizar alguna acción antes de eliminar el objeto
+        # Por ejemplo, registrar el borrado en un log
+        efectivo = Cuenta.objects.get(cuenta="Efectivo")
+        tipo_cuenta = str(self.object.tipo_cuenta)
+
+        if tipo_cuenta == 'Entrada':
+            # print("Es un Crédito, lo voy a retar")
+            efectivo.un_peso -= self.object.un_peso
+            efectivo.tres_pesos -= self.object.tres_pesos
+            efectivo.cinco_pesos -= self.object.cinco_pesos
+            efectivo.diez_pesos -= self.object.diez_pesos
+            efectivo.veinte_pesos -= self.object.veinte_pesos
+            efectivo.cincuenta_pesos -= self.object.cincuenta_pesos
+            efectivo.cien_pesos -= self.object.cien_pesos
+            efectivo.doscientos_pesos -= self.object.doscientos_pesos
+            efectivo.quinientos_pesos -= self.object.quinientos_pesos
+            efectivo.mil_pesos -= self.object.mil_pesos
+            efectivo.saldo -= self.object.total
+        else:
+            # print("Es un Débito, lo voy a sumar")
+            efectivo.un_peso += self.object.un_peso
+            efectivo.tres_pesos += self.object.tres_pesos
+            efectivo.cinco_pesos += self.object.cinco_pesos
+            efectivo.diez_pesos += self.object.diez_pesos
+            efectivo.veinte_pesos += self.object.veinte_pesos
+            efectivo.cincuenta_pesos += self.object.cincuenta_pesos
+            efectivo.cien_pesos += self.object.cien_pesos
+            efectivo.doscientos_pesos += self.object.doscientos_pesos
+            efectivo.quinientos_pesos += self.object.quinientos_pesos
+            efectivo.saldo += self.object.total
+        
+        efectivo.save()
+
+        # print(f"Registro eliminado id: {self.object.id}")
+        # print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
+        # comprobar = str(tipo_cuenta) == 'Entrada'
+        # print(f"Comprobación si es Entrada: {comprobar}")
+
+        # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
+
+        # Llamar al método `delete()` original
+        response = super().post(request, *args, **kwargs)
+
+        # Si quieres cambiar la redirección, puedes hacerlo aquí
+        return response
 
 
 class VentasAnualesView(YearArchiveView):
@@ -647,11 +790,9 @@ class DondeSeVendeMas(View):
         inicio_mes = fecha_entrada.replace(day=1, hour=1, minute=0, second=0)
         fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1, hour=23, minute=59, second=59) - datetime.timedelta(days=1)
         # print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
-
-
-#        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
-#        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
-#        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
+        #        inicio_mes = fecha_entrada.replace(day=1, hour=0, minute=0, second=0)
+        #        fin_mes = (inicio_mes + datetime.timedelta(days=32)).replace(day=1,hour=23,minute=59,second=59) - datetime.timedelta(days=1)
+        #        print(f"inicio_mes: {inicio_mes}, fin_mes: {fin_mes}")
         # Obtener ventas del mes actual
         ventas_mensuales = Ventas.objects.filter(
             #fecha__gte=inicio_mes,
@@ -718,8 +859,8 @@ class DondeSeVendeMas(View):
             fecha = datetime.datetime(year=anno, month=mes,day=1,tzinfo=zona_horaria)
 
             print(f"Dentro del POST: MES: {mes}, AÑO: {anno}")
-#            fecha1 = timezone.now()
-#            fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
+        #     fecha1 = timezone.now()
+        #     fecha = fecha1.replace(year=anno, month=mes,day=1,hour=5,minute=0,second=0)
             # fecha = datetime.datetime(year=anno, month=mes,day=1)
             #print(f"fecha a enviar para procesamiento: {fecha}")
             context = {}

@@ -47,7 +47,7 @@ nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
-.hypothesis/
+.hypothesis/b
 .pytest_cache/
 cover/
 
@@ -58,6 +58,8 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
+db.sqlite*
+db.sqlite
 db.sqlite3
 db.sqlite3-journal
 
@@ -162,3 +164,4 @@ cython_debug/
 .idea/
 
 .DB_Store
+.qodo

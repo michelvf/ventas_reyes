@@ -1,0 +1,9 @@
+[
+    {"model": "compras.UnidadMedida", "pk": 1, "fields": {"nombre": "Libra", "sigla": "lb"}},
+    {"model": "compras.UnidadMedida", "pk": 2, "fields": {"nombre": "Gramos", "sigla": "gr"}},
+    {"model": "compras.UnidadMedida", "pk": 3, "fields": {"nombre": "Mililitro", "sigla": "ml"}},
+    {"model": "compras.UnidadMedida", "pk": 4, "fields": {"nombre": "Litro", "sigla": "l"}},
+    {"model": "compras.UnidadMedida", "pk": 5, "fields": {"nombre": "Kilogramo", "sigla": "kg"}},
+    {"model": "compras.UnidadMedida", "pk": 6, "fields": {"nombre": "Paquete", "sigla": "pq"}},
+    {"model": "compras.UnidadMedida", "pk": 7, "fields": {"nombre": "Millar", "sigla": "mil"}}
+]

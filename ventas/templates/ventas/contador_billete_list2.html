@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}| Listado del Contador de Billetes{% endblock title %}
+
+{% block css %}
+  <!-- link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" / -->
+  <link rel="stylesheet" href="{% static 'assets/lib/datatables/simple/datatables.min.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
+  <style> 
+    .modal-header {
+        background-color: #0059be;
+        color: white;
+        display: flex;
+        //flex-direction: column;
+        //align-items: center;
+        padding-top: 4px; /* Ajuste para acomodar la franja */
+        //position: relative;
+    }
+
+    .modal-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px; /* Ancho de la franja amarilla */
+        background-color: #fdb02b;;
+    }
+    //.ancho {
+    //    /* Asegurar que la segunda columna tenga un ancho fijo */
+    //    td:nth-child(2), th:nth-child(2) {
+    //        width: 450px !important;
+    //    }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="az-dashboard-one-title">
+    <div>
+      <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span>&nbsp;
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()" alt="Mostrar Billetes">
+            <i class="typcn typcn-eye" title="Detalles de todo el Efectivo"></i>
+        </button>
+      </h2>
+      <p class="az-dashboard-text">Las veces que contaste los billetes, ordenados por fechas.</p>
+    </div>
+    <div class="az-content-header-right">
+        <a href="{% url 'calculadora_billetes' %}" alt="Agregar">
+            <button class="btn btn-primary">
+                <i class="typcn typcn-plus" title="Agregar"></i>
+            </button>
+        </a>
+    </div>
+  </div><!-- az-dashboard-one-title -->
+ <div>
+    <table class="table ancho" id="tabla">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Comentario</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Sub Total</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+ </div>
+
+<!-- LARGE MODAL -->
+<div id="detalles" class="modal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header" style="justify-content: start !important;">
+                <h6 class="modal-title mt-3">Detalles del pago</h6>
+                <!-- button type="button" class="close mt-1" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button -->
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr style="text-align:center !important">
+                            <th>Monto</th>
+                            <th>$1</th>
+                            <th>$3</th>
+                            <th>$5</th>
+                            <th>$10</th>
+                            <th>$20</th>
+                            <th>$50</th>
+                            <th>$100</th>
+                            <th>$200</th>
+                            <th>$500</th>
+                            <th>$1000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="total" style="text-align:center !important"></td>
+                            <td id="1" style="text-align:center !important"></td>
+                            <td id="3" style="text-align:center !important"></td>
+                            <td id="5" style="text-align:center !important"></td>
+                            <td id="10" style="text-align:center !important"></td>
+                            <td id="20" style="text-align:center !important"></td>
+                            <td id="50" style="text-align:center !important"></td>
+                            <td id="100" style="text-align:center !important"></td>
+                            <td id="200" style="text-align:center !important"></td>
+                            <td id="500" style="text-align:center !important"></td>
+                            <td id="1000" style="text-align:center !important"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><!-- modal-body -->
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="btn btn-solid-light">Close</button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- div class="pagination ">
+    <span class="step-links">
+        <table class="table table-bordered">
+            <tr>
+            {% if page_obj.has_previous %}
+                <td>
+                    <a href="?page=1">&laquo; Primero</a>
+                </td>
+                <td>
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </td>
+            {% endif %}
+            <td>
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+            </td>
+            {% if page_obj.has_next %}
+        <td>
+                <a href="?page={{ page_obj.next_page_number }}">Siguinte</a>
+            </td><td>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+    </span>
+</div -->
+{% endblock content %}
+
+{% block js %}
+  <!-- script src="{% static 'js/jquery.min.js' %}"></script -->
+  <!-- script src="{% static 'js/datatables-somethink.min.js' %}" type="text/javascript"></script -->
+  <script src="{% static 'assets/lib/datatables/simple/datatables.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/moment.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/language-dataTables.js' %}" type="text/javascript"></script>
+  <script>
+    function formatCurrency(value) {
+        //return '$' + value.toFixed(2);
+        return value.toLocaleString("en-US", {style:"currency", currency:"USD"});
+    }
+
+    // Mostrar Efectivo
+    var Efectivo = document.getElementById('efectivo')
+    
+    function EfectivoActual() {
+        fetch('/api/saldo_efectivo/')
+        .then(rest => rest.json())
+        .then(dat => {
+            const efec = dat[0].saldo
+            if (efec > 0) {
+                Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
+            } else {
+                Efectivo.innerHTML = '<span class="positivo">$' + new Intl.NumberFormat().format(efec) + '</span>'
+            }
+        })
+    }
+
+    EfectivoActual()
+    //new DataTable('#tabla', {
+    
+    var table = $('#tabla').DataTable({
+        //responsive: true,
+        ajax: {
+            url: '/api/contador_billetes_list/',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'fecha',
+                type: "date",
+                render: function(data) {
+                    // return moment(data).format("DD/MM/YY hh:mm a");
+                    // return moment(data).format("DD/MM/YY HH:mm");
+                    return moment(data).format("DD/MM/YY");
+                }
+            },
+            { data: 'fecha',
+                type: "date",
+                render: function(data) {
+                    // return moment(data).format("DD/MM/YY hh:mm a");
+                    // return moment(data).format("DD/MM/YY HH:mm");
+                    return moment(data).format("HH:mm");
+                }
+            },
+            { data: 'comentario' },
+            { data: 'tipo_cuenta.siglas',
+                // let tipo = data
+                render: function(data) {
+                    if (data == 'CR') {
+                        return `<span class="positivo">${data}</span>`
+                        //return '<span class="positivo">' + formatCurrency(data) + '</span>'
+                    } else {
+                        return `<span class="negativo">${data}</span>`
+                        //return '<span class="negativo">' + formatCurrency(data) + '</span>'
+                    }
+                }
+            },
+            { data: 'total',
+                render: function(data, type, row) {
+                    if (data > 0) {
+                       // return `<span class="positivo">${data}</span>`
+                        return '<span class="positivo text-end">' + formatCurrency(data) + '</span>'
+                    } else if (data < 0) {
+                        // return `<span class="negativo">${data}</span>`
+                        return '<span class="negativo">' + formatCurrency(data) + '</span>'
+                    }
+                }
+            
+            },
+            { data: 'sub_total',
+                render: function(data, type, row) {
+                    if (data > 0) {
+                    // return `<span class="positivo">${data}</span>`
+                        return '<span class="positivo">' + formatCurrency(data) + '</span>'
+                    } else if (data < 0) {
+                        // return `<span class="negativo">${data}</span>`
+                        return '<span class="negativo">' + formatCurrency(data) + '</span>'
+                    }
+                }
+            },
+            {
+              data: 'id',
+                // orderable: false,
+                className: 'text-right',
+                render: function (data) {
+                    return `<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes(${data})" alt="Mostrar Billetes" title="Mostrar Billetes"><i class="typcn typcn-eye"></i></button>
+                    <a href="/ventas/editar_calculadora_billetes/${data}/" class="btn btn-primary" data-id="${data}" href="#" alt="Editar" title="Editar"><i class="typcn typcn-edit"></i></a>
+                    <a href="/ventas/calculadora_billetes/${data}/borrar/"><button class="btn btn-danger" alt="Borrar registro"><i class="typcn typcn-trash" title="Borrar registro"></i></button></a>`
+                }
+            }
+        ],
+        columnDefs: [
+            { width: 500, targets: 2 },
+            { width: 100, targets: 3 },
+            { className: 'text-end', targets: 4 },
+            { className: 'text-end', targets: 5 },
+        ],
+        language: language,
+        pageLength: 20,
+        ordering: false,
+        order: [[0, 'desc']],
+        //order: [[0, 'asc']],
+    });
+
+    // Actualizción cada 5 segundos
+    
+    setInterval(function() {
+        table.ajax.reload(null, false); // 'false' evita que la tabla se reinicie y pierda paginación
+        EfectivoActual();
+        // console.log("se debe haber actualizado");
+    }, 5000); // Actualización cada 5 segundos
+    
+    //$('#tabla').DataTable();
+  </script>
+
+  <script>
+    $(function(){
+      'use strict'
+
+      // showing modal with effect
+      $('.modal-effect').on('click', function(e){
+        e.preventDefault();
+        var effect = $(this).attr('data-effect');
+        $('#modaldemo8').addClass(effect);
+      });
+
+      // hide modal with effect
+      $('#modaldemo8').on('hidden.bs.modal', function (e) {
+        $(this).removeClass (function (index, className) {
+            return (className.match (/(^|\s)effect-\S+/g) || []).join(' ');
+        });
+      });
+
+    });
+
+    function billetes(id) {
+        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
+        let url = '/api/contador_billetes/' + id;
+        // let comentario = document.getElementById('comentario')
+        let total = document.getElementById('total')
+        let uno = document.getElementById('1')
+        let tres = document.getElementById('3')
+        let cinco = document.getElementById('5')
+        let diez = document.getElementById('10')
+        let veinte = document.getElementById('20')
+        let cincuenta = document.getElementById('50')
+        let cien = document.getElementById('100')
+        let doscientos = document.getElementById('200')
+        let quinientos = document.getElementById('500')
+        let mil = document.getElementById('1000')
+
+        fetch(url)
+        .then(res => res.json())
+        .then(dat => {
+            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
+            // comentario.innerHTML = dat.comentario
+            uno.innerHTML = dat.un_peso
+            tres.innerHTML = dat.tres_pesos
+            cinco.innerHTML = dat.cinco_pesos
+            diez.innerHTML = dat.diez_pesos
+            veinte.innerHTML = dat.veinte_pesos
+            cincuenta.innerHTML = dat.cincuenta_pesos
+            cien.innerHTML = dat.cien_pesos
+            doscientos.innerHTML = dat.doscientos_pesos
+            quinientos.innerHTML = dat.quinientos_pesos
+            mil.innerHTML = dat.mil_pesos
+        })
+    }
+
+    function total_billetes() {
+        // console.log(`se le dio click a detalle para buscar el id: ${id}`)
+        let url = '/api/saldo_efectivo/';
+        let total = document.getElementById('total')
+        let uno = document.getElementById('1')
+        let tres = document.getElementById('3')
+        let cinco = document.getElementById('5')
+        let diez = document.getElementById('10')
+        let veinte = document.getElementById('20')
+        let cincuenta = document.getElementById('50')
+        let cien = document.getElementById('100')
+        let doscientos = document.getElementById('200')
+        let quinientos = document.getElementById('500')
+        let mil = document.getElementById('1000')
+
+        fetch(url)
+        .then(res => res.json())
+        .then(dat => {
+            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat[0].saldo)
+            uno.innerHTML = dat[0].un_peso
+            tres.innerHTML = dat[0].tres_pesos
+            cinco.innerHTML = dat[0].cinco_pesos
+            diez.innerHTML = dat[0].diez_pesos
+            veinte.innerHTML = dat[0].veinte_pesos
+            cincuenta.innerHTML = dat[0].cincuenta_pesos
+            cien.innerHTML = dat[0].cien_pesos
+            doscientos.innerHTML = dat[0].doscientos_pesos
+            quinientos.innerHTML = dat[0].quinientos_pesos
+            mil.innerHTML = dat[0].mil_pesos
+        })
+    }
+  </script>
+  
+{% endblock %}

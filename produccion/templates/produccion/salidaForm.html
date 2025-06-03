@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Salida de Producto</h2>
+    <form method="POST" class="shadow p-4 rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_producto" class="form-label">Producto</label>
+            {{ form.producto }}
+        </div>
+        <div class="mb-3">
+            <label for="id_cantidad" class="form-label">Cantidad a Enviar</label>
+            {{ form.cantidad }}
+        </div>
+        <div class="mb-3">
+            <label for="id_destino" class="form-label">Destino</label>
+            {{ form.destino }}
+        </div>
+        <button type="submit" class="btn btn-success">Registrar Salida</button>
+    </form>
+</div>
+{% endblock %}

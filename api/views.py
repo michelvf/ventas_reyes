@@ -11,10 +11,12 @@ from .serializers import VentasPorFechasTodoSerializer, ProdxDepSerializer
 from .serializers import ProdMasVendidosSerializer, SumarVentasPorFechasSerializer
 from .serializers import ProdMasVendidosVarSerializer, LacteosSerializer, AnnoSerializer
 from .serializers import FicherosSubidosSerializer, VentaSemanalSerializer, CuentaBilletesSerializer
-from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar
+from .serializers import NominaDepartamentoSerializer, DiaQueMasVendeSerializar, ContadorBilleteListSerializer
 from compras.models import Almacen, Producto, PrecioProducto, Compra, UnidadMedida
 from .serializers import AlmacenSerializer, ProductoSerializer, CompraSerializer
 from .serializers import PrecioProductoSerializer, NominaCargoSerializer, MesesSerializer
+from .serializers import CategoriaSerializer, ProduccionProductoSerializer, ProduccionSerializer, SalidaSerializer, DestinoSerializer
+from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from .serializers import AnnosMesVentasSerializer, DondeSeVendeMasSerializar, SaldoEfectivoSerializer
 from django.db.models import Sum, Count, Q, DateField
@@ -442,8 +444,7 @@ class DondeSeVendeMasAPI(APIView):
             
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    
+
 
 class AnnosDeVenta(APIView):
     """
@@ -515,3 +516,51 @@ class ContadorBilleteView(ViewSet):
         registro = get_object_or_404(Contador_billete, id=pk)
         serializer = CuentaBilletesSerializer(registro)
         return Response(serializer.data)
+
+class ContadorBilleteListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Contador de Billetes View
+    """
+    queryset = Contador_billete.objects.all()
+    serializer_class = ContadorBilleteListSerializer
+
+# App Produccion
+class ProduccionListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Produccion View
+    """
+    queryset = Produccion.objects.all()
+    serializer_class = ProduccionSerializer
+    
+
+class SalidaListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Salida View
+    """
+    queryset = Salida.objects.all()
+    serializer_class = SalidaSerializer 
+
+
+class ProduccionProductoListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Produccion Producto View
+    """
+    queryset = Producto.objects.all()
+    serializer_class = ProduccionProductoSerializer
+
+
+class CategoriaListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Categoria View
+    """
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+
+
+class DestinoListView(viewsets.ReadOnlyModelViewSet):
+    """
+    Listado de Destino View
+    """
+    queryset = Destino.objects.all()
+    serializer_class = DestinoSerializer
+    

@@ -1,5 +1,6 @@
 
   $("#table").DataTable({
     language: language,
-    responsive: true,
+    pageLength: 20,
+    //ordering: false,
   })

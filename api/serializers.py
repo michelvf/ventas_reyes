@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta
 from compras.models import Almacen, Producto, PrecioProducto, Compra
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
+from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from django.db.models import Count
 
 
@@ -94,6 +95,7 @@ class ProdxDepSerializer(serializers.ModelSerializer):
     class Meta:
         model = Departamentos
         fields = ("id", "departamento", "num_prod")
+
 
 class ProdMasVendidosVarSerializer(serializers.Serializer):
     """
@@ -307,3 +309,83 @@ class CuentaBilletesSerializer(serializers.ModelSerializer):
                 'quinientos_pesos',
                 'mil_pesos'
                 ]
+
+
+class TipoCuentaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Tipos de Cuentas Serializer
+    """
+    class Meta:
+        model = Tipo_cuenta
+        fields = ['id', 'tipo', 'siglas']
+
+
+class ContadorBilleteListSerializer(serializers.ModelSerializer):
+    """
+    Listado de Contador de Billetes Serializer
+    """
+    tipo_cuenta = TipoCuentaSerializer(read_only=True)
+
+    class Meta:
+        model = Contador_billete
+        fields = ['id',
+                'total',
+                'sub_total',
+                'comentario',
+                'tipo_cuenta',
+                'fecha'
+                ]
+
+
+class CategoriaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Categorias Serializer
+    """
+    class Meta:
+        model = Categoria
+        fields = ['id', 'nombre']
+
+
+class ProduccionProductoSerializer(serializers.ModelSerializer):
+    """
+    Listado de Productos Serializer
+    """
+    categoria = CategoriaSerializer(read_only=True)
+    
+    class Meta:
+        model = Producto
+        fields = ['id', 'nombre', 'categoria', 'stock_actual']
+    
+
+class ProduccionSerializer(serializers.ModelSerializer):
+    """
+    Listado de Produccion Serializer
+    """
+    producto = ProduccionProductoSerializer(read_only=True)
+    class Meta:
+        model = Produccion
+        fields = ['id', 'producto', 'cantidad', 'fecha_hora']
+    
+
+class DestinoSerializer(serializers.ModelSerializer):
+    """
+    Listado de Destinos Serializer
+    """
+    class Meta:
+        model = Destino
+        fields = ['id', 'nombre']
+
+
+class SalidaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Salida Serializer
+    """
+    producto = ProduccionProductoSerializer(read_only=True)
+    destino = DestinoSerializer(read_only=True)
+    class Meta:
+        model = Salida
+        fields = ['id', 'producto', 'cantidad', 'fecha_hora', 'destino']
+
+
+
+    
