@@ -13,7 +13,14 @@
 {% endblock css %}
 
 {% block content %}
-  <h2>Calculadora de Billetes</h2>
+  
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2>Calculadora de Billetes</h2>
+    <a href="{% url 'mostrar_conteo_billetes' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Volver
+    </a>
+  </div>
+  
   <form id="formulario" method="post">
     {% csrf_token %}
 
@@ -153,6 +160,9 @@
         <button type="button" class="btn btn-danger mt-5" id="resetBtn">
           <i class="bi bi-trash"></i>Limpiar Datos
         </button>
+        <a href="{% url 'mostrar_conteo_billetes' %}" class="btn btn-secondary mt-5">
+          <i class="fas fa-cancel me-1"></i> Cancelar
+        </a>
     
     </form>
 {% endblock %}

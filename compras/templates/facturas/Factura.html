@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -36,8 +36,14 @@
  </tr>
  <tr style='height:14.25pt'>
     <td colspan='6' class='x21' style='height:14.25pt;'></td>
-    <td colspan='3' class='x146'>&lt;&lt; Original &gt;&gt;</td>
-    <td class='x48'>Recepción No.</td>
+    <td colspan='2' class='x146'>&lt;&lt; Original &gt;&gt;</td>
+    <td class='x48' colspan='2'>
+      {% if factura.tipo == "c" %}
+        Recepción No
+      {% else %}
+        Factura No
+      {% endif %}
+    </td>
     <td class='x105' align='right'>{{ factura.numero }}</td>
  </tr>
  <tr style='height:14.25pt'>
@@ -139,7 +145,7 @@
       &nbsp;--
     {% endif %}
   </td>
-  <td colspan='5' class='x127'>Mini Industria A&amp;A Reyes S.U.R.L.</td>
+  <td colspan='5' class='x127'>MiPYME A &amp; A Reyes S.U.R.L.</td>
   <td colspan='2' class='x23'>
     <font class="font15" style="text-decoration: none;">Ctta. MLC:</font>
     <font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font>
@@ -246,13 +252,25 @@
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
  <tr style='height:14.25pt'>
-<td colspan='2' class='x108' style='height:14.25pt;'>Suministra:</td>
+<td colspan='2' class='x108' style='height:14.25pt;'>
+  {% if factura.tipo == "c" %}
+    Entregado a:
+  {% else %}
+    Suministra:
+  {% endif %}
+  </td>
 <td class='x21'></td>
-<td colspan='2' class='x108'>Entregado a:</td>
+<td colspan='2' class='x108'>
+  {% if factura.tipo == "c" %}
+    Suministra:
+  {% else %}
+    Entregado a:
+  {% endif %}
+</td>
 <td colspan='3' class='x21'></td>
 <td class='x49'></td>
 <td class='x50'>Subtotal:</td>
-<td class='x174'>$<span>{{ factura.subtotal }}</span><span style='mso-spacerun:yes;'></span></td>
+<td class='x174'>$<span>{{ factura.subtotal }}</span><span></span></td>
  </tr>
  <tr style='height:12.75pt'>
   <td colspan='2' class='x110' style='height:12.75pt;'>Alberto M. Reyes Nicot</td>
@@ -267,11 +285,7 @@
   <td colspan='2' class='x111' style='height:12.75pt;'>89012247469</td>
   <td class='x109'></td>
   <td colspan='4' class='x112 ci'>
-    {% if factura.cliente.ci %}
-      {{ factura.cliente.ci }}
-    {% else %}
-      --
-    {% endif %}
+      {{ factura.cliente.ci|default:'--'|striptags|safe }}
   </td>
   <td class='x21'></td>
   <td class='x95'></td>

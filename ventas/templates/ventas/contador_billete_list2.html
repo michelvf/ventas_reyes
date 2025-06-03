@@ -41,7 +41,7 @@
 <div class="az-dashboard-one-title">
     <div>
       <h2 class="az-dashboard-title">Listado del Contador de Billetes  Total de Efectivo: <span id="efectivo"></span>&nbsp;
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()">
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="total_billetes()" alt="Mostrar Billetes">
             <i class="typcn typcn-eye" title="Detalles de todo el Efectivo"></i>
         </button>
       </h2>
@@ -249,9 +249,9 @@
                 // orderable: false,
                 className: 'text-right',
                 render: function (data) {
-                    return `<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes(${data})"><i class="typcn typcn-eye"></i></button>
-                    <a href="/ventas/editar_calculadora_billetes/${data}/" class="btn btn-primary" data-id="${data}" href="#"><i class="typcn typcn-edit"></i></a>
-                        <a href="/ventas/calculadora_billetes/${data}/borrar/" alt="Borrar registro"><button class="btn btn-danger"><i class="typcn typcn-trash" title="Borrar registro"></i></button></a>`
+                    return `<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#detalles" onclick="billetes(${data})" alt="Mostrar Billetes" title="Mostrar Billetes"><i class="typcn typcn-eye"></i></button>
+                    <a href="/ventas/editar_calculadora_billetes/${data}/" class="btn btn-primary" data-id="${data}" href="#" alt="Editar" title="Editar"><i class="typcn typcn-edit"></i></a>
+                    <a href="/ventas/calculadora_billetes/${data}/borrar/"><button class="btn btn-danger" alt="Borrar registro"><i class="typcn typcn-trash" title="Borrar registro"></i></button></a>`
                 }
             }
         ],

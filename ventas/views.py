@@ -677,7 +677,7 @@ class BorrarCalculadoraBilletes(DeleteView):
         tipo_cuenta = str(self.object.tipo_cuenta)
 
         if tipo_cuenta == 'Entrada':
-            print("Es un Crédito, lo voy a retar")
+            # print("Es un Crédito, lo voy a retar")
             efectivo.un_peso -= self.object.un_peso
             efectivo.tres_pesos -= self.object.tres_pesos
             efectivo.cinco_pesos -= self.object.cinco_pesos
@@ -690,7 +690,7 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.mil_pesos -= self.object.mil_pesos
             efectivo.saldo -= self.object.total
         else:
-            print("Es un Débito, lo voy a sumar")
+            # print("Es un Débito, lo voy a sumar")
             efectivo.un_peso += self.object.un_peso
             efectivo.tres_pesos += self.object.tres_pesos
             efectivo.cinco_pesos += self.object.cinco_pesos
@@ -704,10 +704,10 @@ class BorrarCalculadoraBilletes(DeleteView):
         
         efectivo.save()
 
-        print(f"Registro eliminado id: {self.object.id}")
-        print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
-        comprobar = str(tipo_cuenta) == 'Entrada'
-        print(f"Comprobación si es Entrada: {comprobar}")
+        # print(f"Registro eliminado id: {self.object.id}")
+        # print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
+        # comprobar = str(tipo_cuenta) == 'Entrada'
+        # print(f"Comprobación si es Entrada: {comprobar}")
 
         # También podrías ejecutar acciones como enviar un correo o modificar otra tabla
 

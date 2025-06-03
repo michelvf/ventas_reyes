@@ -137,7 +137,7 @@ class Producto(models.Model):
     """
     Modelo Producto de Facturación
     """
-    codigo = models.CharField(max_length=250, unique=True)
+    codigo = models.CharField(max_length=250, unique=True, editable=False)
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
     precio = models.FloatField()
@@ -148,6 +148,17 @@ class Producto(models.Model):
     
     def __str__(self):
         return f"{self.nombre}"
+    
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            last_codigo = Producto.objects.all().order_by('codigo').last()
+
+            if last_codigo:
+                self.codigo = last_codigo + 1
+            else:
+                self.codigo = 100
+        
+        super().save(*args, **kwargs)
     
     class Meta:
         ordering = ['-nombre']
@@ -185,26 +196,50 @@ class Factura(models.Model):
     observaciones = models.TextField(blank=True, null=True)
     
     def save(self, *args, **kwargs):
-        if not self.numero:
-            # Obtener el año actual
-            current_year = datetime.datetime.now().year
+        
+        if self.tipo == "c":
+        
+            if not self.numero:
+                # Obtener el año actual
+                current_year = datetime.datetime.now().year
+                
+                # Buscar la última factura del año actual
+                last_invoice = Factura.objects.filter(
+                    numero__startswith=f'R-{current_year}-'
+                    ).order_by('numero').last()
+                
+                # Determinar el siguiente número
+                if last_invoice:
+                    # Extraer el número secuencial de la última factura
+                    last_number = int(last_invoice.numero.split('-')[-1])
+                    next_number = last_number + 1
+                else:
+                    # Si no hay facturas para este año, comenzar desde 1
+                    next_number = 1
+                
+                # Formatear el nuevo número de factura
+                self.numero = f'R-{current_year}-{next_number:03d}'
+        else:
+            if not self.numero:
+                # Obtener el año actual
+                current_year = datetime.datetime.now().year
+                
+                # Buscar la última factura del año actual
+                last_invoice = Factura.objects.filter(
+                    numero__startswith=f'F-{current_year}-'
+                    ).order_by('numero').last()
+                
+                # Determinar el siguiente número
+                if last_invoice:
+                    # Extraer el número secuencial de la última factura
+                    last_number = int(last_invoice.numero.split('-')[-1])
+                    next_number = last_number + 1
+                else:
+                    # Si no hay facturas para este año, comenzar desde 1
+                    next_number = 1
             
-            # Buscar la última factura del año actual
-            last_invoice = Factura.objects.filter(
-                numero__startswith=f'F-{current_year}-'
-            ).order_by('numero').last()
-            
-            # Determinar el siguiente número
-            if last_invoice:
-                # Extraer el número secuencial de la última factura
-                last_number = int(last_invoice.numero.split('-')[-1])
-                next_number = last_number + 1
-            else:
-                # Si no hay facturas para este año, comenzar desde 1
-                next_number = 1
-            
-            # Formatear el nuevo número de factura
-            self.numero = f'R-{current_year}-{next_number:03d}'
+                # Formatear el nuevo número de factura
+                self.numero = f'F-{current_year}-{next_number:03d}'
 
         super().save(*args, **kwargs)
     
