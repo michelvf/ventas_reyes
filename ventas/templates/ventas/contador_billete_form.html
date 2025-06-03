@@ -157,4 +157,25 @@
     
     {% block js %}
     <script type="text/javascript" src="{% static 'js/calculadora_billetes.js' %}"></script>
+    <script>
+    document.getElementById("formulario").addEventListener("submit", function(event) {;
+    
+    // Evite el envio de formulario 
+    event.preventDefault();
+
+    // Selecciona todos los inputs del formulario
+    let inputs = document.querySelectorAll("#formulario input");
+
+    // Recorre los inputs y coloca 0 si están vacíos
+    inputs.forEach(input => {
+       if (input.value.trim() === "") {
+         input.value = "0";
+       }
+    });
+
+    // Ahora si, envia el formulario después de modificar los valores
+    this.submit();
+  })
+
+    </script>
 {% endblock %}

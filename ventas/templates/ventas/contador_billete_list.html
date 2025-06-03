@@ -216,8 +216,17 @@
     var table = $('#tabla').DataTable({
         language: language,
         pageLength: 20,
-        // order: [[0, 'desc']],
+	ordering: false,
+        order: [[0, 'desc']],
         // order: [[0, 'asc']],
+	columns: [
+            { type: "date" },
+            null,
+            null,
+            null,
+            null,
+            null,
+        ],
     });
   </script>
 
