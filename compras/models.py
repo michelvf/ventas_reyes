@@ -155,7 +155,7 @@ class Producto(models.Model):
             last_codigo = Producto.objects.all().order_by('codigo').last()
             
             if last_codigo:
-                self.codigo = int(last_codigo.id) + 1
+                self.codigo = int(last_codigo.codigo) + 1
             else:
                 self.codigo = 100
         

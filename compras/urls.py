@@ -73,6 +73,7 @@ urlpatterns = [
     
     # Ver Factura
     path('facturas/<int:pk>/ver/', VerFactura.as_view(), name='ver_factura'),
+    path('facturas/<int:pk>/pdf/', views.factura_pdf, name='factura_pdf'),
     
     # API para actualización en tiempo real
     path('api/facturas/', views.get_facturas_json, name='api_facturas'),

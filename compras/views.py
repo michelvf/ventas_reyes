@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.views import View
 
 # Create your views here.
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -27,7 +31,36 @@ from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
 from .forms import UnidadMedidaForm
 
-import numpy as np
+def factura_pdf(request, pk):
+    """Generate PDF for a specific invoice"""
+    factura = get_object_or_404(Factura, pk=pk)
+    template_path = 'facturas/Factura.html'
+    
+    # Get the context data
+    context = {
+        'factura': factura,
+        'request': request,
+    }
+    
+    # Render the template with the context
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    # Create PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="factura_{factura.numero}.pdf"'
+    
+    # Create PDF using xhtml2pdf
+    pisa_status = pisa.CreatePDF(
+        html, 
+        dest=response,
+    )
+    
+    # If error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('Temenos algún error <pre>' + html + '</pre>')
+    return response
+
 
 
 class RegistrarAlmacenView(CreateView):
