@@ -61,7 +61,7 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a href="{% url 'factura_detail' factura.id %}" class="btn btn-sm btn-info">
+                                <a href="{% url 'ver_factura' factura.id %}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 {% if factura.estado == 'pendiente' %}

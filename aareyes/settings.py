@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "codigosbarra.apps.CodigosbarraConfig",
     "produccion.apps.ProduccionConfig",
     "channels",
+    "produc_proceso",
 ]
 
 MIDDLEWARE = [

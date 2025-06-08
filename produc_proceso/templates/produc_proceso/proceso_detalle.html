@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Proceso de {{ proceso.producto.nombre }} - Sistema de Seguimiento de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-cogs me-2"></i>Proceso de {{ proceso.producto.nombre }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        {% if proceso.estado != 'finalizado' and proceso.estado != 'cancelado' %}
+        <a href="{% url 'produccion:proceso_editar' pk=proceso.id %}" class="btn btn-sm btn-outline-secondary me-2">
+            <i class="fas fa-edit me-1"></i> Editar
+        </a>
+        <a href="{% url 'produccion:proceso_finalizar' pk=proceso.id %}" class="btn btn-sm btn-success me-2" onclick="return confirm('¿Está seguro de finalizar este proceso?')">
+            <i class="fas fa-check-circle me-1"></i> Finalizar
+        </a>
+        <a href="{% url 'produccion:entrada_crear' proceso_id=proceso.id %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i> Agregar Material
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Información del Proceso</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Producto:</dt>
+                    <dd class="col-sm-8">
+                        <a href="{% url 'produccion:producto_detalle' pk=proceso.producto.id %}">
+                            {{ proceso.producto.nombre }}
+                        </a>
+                    </dd>
+                    
+                    <dt class="col-sm-4">Fecha Inicio:</dt>
+                    <dd class="col-sm-8">{{ proceso.fecha_inicio }}</dd>
+                    
+                    <dt class="col-sm-4">Fecha Fin:</dt>
+                    <dd class="col-sm-8">{{ proceso.fecha_fin|default:"No finalizado" }}</dd>
+                    
+                    <dt class="col-sm-4">Estado:</dt>
+                    <dd class="col-sm-8">
+                        {% if proceso.estado == 'iniciado' %}
+                        <span class="badge bg-primary">Iniciado</span>
+                        {% elif proceso.estado == 'en_proceso' %}
+                        <span class="badge bg-warning">En Proceso</span>
+                        {% elif proceso.estado == 'finalizado' %}
+                        <span class="badge bg-success">Finalizado</span>
+                        {% else %}
+                        <span class="badge bg-danger">Cancelado</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-4">Costo Total:</dt>
+                    <dd class="col-sm-8">${{ costo_total|floatformat:2 }}</dd>
+                    
+                    {% if proceso.notas %}
+                    <dt class="col-sm-4">Notas:</dt>
+                    <dd class="col-sm-8">{{ proceso.notas }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Materiales Utilizados</h5>
+                {% if proceso.estado != 'finalizado' and proceso.estado != 'cancelado' %}
+                <a href="{% url 'produccion:entrada_crear' proceso_id=proceso.id %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i> Agregar
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <table id="entradas-table" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Cantidad</th>
+                            <th>Costo Unitario</th>
+                            <th>Costo Total</th>
+                            <th>Fecha</th>
+                            {% if proceso.estado != 'finalizado' and proceso.estado != 'cancelado' %}
+                            <th>Acciones</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán vía AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#entradas-table').DataTable({
+            ajax: {
+                url: "{% url 'produccion:api_entradas' proceso_id=proceso.id %}",
+                dataSrc: 'data'
+            },
+            columns: [
+                { data: 'material' },
+                { 
+                    data: null,
+                    render: function(data) {
+                        return data.cantidad + ' ' + data.unidad;
+                    }
+                },
+                { 
+                    data: 'costo_unitario',
+                    render: function(data) {
+                        return '$' + data.toFixed(2);
+                    }
+                },
+                { 
+                    data: 'costo_total',
+                    render: function(data) {
+                        return '$' + data.toFixed(2);
+                    }
+                },
+                { data: 'fecha' },
+                {% if proceso.estado != 'finalizado' and proceso.estado != 'cancelado' %}
+                { 
+                    data: 'id',
+                    orderable: false,
+                    render: function(data) {
+                        return `
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="/entradas/${data}/editar/" class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/entradas/${data}/eliminar/" class="btn btn-outline-danger" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar esta entrada?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+                {% endif %}
+            ]
+        });
+    });
+</script>
+{% endblock %}

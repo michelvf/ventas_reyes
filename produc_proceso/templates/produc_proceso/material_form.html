@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }} - Sistema de Seguimiento de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-boxes me-2"></i>{{ titulo }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                        {{ form.nombre.errors }}
+                        <input type="text" name="{{ form.nombre.name }}" id="{{ form.nombre.id_for_label }}" 
+                               class="form-control {% if form.nombre.errors %}is-invalid{% endif %}" 
+                               value="{{ form.nombre.value|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
+                        {{ form.descripcion.errors }}
+                        <textarea name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" 
+                                  class="form-control {% if form.descripcion.errors %}is-invalid{% endif %}" 
+                                  rows="3">{{ form.descripcion.value|default:'' }}</textarea>

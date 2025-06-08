@@ -201,15 +201,15 @@
   </td>
   <td colspan='2' class='x122' style='border-bottom:1px solid #0070C0;'>
     <div style='display:block;overflow:hidden;line-height:0;'></div>
-</td>
+  </td>
   <td class='x25'>
     <div style='display:block;overflow:hidden;line-height:0;'></div>
   </td>
- </tr>
+</tr>
  <!-- tr>
   <td colspan="7"></td>
  </tr -->
- {% for detalle in factura.detalles.all %}
+{% for detalle in factura.detalles.all %}
  {% if forloop.counter0|divisibleby:2 %}
   <tr style='height:14.25pt'>
     <td class='x69' style='height:14.25pt;'>
@@ -290,7 +290,7 @@
   <td class='x21'></td>
   <td class='x95'></td>
   <td class='x95'>TOTAL:</td>
-  <td class='x96' align='right'>${{ factura.total }}</td>
+  <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
  </tr>
 </table>
 
