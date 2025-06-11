@@ -18,6 +18,12 @@
 <div id='section'>
 <div id='table_0' sheetName='Recepción'>
   <div style="display:flex;margin-bottom: 1.5rem;align-items: center;justify-content: flex-end" class="botones">
+    <a href="{% url 'factura_update' factura.id %}" style="border-width: 0;
+    line-height: 1.538;padding: 9px 20px;border-radius: 0;
+    transition: none;min-height: 8px;color: #1c273c;background-color: #ffc107;
+    border-color: #ffc10;display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+      <i class="fas fa-edit me-1"></i> Editar
+    </a>
     <a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
       <i class="fas fa-arrow-left me-1"></i> Volver
     </a>
