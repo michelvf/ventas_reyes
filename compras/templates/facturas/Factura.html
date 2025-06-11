@@ -3,11 +3,25 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
+<style>
+@media print {
+  header, footer {
+      display: none;
+  }
+  .botones {
+    display: none !important;
+  }
+}
+</style>
 </head>
 <body link='blue' vlink='purple' bgcolor='white'>
 <div id='section'>
 <div id='table_0' sheetName='Recepción'>
+  <div style="display:flex;margin-bottom: 1.5rem;align-items: center;justify-content: flex-end" class="botones">
+    <a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
+      <i class="fas fa-arrow-left me-1"></i> Volver
+    </a>
+  </div>
 <bodyclass='x21'>
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt'>
@@ -294,9 +308,18 @@
  </tr>
 </table>
 
+</div>
+<div class="botones" style="display: flex;justify-content: flex-end;unicode-bidi: isolate;">
+  <a href="#" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
+    vertical-align: middle;user-select: none;background-color: transparent;border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 3px;transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;color: #fff;
+    background-color: #3366ff;border-color: #3366ff;text-decoration: none;margin-top: 1.5rem" onclick="imprimirPagina()">
+      <i class="fas fa-print me-1"></i> Imprimir
+  </a>
+</div>
+</div>
+
 </body>
-</div>
-</div>
 <style>
 a{
   color:blue;
@@ -2571,11 +2594,10 @@ padding:5px;
 position: fixed;
 bottom:0px;
 }
-@media print {
-    header, footer {
-        display: none;
-    }
-}
-
 </style>
-</body>
+<script>
+  function imprimirPagina() {
+      window.print();
+  }
+</script>
+</html>
