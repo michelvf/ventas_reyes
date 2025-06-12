@@ -153,11 +153,9 @@ class Producto(models.Model):
        
         if not self.codigo:
             last_codigo = Producto.objects.all().order_by('codigo').last()
-            # print("El codigo que se extrajo: ", last_codigo.codigo)
             
             if last_codigo:
                 self.codigo = int(last_codigo.codigo) + 1
-                # print("El codigo nuevo será: ", self.codigo)
             else:
                 self.codigo = 100
         
