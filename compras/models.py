@@ -266,13 +266,13 @@ class DetalleFactura(models.Model):
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
-    # cantidad = models.PositiveIntegerField(default=1)
-    cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
+    cantidad = models.PositiveIntegerField(default=1)
+    # cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
     # precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
     # cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     precio_unitario = models.FloatField(validators=[MinValueValidator(0.0)])
-    # precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
-    #subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    #precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Precio histórico
+    # subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     subtotal = models.FloatField(validators=[MinValueValidator(0.0)])
     
     def save(self, *args, **kwargs):

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }} - Sistema de Seguimiento de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-cogs me-2"></i>{{ titulo }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.producto.id_for_label }}" class="form-label">Producto</label>
+                        {{ form.producto.errors }}
+                        <select name="{{ form.producto.name }}" id="{{ form.producto.id_for_label }}" 
+                                class="form-select {% if form.producto.errors %}is-invalid{% endif %}" required>
+                            <option value="">Seleccione un producto</option>
+                            {% for choice in form.producto.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.producto.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label">Fecha de Inicio</label>
+                        {{ form.fecha_inicio.errors }}
+                        <input type="date" name="{{ form.fecha_inicio.name }}" id="{{ form.fecha_inicio.id_for_label }}" 
+                               class="form-control {% if form.fecha_inicio.errors %}is-invalid{% endif %}" 
+                               value="{{ form.fecha_inicio.value|date:'Y-m-d'|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.estado.id_for_label }}" class="form-label">Estado</label>
+                        {{ form.estado.errors }}
+                        <select name="{{ form.estado.name }}" id="{{ form.estado.id_for_label }}" 
+                                class="form-select {% if form.estado.errors %}is-invalid{% endif %}" required>
+                            {% for choice in form.estado.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.estado.value == choice.0 %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.notas.id_for_label }}" class="form-label">Notas</label>
+                        {{ form.notas.errors }}
+                        <textarea name="{{ form.notas.name }}" id="{{ form.notas.id_for_label }}" 
+                                  class="form-control {% if form.notas.errors %}is-invalid{% endif %}" 
+                                  rows="3">{{ form.notas.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'produccion:proceso_lista' %}" class="btn btn-outline-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

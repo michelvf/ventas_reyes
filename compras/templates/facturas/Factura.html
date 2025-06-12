@@ -3,16 +3,36 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
+<style>
+@media print {
+  header, footer {
+      display: none;
+  }
+  .botones {
+    display: none !important;
+  }
+}
+</style>
 </head>
 <body link='blue' vlink='purple' bgcolor='white'>
 <div id='section'>
 <div id='table_0' sheetName='Recepción'>
+  <div style="display:flex;margin-bottom: 1.5rem;align-items: center;justify-content: flex-end" class="botones">
+    <a href="{% url 'factura_update' factura.id %}" style="border-width: 0;
+    line-height: 1.538;padding: 9px 20px;border-radius: 0;
+    transition: none;min-height: 8px;color: #1c273c;background-color: #ffc107;
+    border-color: #ffc10;display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+      <i class="fas fa-edit me-1"></i> Editar
+    </a>
+    <a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
+      <i class="fas fa-arrow-left me-1"></i> Volver
+    </a>
+  </div>
 <bodyclass='x21'>
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt'>
  <col class='x21' style='background:none;width:36pt'>
- <col class='x21' style='background:none;width:200pt'>
+ <col class='x21' style='background:none;width:250pt'>
  <col class='x21' style='background:none;width:21pt'>
  <col class='x21' style='background:none;width:28.5pt'>
  <col class='x21' style='background:none;width:27pt'>
@@ -201,15 +221,15 @@
   </td>
   <td colspan='2' class='x122' style='border-bottom:1px solid #0070C0;'>
     <div style='display:block;overflow:hidden;line-height:0;'></div>
-</td>
+  </td>
   <td class='x25'>
     <div style='display:block;overflow:hidden;line-height:0;'></div>
   </td>
- </tr>
+</tr>
  <!-- tr>
   <td colspan="7"></td>
  </tr -->
- {% for detalle in factura.detalles.all %}
+{% for detalle in factura.detalles.all %}
  {% if forloop.counter0|divisibleby:2 %}
   <tr style='height:14.25pt'>
     <td class='x69' style='height:14.25pt;'>
@@ -290,13 +310,22 @@
   <td class='x21'></td>
   <td class='x95'></td>
   <td class='x95'>TOTAL:</td>
-  <td class='x96' align='right'>${{ factura.total }}</td>
+  <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
  </tr>
 </table>
 
+</div>
+<div class="botones" style="display: flex;justify-content: flex-end;unicode-bidi: isolate;">
+  <a href="#" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
+    vertical-align: middle;user-select: none;background-color: transparent;border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 3px;transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;color: #fff;
+    background-color: #3366ff;border-color: #3366ff;text-decoration: none;margin-top: 1.5rem" onclick="imprimirPagina()">
+      <i class="fas fa-print me-1"></i> Imprimir
+  </a>
+</div>
+</div>
+
 </body>
-</div>
-</div>
 <style>
 a{
   color:blue;
@@ -324,21 +353,25 @@ ruby
   font-weight:400;
   font-style:normal;
   font-family:'Aptos Narrow',sans-serif;
+ }
   .font4
   {
   color:#000000;
   font-size:10pt;
   font-weight:400;
   font-style:normal;
-  font-family:Calibri,sans-serif; }
+  font-family:Calibri,sans-serif;
+  }
   .font15
   {
   color:#747474;
   font-size:10pt;
   font-weight:400;
   font-style:normal;
-  font-family:Calibri,sans-serif; }
-  td 
+  font-family:Calibri,sans-serif;
+  }
+  td
+  {
   text-align:general;
   vertical-align:bottom;
   white-space:nowrap;
@@ -2552,8 +2585,6 @@ ruby
  }
 #section {
 overflow: none;
-height: expression(window.screen.height - 39);
-width: window.screen.width;
 float:left;
 padding:10px;}
 .push{
@@ -2569,11 +2600,10 @@ padding:5px;
 position: fixed;
 bottom:0px;
 }
-@media print {
-    header, footer {
-        display: none;
-    }
-}
-
 </style>
-</body>
+<script>
+  function imprimirPagina() {
+      window.print();
+  }
+</script>
+</html>

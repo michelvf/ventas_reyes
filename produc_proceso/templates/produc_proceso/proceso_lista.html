@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Procesos de Producción - Sistema de Seguimiento de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-cogs me-2"></i>Procesos de Producción</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'produccion:proceso_crear' %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i> Nuevo Proceso
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="procesos-table" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Costo Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se cargarán vía AJAX -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#procesos-table').DataTable({
+            ajax: {
+                url: "{% url 'produccion:api_procesos' %}",
+                dataSrc: 'data'
+            },
+            columns: [
+                { 
+                    data: 'producto',
+                    render: function(data, type, row) {
+                        return data;
+                    }
+                },
+                { data: 'fecha_inicio' },
+                { data: 'fecha_fin' },
+                { 
+                    data: 'estado',
+                    render: function(data, type, row) {
+                        let badgeClass = 'bg-primary';
+                        if (data === 'En Proceso') {
+                            badgeClass = 'bg-warning';
+                        } else if (data === 'Finalizado') {
+                            badgeClass = 'bg-success';
+                        } else if (data === 'Cancelado') {
+                            badgeClass = 'bg-danger';
+                        }
+                        return '<span class="badge ' + badgeClass + '">' + data + '</span>';
+                    }
+                },
+                { 
+                    data: 'costo_total',
+                    render: function(data) {
+                        return '$' + data.toFixed(2);
+                    }
+                },
+                { 
+                    data: 'id',
+                    orderable: false,
+                    render: function(data) {
+                        return `
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="/procesos/${data}/" class="btn btn-outline-primary" title="Ver detalle">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/procesos/${data}/editar/" class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+            ]
+        });
+    });
+</script>
+{% endblock %}

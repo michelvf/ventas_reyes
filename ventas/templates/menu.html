@@ -40,7 +40,6 @@
                   <a href="{% url 'reporte_venta_mensual' %}" class="nav-link">Ventas en un Mes, de todos los Puntos de Ventas</a>
                   <a href="{% url 'create-barcode' %}" class="nav-link">Códigos de Barra</a>
                   <a href="#" class="nav-link">Estudio Inventario</a>
-
                   <span class="mt-3 mb-1"><strong>Respaldo</strong></span>
                   <a href="{% url 'backup_restore' %}" class="nav-link">Guardar o Cargar Base de Datos</a>
                 </nav>
@@ -79,36 +78,27 @@
           </nav>
         </li>
         <li class="nav-item">
-          <a href="" class="nav-link with-sub">Producción</a>
-          <nav class="az-menu-sub">
+          <a href="#" class="nav-link with-sub">Producción</a>
+          <div class="az-menu-sub">
+            <div>
+              <nav class="nav">
             <a href="{% url 'categorias_list' %}" class="nav-link">Categorias</a>
 	          <a href="{% url 'productos_list' %}" class="nav-link">Pruductos</a>
             <a href="{% url 'produccion_list' %}" class="nav-link">Producción</a>
             <a href="{% url 'salida_list' %}" class="nav-link">Salida</a>
             <a href="{% url 'destino_list' %}" class="nav-link">Destino</a>
+            <span class="mt-3 mb-1">
+              <strong>Producción en Proceso</strong>
+            </span>
+            <a href="{% url 'produc_proceso:dashboard' %}" class="nav-link">Ver lo que produce</a>
+	          <a href="{% url 'productos_list' %}" class="nav-link">Pruductos</a>
+            <a href="{% url 'produccion_list' %}" class="nav-link">Producción</a>
+            <a href="{% url 'salida_list' %}" class="nav-link">Salida</a>
+            <a href="{% url 'destino_list' %}" class="nav-link">Destino</a>
           </nav>
+        </div>
+        </div>
         </li>
-        <!-- li class="nav-item">
-          <a href="" class="nav-link with-sub">Punto de Venta</a>
-          <nav class="az-menu-sub">
-            {% comment %}
-            <a href="{% url 'dashboard_puntoventa' %}" class="nav-link">DashBoard</a>
-            <a href="{% url 'transaccion_list' %}" class="nav-link">Transacciones</a>
-            <a href="{% url 'existencia_mensual' %}" class="nav-link">Existencia Mensual</a>
-            <a href="{% url 'detalle_venta_list' %}" class="nav-link">Detalle Ventas</a>
-            <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a>
-            {% endcomment %}
-            {% comment %} <a href="{% url 'almacen_list' %}" class="nav-link">Almacén</a> {% endcomment %}
-            <a href="{% url 'producto_list' %}" class="nav-link">Productos</a>
-            {% comment %} <a href="{% url 'venta_list' %}" class="nav-link">Ventas</a> {% endcomment %}
-            <a href="{% url 'cliente_list' %}" class="nav-link">Clientes</a>
-            {% comment %} <a href="{% url 'proveedor_list' %}" class="nav-link">Proveedores</a> {% endcomment %}
-            {% comment %} <a href="{% url 'categoria_list' %}" class="nav-link">Categorias</a> {% endcomment %}
-            {% comment %} <a href="{% url 'puntodeventa_list' %}" class="nav-link">Punto de Ventas</a> {% endcomment %}
-            {% comment %} <a href="{% url 'envio_list' %}" class="nav-link">Envíos</a> {% endcomment %}
-            
-          </nav>
-        </li -->
         <!-- li class="nav-item">
           <a href="" class="nav-link with-sub"><i class="typcn typcn-document"></i> Pages</a>
           <nav class="az-menu-sub">

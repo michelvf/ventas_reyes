@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.views import View
 
 # Create your views here.
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -27,7 +31,36 @@ from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
 from .forms import UnidadMedidaForm
 
-import numpy as np
+def factura_pdf(request, pk):
+    """Generate PDF for a specific invoice"""
+    factura = get_object_or_404(Factura, pk=pk)
+    template_path = 'facturas/Factura.html'
+    
+    # Get the context data
+    context = {
+        'factura': factura,
+        'request': request,
+    }
+    
+    # Render the template with the context
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    # Create PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="factura_{factura.numero}.pdf"'
+    
+    # Create PDF using xhtml2pdf
+    pisa_status = pisa.CreatePDF(
+        html, 
+        dest=response,
+    )
+    
+    # If error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('Temenos algún error <pre>' + html + '</pre>')
+    return response
+
 
 
 class RegistrarAlmacenView(CreateView):
@@ -585,7 +618,8 @@ def crear_factura(request):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura creada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
                 else:
                     # Si el formset no es válido, eliminamos la factura
                     factura.delete()
@@ -605,8 +639,9 @@ def editar_factura(request, pk):
     
     if factura.estado != 'pendiente' and factura.estado != 'pagada':
         messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
-        return redirect('factura_detail', pk=factura.pk)
-    
+        # return redirect('factura_detail', pk=factura.pk)
+        return redirect('ver_factura', pk=factura.pk)
+
     if request.method == 'POST':
         form = FacturaForm(request.POST, instance=factura)
         if form.is_valid():
@@ -618,7 +653,8 @@ def editar_factura(request, pk):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura actualizada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
     else:
         form = FacturaForm(instance=factura)
         formset = DetalleFacturaFormSet(instance=factura)
@@ -777,7 +813,8 @@ def get_facturas_cliente_json(request, cliente_id):
                 'value': factura.estado
             },
             'acciones': f'''
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            # <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
             '''
