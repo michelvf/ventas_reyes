@@ -268,18 +268,23 @@
   </tr>
   {% endif %}
  {% endfor %}
- {% if factura.detalles.all|length < 8 %}
-  {% for %}
- <tr style='height:14.25pt'>
-  <td class='x70' style='height:14.25pt;'></td>
-  <td colspan='3' class='x142'></td>
-  <td class='x73'></td>
-  <td class='x64'></td>
-  <td colspan='2' class='x143'></td>
-  <td colspan='2' class='x120'></td>
-  <td class='x65'></td>
-</tr>
-{% endif %}
+ {% with factura.detalles.all|length as total %}
+  {% if total < 8 %}  
+      {% with resultado=total|add:"8" %}
+         {%  comment %}{% for a in resultado %} {%  endcomment %}
+          <tr style='height:14.25pt'>
+            <td class='x70' style='height:14.25pt;'>agregar {{ a }} resultado: {{ resultado }}, total: {{ total }}</td>
+            <td colspan='3' class='x142'></td>
+            <td class='x73'></td>
+            <td class='x64'></td>
+            <td colspan='2' class='x143'></td>
+            <td colspan='2' class='x120'></td>
+            <td class='x65'></td>
+          </tr>
+          {%  comment %} {% endfor %} {%  endcomment %}
+    {% endwith %}  
+  {% endif %}
+{% endwith %}
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
