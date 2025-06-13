@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }} - Sistema de Seguimiento de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-plus-circle me-2"></i>{{ titulo }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Proceso: {{ proceso.producto.nombre }} ({{ proceso.fecha_inicio }})</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.material.id_for_label }}" class="form-label">Material</label>
+                        {{ form.material.errors }}
+                        <select name="{{ form.material.name }}" id="{{ form.material.id_for_label }}" 
+                                class="form-select {% if form.material.errors %}is-invalid{% endif %}" required>
+                            <option value="">Seleccione un material</option>
+                            {% for choice in form.material.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.material.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.cantidad.id_for_label }}" class="form-label">Cantidad</label>
+                        {{ form.cantidad.errors }}
+                        <input type="number" name="{{ form.cantidad.name }}" id="{{ form.cantidad.id_for_label }}" 
+                               class="form-control {% if form.cantidad.errors %}is-invalid{% endif %}" 
+                               value="{{ form.cantidad.value|default:'' }}" step="0.01" min="0.01" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.fecha.id_for_label }}" class="form-label">Fecha</label>
+                        {{ form.fecha.errors }}
+                        <input type="date" name="{{ form.fecha.name }}" id="{{ form.fecha.id_for_label }}" 
+                               class="form-control {% if form.fecha.errors %}is-invalid{% endif %}" 
+                               value="{{ form.fecha.value|date:'Y-m-d'|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.notas.id_for_label }}" class="form-label">Notas</label>
+                        {{ form.notas.errors }}
+                        <textarea name="{{ form.notas.name }}" id="{{ form.notas.id_for_label }}" 
+                                  class="form-control {% if form.notas.errors %}is-invalid{% endif %}" 
+                                  rows="2">{{ form.notas.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'produccion:proceso_detalle' pk=proceso.id %}" class="btn btn-outline-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
