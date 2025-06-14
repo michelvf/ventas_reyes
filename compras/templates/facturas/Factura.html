@@ -268,6 +268,31 @@
   </tr>
   {% endif %}
  {% endfor %}
+ {% if columnas %}
+  {% for col in columnas %}
+    {% if col|divisibleby:"2" %}
+      <tr style='height:14.25pt'>
+        <td class='x70' style='height:14.25pt;'></td>
+        <td colspan='3' class='x142'>-----------</td>
+        <td class='x73'>--</td>
+        <td class='x64'></td>
+        <td colspan='2' class='x143'>----</td>
+        <td colspan='2' class='x120'>----</td>
+        <td class='x65'>----</td>
+      </tr>
+    {% else %}
+      <tr style='height:14.25pt'>
+        <td class='x69' style='height:14.25pt;'></td>
+        <td colspan='3' class='x136'>-----------</td>
+        <td class='x74'>--</td>
+        <td class='x66'></td>
+        <td colspan='2' class='x171'>----</td>
+        <td colspan='2' class='x119'>----</td>
+        <td class='x63'>----</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+ {% endif %}
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
@@ -314,6 +339,11 @@
  </tr>
 </table>
 
+</div>
+<div>
+  <p>
+    ------------------------------------------------------------------------------------------------------------------------------------
+  </p>
 </div>
 <div class="botones" style="display: flex;justify-content: flex-end;unicode-bidi: isolate;">
   <a href="#" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
