@@ -241,7 +241,7 @@
         00{{ forloop.counter }}
       {% endif %}
     </td>
-    <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
+    <td colspan='3' class='x136'>{{ factura.detalles.all|length }} {{ detalle.producto.nombre|upper }}</td>
     <td class='x74'>{{ detalle.producto.codigo }}</td>
     <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
     <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>
@@ -268,6 +268,7 @@
   </tr>
   {% endif %}
  {% endfor %}
+<<<<<<< HEAD
  {% if columnas %}
   {% for col in columnas %}
     {% if col|divisibleby:"2" %}
@@ -293,6 +294,20 @@
     {% endif %}
   {% endfor %}
  {% endif %}
+=======
+ {% if factura.detalles.all|length < 8 %}
+  {% for %}
+ <tr style='height:14.25pt'>
+  <td class='x70' style='height:14.25pt;'></td>
+  <td colspan='3' class='x142'></td>
+  <td class='x73'></td>
+  <td class='x64'></td>
+  <td colspan='2' class='x143'></td>
+  <td colspan='2' class='x120'></td>
+  <td class='x65'></td>
+</tr>
+{% endif %}
+>>>>>>> a3f73b279ec1ce4aee6894137f2b04a5bd00973c
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
@@ -338,7 +353,9 @@
   <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
  </tr>
 </table>
-
+<div>
+  <p>-------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
 </div>
 <div>
   <p>
@@ -354,6 +371,7 @@
   </a>
 </div>
 </div>
+
 
 </body>
 <style>
