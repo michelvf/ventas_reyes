@@ -810,7 +810,7 @@ def get_facturas_cliente_json(request, cliente_id):
                 'value': factura.estado
             },
             'acciones': f'''
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
             '''

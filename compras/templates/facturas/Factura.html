@@ -24,9 +24,10 @@
     border-color: #ffc10;display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
       <i class="fas fa-edit me-1"></i> Editar
     </a>
-    <a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
+    <!-- a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
       <i class="fas fa-arrow-left me-1"></i> Volver
-    </a>
+    </a -->
+    <button onclick="history.back()" style="border-width: 0;line-height: 1.538;padding: 12px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">Volver</button>
   </div>
 <bodyclass='x21'>
 
@@ -268,7 +269,6 @@
   </tr>
   {% endif %}
  {% endfor %}
-<<<<<<< HEAD
  {% if columnas %}
   {% for col in columnas %}
     {% if col|divisibleby:"2" %}
@@ -294,20 +294,6 @@
     {% endif %}
   {% endfor %}
  {% endif %}
-=======
- {% if factura.detalles.all|length < 8 %}
-  {% for %}
- <tr style='height:14.25pt'>
-  <td class='x70' style='height:14.25pt;'></td>
-  <td colspan='3' class='x142'></td>
-  <td class='x73'></td>
-  <td class='x64'></td>
-  <td colspan='2' class='x143'></td>
-  <td colspan='2' class='x120'></td>
-  <td class='x65'></td>
-</tr>
-{% endif %}
->>>>>>> a3f73b279ec1ce4aee6894137f2b04a5bd00973c
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
@@ -353,9 +339,6 @@
   <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
  </tr>
 </table>
-<div>
-  <p>-------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
-</div>
 </div>
 <div>
   <p>
