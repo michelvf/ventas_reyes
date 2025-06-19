@@ -36,13 +36,46 @@
                 <h5 class="card-title mb-0">Información del Cliente</h5>
             </div>
             <div class="card-body">
-                <p><strong>Nombre completo:</strong> {{ cliente.nombre|upper }} {{ cliente.apellido|upper }}</p>
-                <p><strong>Negocio:</strong> {{ cliente.negocio|upper }}</p>
-                <p><strong>Dirección:</strong> {{ cliente.direccion|upper }}</p>
-                <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
-                <p><strong>Email:</strong> {{ cliente.email|default:"No registrado" }}</p>
-                <p><strong>Carné de Identidad:</strong> {{ cliente.ci }}</p>
-                <p><strong>Fecha de registro:</strong> {{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
+                <p>
+                    <strong>Nombre completo:</strong> {{ cliente.nombre|upper }}
+                    {% if cliente.apellido %}
+                        {{ cliente.apellido|upper }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Negocio:</strong>
+                    {% if cliente.negocio %}
+                        {{ cliente.negocio|upper }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Dirección:</strong>
+                    {% if cliente.direccion %}
+                        {{ cliente.direccion|upper }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Teléfono:</strong>
+                    {% if cliente.telefono %}
+                        {{ cliente.telefono }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Email:</strong>
+                    {{ cliente.email|default:"No registrado" }}
+                </p>
+                <p>
+                    <strong>Carné de Identidad:</strong>
+                    {% if cliente.ci %}
+                        {{ cliente.ci }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Fecha de registro:</strong>
+                    {% if cliente.fecha_registro %}
+                    {{ cliente.fecha_registro|date:"d/m/Y h:i a" }}
+                    {% endif %}
+                </p>
             </div>
         </div>
     </div>
@@ -62,6 +95,7 @@
                             <tr>
                                 <th>Número</th>
                                 <th>Fecha</th>
+                                <th>Prod.</th>
                                 <th>Total</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
@@ -73,6 +107,7 @@
                             <tr id="factura-cliente-{{ factura.id }}">
                                 <td>{{ factura.numero }}</td>
                                 <td data-order="{{ factura.fecha_emision|date:'Y-m-d' }}">{{ factura.fecha_emision|date:"d/m/Y" }}</td>
+                                <td data-order="{{ factura.cantidad_produccto }}">{{ factura.cantidad_producto }}</td>
                                 <td data-order="{{ factura.total }}">$ {{ factura.total }}</td>
                                 <td>
                                     {% if factura.estado == 'pendiente' %}
@@ -134,6 +169,7 @@
                 columns: [
                     { data: 'numero' },
                     { data: 'fecha.display' },
+                    { data: 'cantidad_producto.display' },
                     { data: 'total.display' },
                     { data: 'estado.display' },
                     { data: 'acciones' },

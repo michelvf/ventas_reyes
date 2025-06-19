@@ -24,9 +24,10 @@
     border-color: #ffc10;display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
       <i class="fas fa-edit me-1"></i> Editar
     </a>
-    <a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
+    <!-- a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
       <i class="fas fa-arrow-left me-1"></i> Volver
-    </a>
+    </a -->
+    <button onclick="history.back()" style="border-width: 0;line-height: 1.538;padding: 12px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">Volver</button>
   </div>
 <bodyclass='x21'>
 
@@ -241,7 +242,7 @@
         00{{ forloop.counter }}
       {% endif %}
     </td>
-    <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
+    <td colspan='3' class='x136'>{{ factura.detalles.all|length }} {{ detalle.producto.nombre|upper }}</td>
     <td class='x74'>{{ detalle.producto.codigo }}</td>
     <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
     <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>
@@ -268,6 +269,31 @@
   </tr>
   {% endif %}
  {% endfor %}
+ {% if columnas %}
+  {% for col in columnas %}
+    {% if col|divisibleby:"2" %}
+      <tr style='height:14.25pt'>
+        <td class='x70' style='height:14.25pt;'></td>
+        <td colspan='3' class='x142'>-----------</td>
+        <td class='x73'>--</td>
+        <td class='x64'></td>
+        <td colspan='2' class='x143'>----</td>
+        <td colspan='2' class='x120'>----</td>
+        <td class='x65'>----</td>
+      </tr>
+    {% else %}
+      <tr style='height:14.25pt'>
+        <td class='x69' style='height:14.25pt;'></td>
+        <td colspan='3' class='x136'>-----------</td>
+        <td class='x74'>--</td>
+        <td class='x66'></td>
+        <td colspan='2' class='x171'>----</td>
+        <td colspan='2' class='x119'>----</td>
+        <td class='x63'>----</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+ {% endif %}
  <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
  </tr>
@@ -313,7 +339,11 @@
   <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
  </tr>
 </table>
-
+</div>
+<div style="text-align:center;">
+  <p>
+    ------------------------------------------------------------------------------------------------------------------------------------
+  </p>
 </div>
 <div class="botones" style="display: flex;justify-content: flex-end;unicode-bidi: isolate;">
   <a href="#" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
@@ -324,6 +354,7 @@
   </a>
 </div>
 </div>
+
 
 </body>
 <style>

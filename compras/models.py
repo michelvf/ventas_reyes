@@ -189,7 +189,8 @@ class Factura(models.Model):
     fecha_emision = models.DateTimeField(default=timezone.now)
     tipo = models.CharField(max_length=1,choices=TIPO_FACTURA, default='c')
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
-    subtotal = models.FloatField( default=0)
+    subtotal = models.FloatField(default=0)
+    cantidad_producto = models.IntegerField(default=0)
     # iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     #bonificacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     bonificacion = models.FloatField(default=0)
@@ -246,6 +247,7 @@ class Factura(models.Model):
     
     def calcular_totales(self):
         detalles = self.detalles.all()
+        self.cantidad_producto = detalles.count()
         self.subtotal = sum(detalle.subtotal for detalle in detalles)
         # self.iva = self.subtotal * 0.19  # IVA del 19%
         self.total = self.subtotal + self.bonificacion
@@ -266,8 +268,8 @@ class DetalleFactura(models.Model):
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
-    cantidad = models.PositiveIntegerField(default=1)
-    # cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
+    # cantidad = models.PositiveIntegerField(default=1)
+    cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
     # precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
     # cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     precio_unitario = models.FloatField(validators=[MinValueValidator(0.0)])
@@ -281,7 +283,8 @@ class DetalleFactura(models.Model):
             self.precio_unitario = self.producto.precio
         
         # Calcular subtotal
-        self.subtotal = self.cantidad * self.precio_unitario
+        subto = self.cantidad * self.precio_unitario
+        self.subtotal = round(subto, ndigits=2)
         
         super().save(*args, **kwargs)
         

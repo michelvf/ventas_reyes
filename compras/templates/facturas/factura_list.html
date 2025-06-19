@@ -43,6 +43,7 @@
                         <th>Tipo</th>
                         <th>Fecha</th>
                         <th>Total</th>
+                        <th>Cant. Prod.</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -61,6 +62,7 @@
                         </td>
                         <td>{{ factura.fecha_emision|date:"d/m/Y H:i" }}</td>
                         <td>${{ factura.total }}</td>
+                        <td>{{ factura.cantidad_producto }}</td>
                         <td>
                             {% if factura.estado == 'pendiente' %}
                             <span class="badge bg-warning">Pendiente</span>
@@ -117,7 +119,7 @@
             language: language,
             pageLength: 20,
             ordering: false,
-            order: [[2, 'desc']],
+            order: [[3, 'desc']],
         }); 
     </script>
 {% endblock js %}
