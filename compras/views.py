@@ -845,7 +845,7 @@ class VerFactura(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.object.cantidad_producto < 8:
-            columnas = 14 - self.object.cantidad_producto
+            columnas = 13 - self.object.cantidad_producto
             context["columnas"] = range(columnas)
         else:
             context["columnas"] = None
