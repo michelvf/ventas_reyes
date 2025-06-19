@@ -42,6 +42,7 @@
                         <th>Teléfono</th>
                         <th>Email</th>
                         <th>Cant. Fact/Recep</th>
+                        <th class="text-center">Moto Total</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -49,9 +50,17 @@
                     {% for cliente in clientes %}
                     <tr>
                         <td>{{ cliente.nombre|upper }} {{ cliente.apellido|upper }}</td>
-                        <td>{{ cliente.telefono }}</td>
+                        <td>
+                            {% if cliente.telefono %}
+                                {{ cliente.telefono }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
                         <td>{{ cliente.email|default:"-" }}</td>
-                         <td>{{ cliente.facturas.count }}</td>
+                        <td>{{ cliente.facturas.count }}</td>
+                        <td class="dt-type-numeric">$ {{ cliente.total_facturado|floatformat:2 }}</td>
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="{% url 'cliente_detail' cliente.id %}" class="btn btn-sm btn-info">
@@ -90,13 +99,18 @@
         $(document).ready(function() {
             $('#clientes-table').DataTable({
                 responsive: true,
-                language: language,  /* {
+                language: language,
+                /*
+                {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-                }, */
+                },
+                */
                 columnDefs: [
                     { responsivePriority: 1, targets: 0 }, // Documento
                     { responsivePriority: 2, targets: 1 }, // Nombre
-                    { responsivePriority: 3, targets: 3 }, // Acciones
+                    { responsivePriority: 3, targets: 2 }, // Acciones
+                    { responsivePriority: 4, targets: 3 }, // Acciones
+                    { responsivePriority: 5, targets: 4 }, // Acciones
                     { orderable: false, targets: 3 } // No ordenar la columna de acciones
                 ]
             });

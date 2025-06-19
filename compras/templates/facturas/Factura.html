@@ -86,18 +86,18 @@
       <div style='display:block;overflow:hidden;line-height:0;'></div>
     </td>
     <td rowspan='3' class='x130' style='border-bottom:1px solid #0070C0;height:24.75pt;'>
-      <div style='display:block;overflow:hidden;'>Importe &gt;</div>
+      <div style='display:block;overflow:hidden;'>Importe </div>
     </td>
-    <td rowspan='2' class='x166' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
-      <div style='display:block;overflow:hidden;'>x</div>
+    <td rowspan='3' class='x166' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
+      <div style='display:block;overflow:hidden;'></div>
     </td>
-    <td rowspan='2' class='x131' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
+    <td rowspan='3' class='x131' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
       <div style='display:block;overflow:hidden;'>CUP</div>
     </td>
-    <td rowspan='2' class='x131' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
+    <td rowspan='3' class='x131' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
       <div style='display:block;overflow:hidden;'>-&gt;&gt;</div>
     </td>
-    <td rowspan='2' class='x163' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
+    <td rowspan='3' class='x163' style='border-bottom:1px solid #0070C0;height:12.75pt;'>
       <div style='display:block;overflow:hidden;'>$
         <span style='mso-spacerun:yes;'></span>{{ factura.subtotal }}
         <span style='mso-spacerun:yes;'></span>
@@ -122,10 +122,10 @@
     <td class='x89'>{{ factura.fecha_emision|date:"d"}}</td>
     <td class='x89'>{{ factura.fecha_emision|date:"m"}}</td>
     <td class='x90'>{{ factura.fecha_emision|date:"Y"}}</td>
-    <td class='x168'></td>
-    <td class='x91'>MLC</td>
+    <td class='x89' colspan="4"></td>
+    <!-- td class='x91'>MLC</td>
     <td class='x107'>--</td>
-    <td class='x165'>&nbsp;--&nbsp;</td>
+    <td class='x165'>&nbsp;--&nbsp;</td -->
  </tr>
  <tr style='height:4.5pt'>
   <td colspan='11' class='x28' style='height:3pt;'>
@@ -327,16 +327,16 @@
   <td class='x51'><div style='float:right'>Bonificación:</div></td>
   <td class='x173' align='right'>{{ factura.bonificacion }} %</td>
  </tr>
- <tr style='height:12.75pt'>
+ <tr style='height:20.75pt'>
   <td colspan='2' class='x111' style='height:12.75pt;'>89012247469</td>
   <td class='x109'></td>
   <td colspan='4' class='x112 ci'>
       {{ factura.cliente.ci|default:'--'|striptags|safe }}
   </td>
   <td class='x21'></td>
-  <td class='x95'></td>
-  <td class='x95'>TOTAL:</td>
-  <td class='x96' align='right' style="border-top: 1px solid #000;">${{ factura.total }}</td>
+  <!-- td class='x95'></td -->
+  <td class='x95' colspan="2">TOTAL:</td>
+  <td class='x96' align='right' style="border-top: 1px solid #000; border-bottom-style:double;">${{ factura.total }}</td>
  </tr>
 </table>
 </div>
@@ -1457,8 +1457,8 @@ ruby
  white-space:nowrap;
  background:#DCEAF7;
  color:#000000;
- font-size:11pt;
- font-weight:400;
+ font-size:15pt;
+ font-weight: bold;
  font-style:normal;
  font-family:Calibri,sans-serif;
  }
@@ -1469,7 +1469,7 @@ ruby
  white-space:nowrap;
  background:auto;
  color:#000000;
- font-size:11pt;
+ font-size:15pt;
  font-weight:700;
  font-style:normal;
  font-family:Calibri,sans-serif;

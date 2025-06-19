@@ -10,6 +10,7 @@ from django.views.generic import ListView
 from django.views import View
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy, reverse
 from datetime import timedelta
 from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
@@ -60,7 +61,6 @@ def factura_pdf(request, pk):
     if pisa_status.err:
         return HttpResponse('Temenos algún error <pre>' + html + '</pre>')
     return response
-
 
 
 class RegistrarAlmacenView(CreateView):
@@ -459,12 +459,14 @@ class ClienteListView(ListView):
     model = Cliente
     template_name = 'facturas/cliente_list.html'
     context_object_name = 'clientes'
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
-    #     context['facturas'] = self.facturas.all().count()
-    #     return context
+
+    def get_queryset(self):
+        """
+        Anota el total facturado para cada cliente.
+        """
+        return Cliente.objects.annotate(
+            total_facturado=Coalesce(Sum('facturas__total'), 0.00)
+        ).order_by('nombre', 'apellido')
 
 
 class ClienteDetailView(DetailView):
@@ -849,3 +851,8 @@ class VerFactura(DetailView):
             context["columnas"] = None
         
         return context
+
+
+class PruebaBT(TemplateView):
+    """Probando Bootstrap Table View"""
+    template_name = "compras/bt.html"
