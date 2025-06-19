@@ -95,7 +95,7 @@
                             <tr>
                                 <th>Número</th>
                                 <th>Fecha</th>
-                                <th>Total</th>
+                                <!-- th>Total</th -->
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -167,15 +167,22 @@
                 columns: [
                     { data: 'numero' },
                     { data: 'fecha.display' },
-                    { data: 'total.display' },
+                    /*
+                    { data: 'total.display',
+                    
+                        //render: function( data, type, row ) {
+                        //    render: $.fn.dataTable.render.number( ',', '.', 2).display(data)
+                        //}
+                    },
+                    */
                     { data: 'estado.display' },
                     { data: 'acciones' },
                 ],
                 columnDefs: [
                     { responsivePriority: 1, targets: 0 }, // Número de factura
-                    { responsivePriority: 2, targets: 3 }, // Estado
-                    { responsivePriority: 3, targets: 4 }, // Acciones
-                    { orderable: false, targets: 4 }, // No ordenar la columna de acciones
+                    { responsivePriority: 2, targets: 2 }, // Estado
+                    { responsivePriority: 3, targets: 3 }, // Acciones
+                    { orderable: false, targets: 3 }, // No ordenar la columna de acciones
                     {   
                         targets: 1, // Columna de fecha
                         render: function(data, type, row) {
