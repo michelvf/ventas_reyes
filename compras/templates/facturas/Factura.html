@@ -17,18 +17,50 @@
 <body link='blue' vlink='purple' bgcolor='white'>
 <div id='section'>
 <div id='table_0' sheetName='Recepción'>
-  <div style="display:flex;margin-bottom: 1.5rem;align-items: center;justify-content: flex-end" class="botones">
+  <div style="display:flex;justify-content: space-between;" class="botones">
+      <div>
+        {% if factura.estado == 'pendiente' or factura.estado == 'pagada'%}
+        <div class="d-flex justify-content-between">
+          {% if factura.estado != 'pagada' %}
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada' %}" style="border-width: 0;
+                    line-height: 1.538;padding: 9px 20px;border-radius: 0;
+                    transition: none;min-height: 8px;color: #fff;background-color: #17a2b8;  
+                    border-color: #ffc10; display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+                        <i class="fas fa-wallet me-1"></i>Pagada
+                    </a>
+          {% endif %}
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'pagada-eleventa' %}" style="border-width: 0;
+                    line-height: 1.538;padding: 9px 20px;border-radius: 0;
+                    transition: none;min-height: 8px;color: #fff;background-color: #3bb001;
+                    border-color: #ffc10; display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+                        <i class="fas fa-check-circle me-1"></i>Pagada y Registrada en Eleventa
+                    </a>
+                    <a href="{% url 'factura_cambiar_estado' factura.id 'anulada' %}" style="border-width: 0;
+                    line-height: 1.538;padding: 9px 20px;border-radius: 0;
+                    transition: none;min-height: 8px;color: #fff;background-color: #dc3545;
+                    border-color: #ffc10; display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+                        <i class="fas fa-times-circle me-1"></i> Anular Recepción
+                    </a>
+        </div>
+        {% endif %}
+      </div>
+
+  
+  <div style="margin-bottom: 1.5rem;align-items: center;justify-content: flex-end">
+    {% if factura.estado == 'pendiente' or factura.estado == 'pagada'%}
     <a href="{% url 'factura_update' factura.id %}" style="border-width: 0;
     line-height: 1.538;padding: 9px 20px;border-radius: 0;
     transition: none;min-height: 8px;color: #1c273c;background-color: #ffc107;
-    border-color: #ffc10;display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
+    border-color: #ffc10; display: inline-block;text-align: center;vertical-align: middle;user-select: none;border: 1px solid transparent;    text-decoration: none;">
       <i class="fas fa-edit me-1"></i> Editar
     </a>
+    {% endif %}
     <!-- a href="{% url 'factura_list' %}" style="border-width: 0;line-height: 1.538;padding: 9px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">
       <i class="fas fa-arrow-left me-1"></i> Volver
     </a -->
     <button onclick="history.back()" style="border-width: 0;line-height: 1.538;padding: 12px 20px;border-radius: 0;transition: none;min-height: 8px;color: #fff;background-color: #7987a1;border-color: #7987a1;display: inline-block;text-align: center;vertical-align: middle;user-select: none;text-decoration: none; ms-2">Volver</button>
   </div>
+</div>
 <bodyclass='x21'>
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt'>
@@ -340,7 +372,7 @@
  </tr>
 </table>
 </div>
-<div>
+<div style="text-align:center;">
   <p>
     ------------------------------------------------------------------------------------------------------------------------------------
   </p>

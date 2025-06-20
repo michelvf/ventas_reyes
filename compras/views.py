@@ -626,7 +626,8 @@ def crear_factura(request):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura creada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
                 else:
                     # Si el formset no es válido, eliminamos la factura
                     factura.delete()
@@ -646,8 +647,9 @@ def editar_factura(request, pk):
     
     if factura.estado != 'pendiente' and factura.estado != 'pagada':
         messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
-        return redirect('factura_detail', pk=factura.pk)
-    
+        # return redirect('factura_detail', pk=factura.pk)
+        return redirect('ver_factura', pk=factura.pk)
+
     if request.method == 'POST':
         form = FacturaForm(request.POST, instance=factura)
         if form.is_valid():
@@ -659,7 +661,8 @@ def editar_factura(request, pk):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura actualizada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
     else:
         form = FacturaForm(instance=factura)
         formset = DetalleFacturaFormSet(instance=factura)
@@ -692,7 +695,7 @@ def cambiar_estado_factura(request, pk, estado):
             messages.success(request, f"Estado de factura cambiado a {estado}.")
 
     
-    return redirect('factura_detail', pk=factura.pk)
+    return redirect('ver_factura', pk=factura.pk)
 
 
 # @login_required
@@ -744,7 +747,7 @@ def get_facturas_json(request):
         # Generar HTML para los botones de acción
         acciones_html = f'''
         <div class="btn-group" role="group">
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
         '''
@@ -809,6 +812,10 @@ def get_facturas_cliente_json(request, cliente_id):
                 'display': factura.fecha_emision.strftime("%d/%m/%Y"),
                 'timestamp': factura.fecha_emision.timestamp()
             },
+            'cantidad_producto': {
+                'display': factura.cantidad_producto,
+                'value': factura.cantidad_producto,
+            },
             'total': {
                 'display': f"$ {factura.total}",
                 'value': float(factura.total)
@@ -838,7 +845,7 @@ class VerFactura(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.object.cantidad_producto < 8:
-            columnas = 8 - self.object.cantidad_producto
+            columnas = 13 - self.object.cantidad_producto
             context["columnas"] = range(columnas)
         else:
             context["columnas"] = None

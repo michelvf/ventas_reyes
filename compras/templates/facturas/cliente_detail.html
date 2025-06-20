@@ -95,7 +95,8 @@
                             <tr>
                                 <th>Número</th>
                                 <th>Fecha</th>
-                                <!-- th>Total</th -->
+                                <th>Prod.</th>
+                                <th>Total</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -106,6 +107,7 @@
                             <tr id="factura-cliente-{{ factura.id }}">
                                 <td>{{ factura.numero }}</td>
                                 <td data-order="{{ factura.fecha_emision|date:'Y-m-d' }}">{{ factura.fecha_emision|date:"d/m/Y" }}</td>
+                                <td data-order="{{ factura.cantidad_produccto }}">{{ factura.cantidad_producto }}</td>
                                 <td data-order="{{ factura.total }}">$ {{ factura.total }}</td>
                                 <td>
                                     {% if factura.estado == 'pendiente' %}
@@ -167,14 +169,15 @@
                 columns: [
                     { data: 'numero' },
                     { data: 'fecha.display' },
-                    /*
+                    { data: 'cantidad_producto.display' },
+                    
                     { data: 'total.display',
                     
                         //render: function( data, type, row ) {
                         //    render: $.fn.dataTable.render.number( ',', '.', 2).display(data)
                         //}
                     },
-                    */
+                    
                     { data: 'estado.display' },
                     { data: 'acciones' },
                 ],
