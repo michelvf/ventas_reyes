@@ -459,6 +459,12 @@ class ClienteListView(ListView):
     model = Cliente
     template_name = 'facturas/cliente_list.html'
     context_object_name = 'clientes'
+    
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
+    #     context['facturas'] = self.facturas.all().count()
+    #     return context
 
 
 class ClienteDetailView(DetailView):
@@ -810,7 +816,7 @@ def get_facturas_cliente_json(request, cliente_id):
                 'value': factura.estado
             },
             'acciones': f'''
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
             '''
@@ -826,3 +832,13 @@ class VerFactura(DetailView):
     model = Factura
     template_name = "facturas/Factura.html"
     context_object_name = 'factura'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object.cantidad_producto < 8:
+            columnas = 13 - self.object.cantidad_producto
+            context["columnas"] = range(columnas)
+        else:
+            context["columnas"] = None
+        
+        return context

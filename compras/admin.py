@@ -50,7 +50,7 @@ class ProductoAdmin(admin.ModelAdmin):
 
 @admin.register(Factura)
 class FacturaAdmin(admin.ModelAdmin):
-    list_display = ('numero', 'cliente', 'fecha_emision', 'subtotal', 'total', 'estado')
+    list_display = ('numero', 'cliente', 'fecha_emision', 'subtotal', 'total', 'estado', 'cantidad_producto')
     list_filter = ('fecha_emision', 'estado')
     search_fields = ('numero', 'cliente__nombre', 'cliente__apellido', 'cliente__documento')
     readonly_fields = ('numero', 'subtotal', 'total')

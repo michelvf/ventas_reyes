@@ -41,6 +41,7 @@
                         <th>Nombre</th>
                         <th>Teléfono</th>
                         <th>Email</th>
+                        <th>Cant. Fact/Recep</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -50,6 +51,7 @@
                         <td>{{ cliente.nombre|upper }} {{ cliente.apellido|upper }}</td>
                         <td>{{ cliente.telefono }}</td>
                         <td>{{ cliente.email|default:"-" }}</td>
+                         <td>{{ cliente.facturas.count }}</td>
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="{% url 'cliente_detail' cliente.id %}" class="btn btn-sm btn-info">
