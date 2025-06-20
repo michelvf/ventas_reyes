@@ -10,6 +10,7 @@ from django.views.generic import ListView
 from django.views import View
 from django.utils import timezone
 from django.db.models import Sum, F
+from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy, reverse
 from datetime import timedelta
 from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
@@ -60,7 +61,6 @@ def factura_pdf(request, pk):
     if pisa_status.err:
         return HttpResponse('Temenos algún error <pre>' + html + '</pre>')
     return response
-
 
 
 class RegistrarAlmacenView(CreateView):
@@ -459,12 +459,14 @@ class ClienteListView(ListView):
     model = Cliente
     template_name = 'facturas/cliente_list.html'
     context_object_name = 'clientes'
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
-    #     context['facturas'] = self.facturas.all().count()
-    #     return context
+
+    def get_queryset(self):
+        """
+        Anota el total facturado para cada cliente.
+        """
+        return Cliente.objects.annotate(
+            total_facturado=Coalesce(Sum('facturas__total'), 0.00)
+        ).order_by('nombre', 'apellido')
 
 
 class ClienteDetailView(DetailView):
@@ -624,7 +626,8 @@ def crear_factura(request):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura creada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
                 else:
                     # Si el formset no es válido, eliminamos la factura
                     factura.delete()
@@ -644,8 +647,9 @@ def editar_factura(request, pk):
     
     if factura.estado != 'pendiente' and factura.estado != 'pagada':
         messages.error(request, "No se puede editar una factura que no esté en estado pendiente.")
-        return redirect('factura_detail', pk=factura.pk)
-    
+        # return redirect('factura_detail', pk=factura.pk)
+        return redirect('ver_factura', pk=factura.pk)
+
     if request.method == 'POST':
         form = FacturaForm(request.POST, instance=factura)
         if form.is_valid():
@@ -657,7 +661,8 @@ def editar_factura(request, pk):
                     formset.save()
                     factura.calcular_totales()
                     messages.success(request, "Factura actualizada exitosamente.")
-                    return redirect('factura_detail', pk=factura.pk)
+                    # return redirect('factura_detail', pk=factura.pk)
+                    return redirect('ver_factura', pk=factura.pk)
     else:
         form = FacturaForm(instance=factura)
         formset = DetalleFacturaFormSet(instance=factura)
@@ -690,7 +695,7 @@ def cambiar_estado_factura(request, pk, estado):
             messages.success(request, f"Estado de factura cambiado a {estado}.")
 
     
-    return redirect('factura_detail', pk=factura.pk)
+    return redirect('ver_factura', pk=factura.pk)
 
 
 # @login_required
@@ -742,7 +747,7 @@ def get_facturas_json(request):
         # Generar HTML para los botones de acción
         acciones_html = f'''
         <div class="btn-group" role="group">
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
         '''
@@ -807,6 +812,10 @@ def get_facturas_cliente_json(request, cliente_id):
                 'display': factura.fecha_emision.strftime("%d/%m/%Y"),
                 'timestamp': factura.fecha_emision.timestamp()
             },
+            'cantidad_producto': {
+                'display': factura.cantidad_producto,
+                'value': factura.cantidad_producto,
+            },
             'total': {
                 'display': f"$ {factura.total}",
                 'value': float(factura.total)
@@ -842,3 +851,8 @@ class VerFactura(DetailView):
             context["columnas"] = None
         
         return context
+
+
+class PruebaBT(TemplateView):
+    """Probando Bootstrap Table View"""
+    template_name = "compras/bt.html"

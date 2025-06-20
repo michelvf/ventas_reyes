@@ -35,7 +35,7 @@ class fileUpdate(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['fecha']
+        ordering = ['-fecha']
         indexes = [
             models.Index(fields=["id"]),
             models.Index(fields=["fecha"]),
