@@ -119,14 +119,14 @@
                                 </td>
                                 <td>
                                     {% if form.instance.pk %}
-                                    {{ form.DELETE }}
-                                    <label for="{{ form.DELETE.id_for_label }}" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </label>
-                                    {% else %}
-                                    <button type="button" class="btn btn-sm btn-danger remove-form">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                        {{ form.DELETE }}
+                                        <label for="{{ form.DELETE.id_for_label }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </label>
+                                        {% else %}
+                                        <button type="button" class="btn btn-sm btn-danger remove-form">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -197,6 +197,29 @@
             }
         }
         
+        // Eliminar un detalle usando event delegation
+        $("#detalles-table").on("click", ".remove-form", function() {
+            console.log('borrar el tr');
+            const row = $(this).closest("tr");
+            if ($("#detalles-table tbody tr.detalle-form").length > 1) {
+                row.remove();
+                updateFormsetIndexes();
+                updateTotals();
+            } else {
+                alert("Debe mantener al menos un producto en la factura.");
+            }
+        });
+        
+        // Función para actualizar los índices del formset
+        function updateFormsetIndexes() {
+            $("#detalles-table tbody tr.detalle-form").each(function(index) {
+                $(this).find("input, select, textarea").each(function() {
+                    updateElementIndex(this, prefix, index);
+                });
+                totalForms.val($("#detalles-table tbody tr.detalle-form").length);
+            });
+        }
+        
         // Agregar un nuevo detalle
         $("#add-detalle").click(function(e) {
             e.preventDefault();
@@ -224,12 +247,15 @@
         });
         
         // Eliminar un detalle
-        $(".remove-form").click(function(e) {
+        //function borrarTr() {
+        $('.remove-form').click(function(e) {
             e.preventDefault();
-            $(this).closest('tr').remove();
-            updateTotals();
+            console.log('Elimiar una fila');
+                // $(this).closest('tr').remove();
+                // updateTotals();
         });
-        
+        //}
+
         // Obtener información del producto seleccionado
         function bindEvents() {
             $('select[id$="-producto"]').change(function() {
@@ -244,7 +270,7 @@
                             // Actualizar subtotal
                             const cantidad = parseFloat(row.find('input[id$="-cantidad"]').val()).toFixed(2) || 0;
                             const subtotal = cantidad * data.precio;
-                            console.log(`BindEvents> el subtotal del calculo: ${subtotal}`)
+                            // console.log(`BindEvents> el subtotal del calculo: ${subtotal}`)
                             row.find('.subtotal').text('$' + subtotal.toFixed(2));
                             
                             updateTotals();
@@ -261,7 +287,7 @@
                 const precio = parseFloat(precioText).toFixed(2) || 0;
                 
                 const subtotal = cantidad * precio;
-                console.log(`Del producto, la cantidad es: ${cantidad}, el precio es: ${precio}, y el subtotal: ${subtotal.toFixed(2)}`)
+                // console.log(`Del producto, la cantidad es: ${cantidad}, el precio es: ${precio}, y el subtotal: ${subtotal.toFixed(2)}`)
                 row.find('.subtotal').text('$' + subtotal.toFixed(2));
                 
                 updateTotals();
@@ -293,7 +319,7 @@
                 subtotal += value;
             });
 
-            console.log(`Subtotal: ${subtotal.toFixed(2)}`);
+            // console.log(`Subtotal: ${subtotal.toFixed(2)}`);
 
             //const iva = subtotal * 0.19;
             const bonificacion = parseFloat(document.getElementById('id_bonificacion').value);
