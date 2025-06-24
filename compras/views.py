@@ -695,7 +695,7 @@ def cambiar_estado_factura(request, pk, estado):
             messages.success(request, f"Estado de factura cambiado a {estado}.")
 
     
-    return redirect('factura_detail', pk=factura.pk)
+    return redirect('ver_factura', pk=factura.pk)
 
 
 # @login_required
@@ -747,7 +747,7 @@ def get_facturas_json(request):
         # Generar HTML para los botones de acción
         acciones_html = f'''
         <div class="btn-group" role="group">
-            <a href="{reverse('factura_detail', args=[factura.id])}" class="btn btn-sm btn-info">
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
                 <i class="fas fa-eye"></i>
             </a>
         '''

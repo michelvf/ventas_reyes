@@ -223,10 +223,10 @@
             },
             { data: 'total',
                 render: function(data, type, row) {
-                    if (data > 0) {
+			    if ( row.tipo_cuenta.siglas == 'CR' ) {
                        // return `<span class="positivo">${data}</span>`
                         return '<span class="positivo text-end">' + formatCurrency(data) + '</span>'
-                    } else if (data < 0) {
+                    } else {
                         // return `<span class="negativo">${data}</span>`
                         return '<span class="negativo">' + formatCurrency(data) + '</span>'
                     }

@@ -1,5 +1,9 @@
 .positivo {
-    color: rgba(39, 131, 39);
+    /* color: rgba(39, 131, 39); 
+    color: rgba(0,176,80);
+    color: rgba(39,141,71);
+    color: #3bb001; */
+    color: rgba(25,135,84,1);
 }
 .negativo {
     color: rgba(255,0,0,1.00);

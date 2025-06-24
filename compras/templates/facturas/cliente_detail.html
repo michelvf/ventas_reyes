@@ -6,6 +6,12 @@
 {% block css %}
     <!-- link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" / -->
     <link rel="stylesheet" href="{% static 'assets/lib/datatables/full/datatables.min.css' %}" />
+    <style>
+        .line-through-row td {
+            text-decoration: line-through;
+            color: #888; /* Optional: make text appear subdued */
+          }
+    </style>
 {% endblock css %}
 
 {% block content %}
@@ -213,7 +219,12 @@
                             return data //.display || data;
                         }
                     }
-                ]
+                ],
+                rowCallback: function(row, data) {
+                    if (data.estado.display === '<span class="badge bg-danger">Anulada</span>') {
+                      $(row).addClass('line-through-row');
+                    }
+                }
             });
             
             // Toast para notificaciones
