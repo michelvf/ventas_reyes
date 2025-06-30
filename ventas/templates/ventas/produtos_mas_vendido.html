@@ -152,6 +152,7 @@
             //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
 
+        /*
         $.ajax({
             url: '/api/departamentos/',
             type: 'get',
@@ -173,6 +174,7 @@
                 }
             }
         });
+        */
 
         // Capturar lo que envía el formulario, procesarlo, y enviarlo por POST
         // a la API
@@ -213,6 +215,7 @@
                 }
             });
         })
+        
 
         $('.errorlist').css('color', 'red')
 

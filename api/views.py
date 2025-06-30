@@ -126,14 +126,17 @@ class ProductMasVendidoAPI(APIView):
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             departamento = serializer.validated_data['departamento']
-            produ_mas_vendido = (Productos.objects
+            # produ_mas_vendido = (Productos.objects
+            produ_mas_vendido = (Ventas.objects
+                .values('id_producto__producto', 'id_producto__id_departamento_id')
                 .filter(
-                    productos__fecha__range=[start_date, end_date],
-                    id_departamento__in=departamento
+                    # productos__fecha__range=[start_date, end_date],
+                    fecha__range=[start_date, end_date],
+                    id_producto__id_departamento_id__in=departamento
                 )
                 .annotate(
-                    total_vendido=Sum('productos__cantidad'),
-                    total_ventas=Sum('productos__calculo')
+                    total_vendido=Sum('cantidad'),
+                    total_ventas=Sum('calculo')
                 )
                 .order_by('-total_vendido')[:10]
             )
