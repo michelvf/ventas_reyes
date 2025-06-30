@@ -14,19 +14,21 @@
       .marca-anulada {
         display: none;
       }
-      body::before {
-        content: "Anulada";
-        position: fixed;
-        top: 17%;
-        left: 35%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 13em;
-        color: rgba(100, 100, 100, 0.12);
-        z-index: 9999;
-        font-weight: bold;
-        pointer-events: none;
-        white-space: nowrap;
-      }
+      {% if factura.estado == "anulada" %}
+        body::before {
+          content: "Anulada";
+          position: fixed;
+          top: 17%;
+          left: 35%;
+          transform: translate(-50%, -50%) rotate(-30deg);
+          font-size: 13em;
+          color: rgba(100, 100, 100, 0.3);
+          z-index: 9999;
+          font-weight: bold;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+      {% endif %}
     }
 
     .marca-anulada {

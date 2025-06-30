@@ -910,6 +910,13 @@ class LacteosUpdate(UpdateView):
 class CalculoPorcientoPrecio(TemplateView):
     template_name = 'ventas/calculo_porciento.html'
 
+
+class PruebaView(TemplateView):
+    """Para Pruebas"""
+    template_name = 'ventas/probar.html'
+
+
+
 """
 Punto la Parada:
 21.73781, -82.75416
