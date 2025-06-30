@@ -104,8 +104,6 @@ class ProductXDeptoListView(APIView):
     """
     Api to show the cant of Product for Departament
     """
-    # queryset = Departamentos.objects.annotate(num_prod=Count('producto'))
-    # serializer = ProductXDepto()
 
     def get(self, request):
         departamentos = Departamentos.objects.annotate(num_prod=Count('productos'))
@@ -126,19 +124,23 @@ class ProductMasVendidoAPI(APIView):
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             departamento = serializer.validated_data['departamento']
-            # produ_mas_vendido = (Productos.objects
-            produ_mas_vendido = (Ventas.objects
-                .values('id_producto__producto', 'id_producto__id_departamento_id')
+            produ_mas_vendido = (
+                Ventas.objects
                 .filter(
-                    # productos__fecha__range=[start_date, end_date],
-                    fecha__range=[start_date, end_date],
-                    id_producto__id_departamento_id__in=departamento
+                    #total_ventas__gt=0,
+                    id_producto__id_departamento__in=departamento,
+                    fecha__range=(start_date, end_date)
+                )
+                .values(
+                    'id_producto__producto',
+                #    'id_producto__id_departamento__departamento'
                 )
                 .annotate(
-                    total_vendido=Sum('cantidad'),
+                    cantidad_vendido=Sum('cantidad'),
                     total_ventas=Sum('calculo')
                 )
-                .order_by('-total_vendido')[:10]
+                # .order_by('-total_ventas')
+                .order_by('-cantidad_vendido')
             )
             serializer_other = ProdMasVendidosSerializer(produ_mas_vendido, many=True)
             return Response(serializer_other.data, status=status.HTTP_200_OK)

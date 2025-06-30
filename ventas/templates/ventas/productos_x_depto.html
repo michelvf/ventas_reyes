@@ -34,23 +34,23 @@
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/datatables-somethink.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/moment.min.js' %}" /></script>
 <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
-<script>
+<script type="text/javascript">
     new DataTable('#venta', {
-    language: language,
-    ajax: {
-        url: '/ventas/api_prod_x_depto/',
-        dataSrc: ''
-    },
-    columns: [
-        { data: 'departamento'},
-        { data: 'num_prod'},
-    ],
-    order: [[1, 'desc']],
-    pageLength: 20,
-});
+        language: language,
+        ajax: {
+            url: '/ventas/api_prod_x_depto/',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'departamento'},
+            { data: 'num_prod'},
+        ],
+        order: [[1, 'desc']],
+        pageLength: 20,
+    });
 </script>
 {% endblock %}

@@ -5,8 +5,8 @@
 {% block title %} | Productos más ventidos{% endblock title %}
 
 {% block css %}
-    <link href="{% static 'assets/lib/select2/css/select2.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/daterangepicker.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'assets/lib/select2/css/select2.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/daterangepicker.css' %}" />
     <link rel="stylesheet" href="{% static 'css/datatables-somethink.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/positivo.css' %}" />
 {% endblock css %}
@@ -49,7 +49,6 @@
         <table id="prodmasvendidos" class="display table table-striped table-hover table-bordered" >
             <thead>
                 <tr>
-                    <th>Código</th>
                     <th>Producto</th>
                     <th>Cantidad Vendida</th>
                     <th>Total Vendido</th>
@@ -77,6 +76,7 @@
     <script src="{% static 'js/datatables-somethink.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}" /></script>
     <script type="text/javascript" src="{% static 'js/chart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/datatables/formatted-numbers.js' %}"></script>
     <script type="text/javascript">
 
     // Tomar la fecha de hoy
@@ -229,9 +229,8 @@
             language: language,
             data: data,
             columns: [
-                { data: 'codigo' },
                 { data: 'producto' },
-                { data: 'total_vendido' },
+                { data: 'cantidad_vendido' },
                 { data: 'total_ventas',
                     'sClass': 'right dt-type-numeric',
                     render: function (data, type, full, meta ) {
@@ -240,6 +239,19 @@
                 },
                 //{ data: 'id_departamento.departamento' }
             ],
+            columnDefs: [{
+                targets: 2, // la columna monetaria
+                /*
+                render: function (data, type, row) {
+                  if (type === 'display') {
+                    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(data);
+                  }
+                  return data; // para 'sort' y 'type', devolver valor crudo
+                }
+                */
+                type: 'formatted-num',
+              }],
+            //ordering: false,
             order: [[2, 'desc']]
           })
         }
@@ -266,7 +278,7 @@
                   labels: data.map(label => label.producto),
                   datasets: [{
                     label: '10 Productos más vendidos',
-                    data: data.map(value => value.total_vendido),
+                    data: data.map(value => value.cantidad_vendido),
                     backgroundColor: '#2458b9',
                     // fill: false,
                     // borderColor: 'rgb(49, 107, 201)',
