@@ -112,6 +112,7 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/lib/select2/js/select2-2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/select2/js/i18n/es.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
@@ -388,38 +389,52 @@
             placeholder: 'Buscar un Departamento...',
             //minimumInputLength: 2,
             ajax: {
+                type: 'GET',
                 url: '/api/departamentos/',
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
-                return {
-                    q: params.departamento // término de búsqueda
-                };
+                    return {
+                        departamento: params.term // término de búsqueda
+                    };
                 },
                 processResults: function (data) {
-                return {
-                    results: data.map(function (item) {
-                    return {
-                        id: item.id,
-                        text: item.departamento
-                    };
-                    })
-                };
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.id,
+                            text: item.departamento
+                        })
+                    });
+
+                    return { results };
+
                 },
                 cache: true
             },
-            
+            language: "es",
             placeholder: 'Escoja uno',
             searchInputPlaceholder: 'Buscar',
             width: 400,
             multiple: true,
             minimumInputLength: 1,
+            templateResult: templateResult,
         });
       
         $('.select2-no-search').select2({
           minimumResultsForSearch: Infinity,
           placeholder: 'Escoja uno'
         });
+
+        function templateResult(data)
+        {
+            if(data.loading)
+            {
+                return data.departamento
+            }
+            //console.log(data)
+            return data.text
+        }
         
       });
 
