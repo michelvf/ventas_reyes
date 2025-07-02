@@ -1,4 +1,6 @@
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
+
+{% load static %}
 
 {% block title %}
     {% if factura %}Editar Recepción{% else %}Nueva Recepción{% endif %} - Sistema de Recepción
@@ -136,9 +138,14 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between mb-4">
-                <button type="button" id="add-detalle" class="btn btn-success">
-                    <i class="fas fa-plus-circle me-1"></i> Agregar Producto
-                </button>
+                <div class="row">
+                    <div class="col-1">
+                        <button type="button" id="add-detalle" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-1"></i> Agregar Producto
+                        </button>
+                    </div>
+                </div>
+                
                 
                 <div class="card" style="width: 300px;">
                     <div class="card-body">
@@ -174,6 +181,9 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="{% static 'assets/lib/select2/js/select2-2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/lib/select2/js/i18n/es.js' %}"></script>
+    
 <script>
     $(document).ready(function() {
         // Variables para el formset
@@ -338,6 +348,8 @@
         // Inicializar eventos
         bindEvents();
         updateTotals();
+
+        $('#id_detalles-0-producto').select2();
     });
 </script>
-{% endblock %}
+{% endblock js %}

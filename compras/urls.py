@@ -9,7 +9,7 @@ from .views import ResumeSemanalView, ResumenProductoSemanalView, ResumenSemanal
 from .views import ClienteListView, ClienteCreateView, ClienteUpdateView, ClienteDetailView, ClienteDeleteView
 from .views import ProductoCreateView, ProductoDeleteView, ProductoDetailView, ProductoListView, ProductosListView, ProductoUpdateView, get_producto_info
 from .views import FacturaListView, FacturaDetailView, crear_factura, editar_factura, eliminar_factura, cambiar_estado_factura
-from .views import VerFactura, PruebaBT
+from .views import VerFactura, PruebaBT, APIProducto
 from api.views import UltimoPrecio, CompraLecheSemana
 from . import views
 
@@ -78,6 +78,7 @@ urlpatterns = [
     # API para actualización en tiempo real
     path('api/facturas/', views.get_facturas_json, name='api_facturas'),
     path('api/clientes/<int:cliente_id>/facturas/', views.get_facturas_cliente_json, name='api_facturas_cliente'),
+    path('api/productos_facturas/', APIProducto.as_view(), name='api_productos_facturas'),
 
     # Pruebas
     path('pruebaBT/', PruebaBT.as_view(), name="pruebaBT"),
