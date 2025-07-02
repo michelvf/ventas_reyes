@@ -1,8 +1,10 @@
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
+
+{% load static  %}
 
 {% block title %}
     {% if factura %}Editar Recepción{% else %}Nueva Recepción{% endif %} - Sistema de Recepción
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -136,10 +138,13 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between mb-4">
-                <button type="button" id="add-detalle" class="btn btn-success">
-                    <i class="fas fa-plus-circle me-1"></i> Agregar Producto
-                </button>
-                
+                <div class="row">
+                    <div class="col">
+                        <button type="button" id="add-detalle" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-1"></i> Agregar Producto
+                        </button>
+                    </div>
+                </div>
                 <div class="card" style="width: 300px;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
@@ -171,9 +176,12 @@
         </form>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
 
 {% block js %}
+<script type="text/javascript" src="{% static 'assets/lib/select2/js/select2-2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/lib/select2/js/i18n/es.js' %}"></script>
+    
 <script>
     $(document).ready(function() {
         // Variables para el formset
@@ -251,8 +259,8 @@
         $('.remove-form').click(function(e) {
             e.preventDefault();
             console.log('Elimiar una fila');
-                // $(this).closest('tr').remove();
-                // updateTotals();
+            $(this).closest('tr').remove();
+            updateTotals();
         });
         //}
 
@@ -338,6 +346,15 @@
         // Inicializar eventos
         bindEvents();
         updateTotals();
+
+        /*
+        $('select[id^="id_detalles-"][id$="-producto"]').each(function() {
+            // Aplica Select2 al primero dentro de su fila (por si hay más de un select por fila)
+            $(this).select2({
+                //width: 'resolve'  // adapta el ancho si es necesario
+            });
+        });
+        */
     });
 </script>
-{% endblock %}
+{% endblock js %}

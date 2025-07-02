@@ -212,7 +212,7 @@
         //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
-    /*
+    
     $.ajax({
         url: '/api/departamentos/',
         type: 'get',
@@ -220,21 +220,23 @@
         dataType: 'json',
         success: function(response) {
 
-            var len = response.length;
-
-            $("#depa").empty();
-            for( var i = 0; i<len; i++){
-                var id = response[i]['id'];
-                var name = response[i]['departamento'];
-                if (id == 1) {
-                    $("#depa").append("<option value='"+id+"' selected>"+name+"</option>");
-                } else {
-                    $("#depa").append("<option value='"+id+"'>"+name+"</option>");
-                }
-            }
+            $.each(response, function(indice,fila){
+                //console.log(fila)
+                $("#depa").append("<option value='"+fila.id+"'>"+fila.departamento+"</option>");
+            }),
+            $("#depa").select2({
+                language: "es",
+                placeholder: 'Escoja uno',
+                searchInputPlaceholder: 'Buscar',
+                width: 400,
+                //multiple: true,
+                //minimumInputLength: 1,
+            })
+            
+            //}
         }
     });
-    */
+    
 
     // Capturar lo que envía el formulario, procesarlo, y enviarlo por POST
     // a la API
@@ -383,58 +385,11 @@
     }
 
     $(document).ready(function(){
-        
-        $('#depa').select2({
-            
-            placeholder: 'Buscar un Departamento...',
-            //minimumInputLength: 2,
-            ajax: {
-                type: 'GET',
-                url: '/api/departamentos/',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        departamento: params.term // término de búsqueda
-                    };
-                },
-                processResults: function (data) {
-                    var results = [];
-                    $.each(data, function(index, item) {
-                        results.push({
-                            id: item.id,
-                            text: item.departamento
-                        })
-                    });
-
-                    return { results };
-
-                },
-                cache: true
-            },
-            language: "es",
-            placeholder: 'Escoja uno',
-            searchInputPlaceholder: 'Buscar',
-            width: 400,
-            multiple: true,
-            minimumInputLength: 1,
-            templateResult: templateResult,
-        });
       
         $('.select2-no-search').select2({
           minimumResultsForSearch: Infinity,
           placeholder: 'Escoja uno'
         });
-
-        function templateResult(data)
-        {
-            if(data.loading)
-            {
-                return data.departamento
-            }
-            //console.log(data)
-            return data.text
-        }
         
       });
 

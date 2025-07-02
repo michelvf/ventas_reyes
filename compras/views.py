@@ -853,6 +853,29 @@ class VerFactura(DetailView):
         return context
 
 
+class APIProductos(View):
+    """
+    API Productos para la Factura
+    """
+    def get(self, request):
+        productos = Producto.objects.select_related('unidadmedida').all()
+        data = []
+
+        for producto in productos:
+            data.append({
+                "id": producto.id,
+                "producto": producto.nombre,
+                "codigo": producto.codigo,
+                "descripcion": producto.descripcion,
+                "unidad_medida": {
+                    "nombre": producto.unidadmedida.nombre,
+                    "sigla": producto.unidadmedida.sigla,
+                },
+            })
+
+        return JsonResponse(data, safe=False)
+
+
 class PruebaBT(TemplateView):
     """Probando Bootstrap Table View"""
     template_name = "compras/bt.html"
