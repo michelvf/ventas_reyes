@@ -107,8 +107,9 @@
                     //spanRespuesta.style.color = "green";
                 //} else {
 		    const indiceCoincidencia = listaNombres.indexOf(valorInput);
-		    const enalce = "/compras/productos/" + indiceCoincidencia + "/editar/"
-		    spanRespuesta.textContent = "❌ Ya este producto existe, puede cambiarle el precio, no influye en las facturas o informes ya hecho anteriormente. Para editar el producto<a href="+ enlace + ">Click aquí</a>";
+		    //const enalce = "/compras/productos/" + indiceCoincidencia + "/editar/"
+		    //spanRespuesta.textContent = "❌ Ya este producto existe, puede cambiarle el precio, no influye en las facturas o informes ya hecho anteriormente. Para editar el producto<a href="+ enlace + ">Click aquí</a>";
+		    spanRespuesta.textContent = "❌ Ya este producto existe, puede cambiarle el precio, no influye en las facturas o informes ya hecho anteriormente.";
                     spanRespuesta.style.color = "red";
                 }
             })
