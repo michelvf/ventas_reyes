@@ -1,1 +1,47 @@
-<h1>BT Template </h1>
+{% extends 'base.html' %}
+
+{% load static  %}
+
+{% block title %}
+     - Sistema de Bootstrap Table
+{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'assets/lib/bt/bootstrap-table.min.css' %}" />
+    
+{% endblock css %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Ver Bootstrap table</h1>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table id="table">
+        
+         </table>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'assets/lib/bt/bootstrap-table.min.js' %}"></script>
+   
+<script>
+    $(document).ready(function() {
+        $('#table').bootstrapTable({
+            url: '/compras/api/productos/',
+            columns: [{
+              field: 'id',
+              title: 'ID'
+            }, {
+              field: 'producto',
+              title: 'Producto'
+            }, {
+              field: 'codigo',
+              title: 'Código'
+            }],
+          })
+    });
+</script>
+{% endblock js %}

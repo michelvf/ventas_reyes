@@ -14,22 +14,21 @@
       .marca-anulada {
         display: none;
       }
-
-  {% if factura.estado == "anulada" %}
-      body::before {
-        content: "Anulada";
-        position: fixed;
-        top: 17%;
-        left: 35%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 13em;
-        color: rgba(100, 100, 100, 0.12);
-        z-index: 9999;
-        font-weight: bold;
-        pointer-events: none;
-        white-space: nowrap;
-      }
-  {% endif %}
+      {% if factura.estado == "anulada" %}
+        body::before {
+          content: "Anulada";
+          position: fixed;
+          top: 17%;
+          left: 35%;
+          transform: translate(-50%, -50%) rotate(-30deg);
+          font-size: 13em;
+          color: rgba(100, 100, 100, 0.3);
+          z-index: 9999;
+          font-weight: bold;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+      {% endif %}
     }
 
     .marca-anulada {
@@ -96,7 +95,7 @@
 
 <table style='border-collapse:collapse;table-layout:fixed;width:496pt;z-index: 0;'>
   {% if factura.estado == "anulada" %}
-  <span class="marca-anulada">Anulada</span>
+    <span class="marca-anulada">Anulada</span>
   {% endif %}
   <col class='x21' style='background:none;width:36pt'>
   <col class='x21' style='background:none;width:250pt'>
@@ -126,9 +125,9 @@
   <td colspan='2' class='x146'>&lt;&lt; Original &gt;&gt;</td>
   <td class='x48' colspan='2'>
     {% if factura.tipo == "c" %}
-    Recepción No
+      Recepción No
     {% else %}
-    Factura No
+      Factura No
     {% endif %}
   </td>
   <td class='x105' align='right'>{{ factura.numero }}</td>
@@ -173,9 +172,9 @@
 <tr style='height:9.75pt'>
   <td colspan='2' rowspan='2' class='x138' style='border-bottom:1px solid #0070C0;height:21pt;'>
     {% if factura.tipo == "c" %}
-    INFORME DE RECEPCIÓN
+      INFORME DE RECEPCIÓN
     {% else %}
-    FACTURA
+      FACTURA
     {% endif %}
   </td>
   <td class='x86'></td>
@@ -200,23 +199,23 @@
 </tr>
 <tr style='height:14.25pt'>
   {% if factura.tipo == 'c' %}
-  <td colspan='2' class='x78' style='height:14.25pt;'>Suministrado por:</td>
+    <td colspan='2' class='x78' style='height:14.25pt;'>Suministrado por:</td>
   {% else %}
-  <td colspan='2' class='x78' style='height:14.25pt;'>Recepcionado por:</td>
+    <td colspan='2' class='x78' style='height:14.25pt;'>Recepcionado por:</td>
   {% endif %}
-  <td class='x78'></td>
-  <td class='x78'></td>
+    <td class='x78'></td>
+    <td class='x78'></td>
   {% if factura.tipo == 'c' %}
-  <td colspan='3' class='x81'>Recepcionado por:</td>
+    <td colspan='3' class='x81'>Recepcionado por:</td>
   {% else %}
-  <td colspan='3' class='x81'>Suministrador:</td>
+    <td colspan='3' class='x81'>Suministrador:</td>
   {% endif %}
   
   <td colspan='4' class='x49'></td>
 </tr>
 <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Nombre:</td>
-  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
+  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}&nbsp;{% if factura.cliente.apellido %}{{ factura.cliente.apellido }} {% endif %}</td>
   <td colspan='5' class='x127'>Alberto M. Reyes Nicot</td>
   <td colspan='2' class='x23'>
     <font class="font15" style="text-decoration: none;">Ctta. CUP:&nbsp;</font>
@@ -227,24 +226,24 @@
   <td class='x44' style='height:12.75pt;'>Negocio:</td>
   <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
     {% if factura.cliente.negocio %}
-    &nbsp;{{ factura.cliente.negocio }}
+      &nbsp;{{ factura.cliente.negocio }}
     {% else %}
-    &nbsp;--
+      &nbsp;--
     {% endif %}
   </td>
   <td colspan='5' class='x127'>MiPYME A &amp; A Reyes S.U.R.L.</td>
   <td colspan='2' class='x23'>
-    <font class="font15" style="text-decoration: none;">Ctta. MLC:</font>
-    <font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font>
+    <font class="font15" style="text-decoration: none;"><!-- Ctta. MLC: --></font>
+    <font class="font4" style="text-decoration: none;"><!-- &nbsp;1299-7460-0134-9332 --></font>
   </td>
 </tr>
 <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;overflow:hidden;'>Dirección:</td>
   <td colspan='3' class='x117' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
     {% if factura.cliente.direccion %}
-    &nbsp;{{ factura.cliente.direccion }}
+      &nbsp;{{ factura.cliente.direccion }}
     {% else %}
-    &nbsp;--
+      &nbsp;--
     {% endif %}
   </td>
   <td colspan='5' class='x127'>Carretera Sur Km. 2 1/2 Presa La Jagua</td>
@@ -254,9 +253,9 @@
   <td class='x44' style='height:12.75pt;'>Teléfono:</td>
   <td colspan='3' class='x113' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>
     {% if factura.cliente.telefono %}
-    &nbsp;{{ factura.cliente.telefono }}
+      &nbsp;{{ factura.cliente.telefono }}
     {% else %}
-    &nbsp;--
+      &nbsp;--
     {% endif %}
   </td>
   <td colspan='5' class='x124'>+53 59889677</td>
@@ -297,68 +296,68 @@
 <td colspan="7"></td>
 </tr -->
 {% for detalle in factura.detalles.all %}
-{% if forloop.counter0|divisibleby:2 %}
-<tr style='height:14.25pt'>
-  <td class='x69' style='height:14.25pt;'>
-    {% if forloop.counter > 9 %}
-    0{{ forloop.counter }}
-    {% elif forloop.counter > 99 %}
-    {{ forloop.counter }}
-    {% else %}
-    00{{ forloop.counter }}
-    {% endif %}
-  </td>
-  <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
-  <td class='x74'>{{ detalle.producto.codigo }}</td>
-  <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
-  <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>
-  <td colspan='2' class='x119'>${{ detalle.precio_unitario|floatformat:2 }}</td>
-  <td class='x63' >${{ detalle.subtotal|floatformat:2 }}  </td>
-</tr>
-{% else %}
-<tr style='height:14.25pt'>
-  <td class='x70' style='height:14.25pt;'>
-    {% if forloop.counter > 9 %}
-    0{{ forloop.counter }}
-    {% elif forloop.counter > 99 %}
-    {{ forloop.counter }}
-    {% else %}
-    00{{ forloop.counter }}
-    {% endif %} 
-  </td>
-  <td colspan='3' class='x142'>{{ detalle.producto.nombre|upper }}</td>
-  <td class='x73'>{{ detalle.producto.codigo }}</td>
-  <td class='x64'>{{ detalle.producto.unidadmedida.sigla }}</td>
-  <td colspan='2' class='x143'>{{ detalle.cantidad }}</td>
-  <td colspan='2' class='x120'>${{ detalle.precio_unitario|floatformat:2 }}</td>
-  <td class='x65' >${{ detalle.subtotal|floatformat:2 }}  </td>
-</tr>
-{% endif %}
+  {% if forloop.counter0|divisibleby:2 %}
+    <tr style='height:14.25pt'>
+      <td class='x69' style='height:14.25pt;'>
+        {% if forloop.counter > 9 %}
+          0{{ forloop.counter }}
+        {% elif forloop.counter > 99 %}
+          {{ forloop.counter }}
+        {% else %}
+          00{{ forloop.counter }}
+        {% endif %}
+      </td>
+      <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
+      <td class='x74'>{{ detalle.producto.codigo }}</td>
+      <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
+      <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>
+      <td colspan='2' class='x119'>${{ detalle.precio_unitario|floatformat:2 }}</td>
+      <td class='x63' >${{ detalle.subtotal|floatformat:2 }}  </td>
+    </tr>
+  {% else %}
+    <tr style='height:14.25pt'>
+      <td class='x70' style='height:14.25pt;'>
+        {% if forloop.counter > 9 %}
+          0{{ forloop.counter }}
+        {% elif forloop.counter > 99 %}
+          {{ forloop.counter }}
+        {% else %}
+          00{{ forloop.counter }}
+        {% endif %} 
+      </td>
+      <td colspan='3' class='x142'>{{ detalle.producto.nombre|upper }}</td>
+      <td class='x73'>{{ detalle.producto.codigo }}</td>
+      <td class='x64'>{{ detalle.producto.unidadmedida.sigla }}</td>
+      <td colspan='2' class='x143'>{{ detalle.cantidad }}</td>
+      <td colspan='2' class='x120'>${{ detalle.precio_unitario|floatformat:2 }}</td>
+      <td class='x65' >${{ detalle.subtotal|floatformat:2 }}  </td>
+    </tr>
+  {% endif %}
 {% endfor %}
 {% if columnas %}
-{% for col in columnas %}
-{% if col|divisibleby:"2" %}
-<tr style='height:14.25pt'>
-  <td class='x70' style='height:14.25pt;'></td>
-  <td colspan='3' class='x142'>-----------</td>
-  <td class='x73'>--</td>
-  <td class='x64'></td>
-  <td colspan='2' class='x143'>----</td>
-  <td colspan='2' class='x120'>----</td>
-  <td class='x65'>----</td>
-</tr>
-{% else %}
-<tr style='height:14.25pt'>
-  <td class='x69' style='height:14.25pt;'></td>
-  <td colspan='3' class='x136'>-----------</td>
-  <td class='x74'>--</td>
-  <td class='x66'></td>
-  <td colspan='2' class='x171'>----</td>
-  <td colspan='2' class='x119'>----</td>
-  <td class='x63'>----</td>
-</tr>
-{% endif %}
-{% endfor %}
+  {% for col in columnas %}
+    {% if col|divisibleby:"2" %}
+      <tr style='height:14.25pt'>
+        <td class='x70' style='height:14.25pt;'></td>
+        <td colspan='3' class='x142'>-----------</td>
+        <td class='x73'>--</td>
+        <td class='x64'></td>
+        <td colspan='2' class='x143'>----</td>
+        <td colspan='2' class='x120'>----</td>
+        <td class='x65'>----</td>
+      </tr>
+    {% else %}
+      <tr style='height:14.25pt'>
+        <td class='x69' style='height:14.25pt;'></td>
+        <td colspan='3' class='x136'>-----------</td>
+        <td class='x74'>--</td>
+        <td class='x66'></td>
+        <td colspan='2' class='x171'>----</td>
+        <td colspan='2' class='x119'>----</td>
+        <td class='x63'>----</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
 {% endif %}
 <tr>
   <td colspan="11" style="border-top: 1px solid #0070C0;"></td>
@@ -387,7 +386,7 @@
 <tr style='height:12.75pt'>
   <td colspan='2' class='x110' style='height:12.75pt;'>Alberto M. Reyes Nicot</td>
   <td class='x21'></td>
-  <td class='x110'>{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
+  <td class='x110'>{{ factura.cliente.nombre }}&nbsp;{% if factura.cliente.apellido %} {{ factura.cliente.apellido }} {% endif %}</td>
   <td colspan='4' class='x110'></td>
   <td class='x49'></td>
   <td class='x51'><div style='float:right'>Bonificación:</div></td>
@@ -404,6 +403,15 @@
   <td class='x95' colspan="2">TOTAL:</td>
   <td class='x96' align='right' style="border-top: 1px solid #000; border-bottom-style:double;">${{ factura.total|floatformat:2 }}</td>
 </tr>
+{% if factura.observaciones %}
+<tr>
+  <td colspan="2" class='x108' style='height:14.25pt;'>Observaciones:</td>
+</tr>
+<tr>
+  <td></td>
+  <td colspan="5" class="x110">{{ factura.observaciones|truncatechars:130 }}</td>
+</tr>
+{% endif %}
 </table>
 </div>
 <div style="text-align:center;">

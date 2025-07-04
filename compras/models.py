@@ -125,7 +125,10 @@ class Cliente(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        if self.apellido:
+            return f"{self.nombre} {self.apellido}"
+        else:
+            return self.nombre
     
     class Meta:
         verbose_name = "Cliente"

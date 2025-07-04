@@ -184,7 +184,7 @@
 
     EfectivoActual()
     //new DataTable('#tabla', {
-    
+    var tipo = "";
     var table = $('#tabla').DataTable({
         //responsive: true,
         ajax: {
@@ -205,29 +205,27 @@
                 render: function(data) {
                     // return moment(data).format("DD/MM/YY hh:mm a");
                     // return moment(data).format("DD/MM/YY HH:mm");
-                    return moment(data).format("HH:mm");
+                    return moment(data).format("hh:mm a");
                 }
             },
             { data: 'comentario' },
             { data: 'tipo_cuenta.siglas',
-                // let tipo = data
                 render: function(data) {
+                    //var tipo = data;
                     if (data == 'CR') {
                         return `<span class="positivo">${data}</span>`
-                        //return '<span class="positivo">' + formatCurrency(data) + '</span>'
                     } else {
                         return `<span class="negativo">${data}</span>`
-                        //return '<span class="negativo">' + formatCurrency(data) + '</span>'
                     }
                 }
             },
             { data: 'total',
                 render: function(data, type, row) {
-			    if ( row.tipo_cuenta.siglas == 'CR' ) {
-                       // return `<span class="positivo">${data}</span>`
+                    //if (data > 0) {
+                    if (row.tipo_cuenta.siglas == 'CR') {
                         return '<span class="positivo text-end">' + formatCurrency(data) + '</span>'
                     } else {
-                        // return `<span class="negativo">${data}</span>`
+                    //} else if (data < 0) {
                         return '<span class="negativo">' + formatCurrency(data) + '</span>'
                     }
                 }
@@ -236,7 +234,6 @@
             { data: 'sub_total',
                 render: function(data, type, row) {
                     if (data > 0) {
-                    // return `<span class="positivo">${data}</span>`
                         return '<span class="positivo">' + formatCurrency(data) + '</span>'
                     } else if (data < 0) {
                         // return `<span class="negativo">${data}</span>`

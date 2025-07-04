@@ -15,6 +15,16 @@ class FicherosSubidosSerializer(serializers.ModelSerializer):
         fields = ('id', 'fecha')
 
 
+class ProductoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Producto Model
+    """
+
+    class Meta:
+        model = Productos
+        fields = ("id", "codigo", "producto", "imagen", "id_departamento")
+
+
 class DepartamentoSerializer(serializers.ModelSerializer):
     """
     Serializer for Departamentos Model 
@@ -112,20 +122,29 @@ class ProdMasVendidosVarSerializer(serializers.Serializer):
     departamento = serializers.MultipleChoiceField(choices=id_puntoVenta())
 
 
-class ProdMasVendidosSerializer(serializers.ModelSerializer):
+# class ProdMasVendidosSerializer(serializers.ModelSerializer):
+class ProdMasVendidosSerializer(serializers.Serializer):
     """
-    Products more sales
+    Products more sales, no se usa ModelSerializar porque la agrupación se hace
+    en la consulta de la vista
     """
-    total_vendido = serializers.IntegerField()
+    cantidad_vendido = serializers.IntegerField()
     total_ventas = serializers.IntegerField()
+    producto = serializers.CharField(source='id_producto__producto')
+    #departamento = serializers.CharField(source='id_producto__id_departamento__departamento')
+    
 
-    id_departamento=DepartamentoSerializer(
-        read_only=True
-    )
+    # id_departamento=DepartamentoSerializer(
+    #     read_only=True
+    # )
+    # id_producto=ProductoSerializer(
+    #     read_only=True
+    # )
 
-    class Meta:
-        model = Productos
-        fields  =["codigo", "producto", "total_vendido", "id_departamento", "total_ventas"]
+    # class Meta:
+    #     model = Ventas
+    #     # fields  =["id_producto", "cantidad_vendido", "id_departamento", "total_ventas"]
+    #     fields  =["id_producto", "cantidad_vendido", "total_ventas"]
 
 
 class LacteosSerializer(serializers.ModelSerializer):
