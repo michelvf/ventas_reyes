@@ -49,7 +49,7 @@
                 <tbody>
                     {% for cliente in clientes %}
                     <tr>
-                        <td>{{ cliente.nombre|upper }} {{ cliente.apellido|upper }}</td>
+                        <td>{{ cliente.nombre|upper }} {% if cliente.apellido %} {{ cliente.apellido|upper }} {% endif %}</td>
                         <td>
                             {% if cliente.telefono %}
                                 {{ cliente.telefono }}

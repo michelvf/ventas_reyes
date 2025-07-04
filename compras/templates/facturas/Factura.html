@@ -215,7 +215,7 @@
 </tr>
 <tr class='x23' style='height:12.75pt'>
   <td class='x44' style='height:12.75pt;'>Nombre:</td>
-  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
+  <td colspan='3' class='x115' style='border-right:1px solid #0070C0;border-bottom:1px solid #0070C0;'>&nbsp;{{ factura.cliente.nombre }}&nbsp;{% if factura.cliente.apellido %}{{ factura.cliente.apellido }} {% endif %}</td>
   <td colspan='5' class='x127'>Alberto M. Reyes Nicot</td>
   <td colspan='2' class='x23'>
     <font class="font15" style="text-decoration: none;">Ctta. CUP:&nbsp;</font>
@@ -233,8 +233,8 @@
   </td>
   <td colspan='5' class='x127'>MiPYME A &amp; A Reyes S.U.R.L.</td>
   <td colspan='2' class='x23'>
-    <font class="font15" style="text-decoration: none;">Ctta. MLC:</font>
-    <font class="font4" style="text-decoration: none;">&nbsp;1299-7460-0134-9332</font>
+    <font class="font15" style="text-decoration: none;"><!-- Ctta. MLC: --></font>
+    <font class="font4" style="text-decoration: none;"><!-- &nbsp;1299-7460-0134-9332 --></font>
   </td>
 </tr>
 <tr class='x23' style='height:12.75pt'>
@@ -386,7 +386,7 @@
 <tr style='height:12.75pt'>
   <td colspan='2' class='x110' style='height:12.75pt;'>Alberto M. Reyes Nicot</td>
   <td class='x21'></td>
-  <td class='x110'>{{ factura.cliente.nombre }}&nbsp;{{ factura.cliente.apellido }}</td>
+  <td class='x110'>{{ factura.cliente.nombre }}&nbsp;{% if factura.cliente.apellido %} {{ factura.cliente.apellido }} {% endif %}</td>
   <td colspan='4' class='x110'></td>
   <td class='x49'></td>
   <td class='x51'><div style='float:right'>Bonificación:</div></td>
