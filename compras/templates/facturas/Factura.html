@@ -307,7 +307,7 @@
     00{{ forloop.counter }}
     {% endif %}
   </td>
-  <td colspan='3' class='x136'>{{ factura.detalles.all|length }} {{ detalle.producto.nombre|upper }}</td>
+  <td colspan='3' class='x136'>{{ detalle.producto.nombre|upper }}</td>
   <td class='x74'>{{ detalle.producto.codigo }}</td>
   <td class='x66'>{{ detalle.producto.unidadmedida.sigla }}</td>
   <td colspan='2' class='x171'>{{ detalle.cantidad }}</td>

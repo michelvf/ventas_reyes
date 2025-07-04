@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% load static  %}
 
 {% block title %}
     {% if factura %}Editar Recepción{% else %}Nueva Recepción{% endif %} - Sistema de Recepción
-{% endblock %}
+{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'assets/lib/select2/css/select2-2.min.css' %}" />   
+{% endblock css %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -139,14 +143,12 @@
             </div>
             <div class="d-flex justify-content-between mb-4">
                 <div class="row">
-                    <div class="col-1">
+                    <div class="col">
                         <button type="button" id="add-detalle" class="btn btn-success">
                             <i class="fas fa-plus-circle me-1"></i> Agregar Producto
                         </button>
                     </div>
                 </div>
-                
-                
                 <div class="card" style="width: 300px;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
@@ -178,7 +180,7 @@
         </form>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
 
 {% block js %}
 <script type="text/javascript" src="{% static 'assets/lib/select2/js/select2-2.min.js' %}"></script>
@@ -261,8 +263,8 @@
         $('.remove-form').click(function(e) {
             e.preventDefault();
             console.log('Elimiar una fila');
-                // $(this).closest('tr').remove();
-                // updateTotals();
+            $(this).closest('tr').remove();
+            updateTotals();
         });
         //}
 
@@ -348,8 +350,21 @@
         // Inicializar eventos
         bindEvents();
         updateTotals();
+        
+        function aplicarSelect2() {
+            $('select[id^="id_detalles-"][id$="-producto"]').select2({
+                //width: 'resolve'
+            });
+        }
+        
+        aplicarSelect2();
 
-        $('#id_detalles-0-producto').select2();
+        // Llamar cada vez que se agregue un nuevo formulario
+        $('#add-detalle').on('click', function() {
+            // Suponiendo que esto añade un nuevo formulario
+            setTimeout(aplicarSelect2, 50);  // pequeño delay para asegurar que el nuevo select esté en el DOM
+        });
+        
     });
 </script>
 {% endblock js %}

@@ -853,27 +853,28 @@ class VerFactura(DetailView):
         return context
 
 
-class APIProducto(View):
+class APIProductos(View):
     """
-    API para ver los productos
+    API Productos para la Factura
     """
     def get(self, request):
         productos = Producto.objects.select_related('unidadmedida').all()
         data = []
-        for p in productos:
+
+        for producto in productos:
             data.append({
-                'id': p.id,
-                'nombre': p.nombre,
-                'codigo': p.codigo,
-                'descripcion': p.descripcion,
-                'precio': str(p.precio),  # Convertir Decimal a string para JSON
-                'unidadmedida': {
-                    'id': p.unidadmedida.id,
-                    'nombre': p.unidadmedida.nombre,
-                    'sigla': p.unidadmedida.sigla,
-                }
+                "id": producto.id,
+                "producto": producto.nombre,
+                "codigo": producto.codigo,
+                "descripcion": producto.descripcion,
+                "unidad_medida": {
+                    "nombre": producto.unidadmedida.nombre,
+                    "sigla": producto.unidadmedida.sigla,
+                },
             })
+
         return JsonResponse(data, safe=False)
+
 
 class PruebaBT(TemplateView):
     """Probando Bootstrap Table View"""

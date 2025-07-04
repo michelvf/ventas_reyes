@@ -112,6 +112,7 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/lib/select2/js/select2-2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/select2/js/i18n/es.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/daterangepicker.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script>
@@ -211,7 +212,7 @@
         //console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
-    /*
+    
     $.ajax({
         url: '/api/departamentos/',
         type: 'get',
@@ -219,21 +220,23 @@
         dataType: 'json',
         success: function(response) {
 
-            var len = response.length;
-
-            $("#depa").empty();
-            for( var i = 0; i<len; i++){
-                var id = response[i]['id'];
-                var name = response[i]['departamento'];
-                if (id == 1) {
-                    $("#depa").append("<option value='"+id+"' selected>"+name+"</option>");
-                } else {
-                    $("#depa").append("<option value='"+id+"'>"+name+"</option>");
-                }
-            }
+            $.each(response, function(indice,fila){
+                //console.log(fila)
+                $("#depa").append("<option value='"+fila.id+"'>"+fila.departamento+"</option>");
+            }),
+            $("#depa").select2({
+                language: "es",
+                placeholder: 'Escoja uno',
+                searchInputPlaceholder: 'Buscar',
+                width: 400,
+                //multiple: true,
+                //minimumInputLength: 1,
+            })
+            
+            //}
         }
     });
-    */
+    
 
     // Capturar lo que envía el formulario, procesarlo, y enviarlo por POST
     // a la API
@@ -382,39 +385,6 @@
     }
 
     $(document).ready(function(){
-        
-        $('#depa').select2({
-            
-            placeholder: 'Buscar un Departamento...',
-            //minimumInputLength: 2,
-            ajax: {
-                url: '/api/departamentos/',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        departamento: params.term // término de búsqueda
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                        return {
-                            id: item.id,
-                            text: item.departamento
-                        };
-                        })
-                    };
-                },
-                cache: true
-            },
-            
-            placeholder: 'Escoja uno',
-            searchInputPlaceholder: 'Buscar',
-            width: 400,
-            multiple: true,
-            minimumInputLength: 1,
-        });
       
         $('.select2-no-search').select2({
           minimumResultsForSearch: Infinity,
