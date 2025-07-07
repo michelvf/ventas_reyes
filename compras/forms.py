@@ -1,3 +1,4 @@
+import pandas as pd
 from django import forms
 from .models import Compra, Almacen, Producto, PrecioProducto, UnidadMedida
 from .models import Cliente, Producto, Factura, DetalleFactura
@@ -225,15 +226,25 @@ class DetalleFacturaForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
 
+
 # Formulario para el conjunto de detalles (formset)
 DetalleFacturaFormSet = forms.inlineformset_factory(
     Factura, DetalleFactura,
     form=DetalleFacturaForm,
-    extra=0,
-    can_delete=True,
-    min_num=1,
-    validate_min=True
+    extra=1,
+    can_delete=True
 )
+
+
+class ExcelUploadForm(forms.Form):
+    """
+    Formulario para subir archivos de Excel
+    """
+    excel_file = forms.FileField(
+        label='Archivo Excel',
+        widget=forms.FileInput(attrs={'class': 'form-control', 'accept': '.xlsx,.xls'})
+    )
+
 
 class UnidadMedidaForm(forms.ModelForm):
     """

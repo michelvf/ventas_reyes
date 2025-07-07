@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.views import View
+from .excel_processor import ExcelProcessor
 
 # Create your views here.
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -30,7 +31,7 @@ from django.http import HttpResponse, JsonResponse
 import json
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
-from .forms import UnidadMedidaForm
+from .forms import UnidadMedidaForm, ExcelUploadForm
 
 def factura_pdf(request, pk):
     """Generate PDF for a specific invoice"""
@@ -908,3 +909,23 @@ class APIClientes(View):
 class PruebaBT(TemplateView):
     """Probando Bootstrap Table View"""
     template_name = "compras/bt.html"
+
+
+class LeerExcel(View):
+    """
+    Para subir el Excel
+    """
+    form_class = ExcelUploadForm
+    template_name = "compras/excel_upload.html"
+    
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            a = ExcelUploadForm(request.FILES['excel_file'])
+            # return redirect('excel_procces')
+            return render(request, 'compras/excel_processed.html')
+        return render(request, self.template_name, {'form': form})
