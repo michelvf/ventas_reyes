@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'assets/lib/select2/css/select2-2.min.css' %}" />   
+    <link rel="stylesheet" href="{% static 'assets/lib/select2/css/select2-2.min.css' %}" />
 {% endblock css %}
 
 {% block content %}
@@ -363,6 +363,18 @@
         $('#add-detalle').on('click', function() {
             // Suponiendo que esto añade un nuevo formulario
             setTimeout(aplicarSelect2, 50);  // pequeño delay para asegurar que el nuevo select esté en el DOM
+        });
+
+        // Imagina que tienes un botón para añadir filas
+        $('#add-detalle').on('click', function() {
+            // Aplica Select2 al nuevo select añadido
+            $('select[id^="id_detalles-"][id$="-producto"]').last().select2({
+                //width: 'resolve'
+            });
+        });
+
+        $('#id_cliente').each(function() {
+            $(this).select2();
         });
         
     });

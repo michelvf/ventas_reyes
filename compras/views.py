@@ -13,7 +13,7 @@ from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy, reverse
 from datetime import timedelta
-from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
+from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida, Cliente
 from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
 from .forms import ResumenSemanal
 from rest_framework import authentication
@@ -844,11 +844,18 @@ class VerFactura(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.object.cantidad_producto < 8:
-            columnas = 13 - self.object.cantidad_producto
-            context["columnas"] = range(columnas)
+        if self.object.observaciones:
+            if self.object.cantidad_producto < 11:
+                columnas = 11 - self.object.cantidad_producto
+                context["columnas"] = range(columnas)
+            else:
+                context["columnas"] = None
         else:
-            context["columnas"] = None
+            if self.object.cantidad_producto < 13:
+                columnas = 13 - self.object.cantidad_producto
+                context["columnas"] = range(columnas)
+            else:
+                context["columnas"] = None
         
         return context
 
@@ -873,6 +880,28 @@ class APIProductos(View):
                 },
             })
 
+        return JsonResponse(data, safe=False)
+
+
+class APIClientes(View):
+    """
+    API Clientes para la Factura
+    """
+    def get(self, request):
+        clientes = Cliente.objects.all()
+        data = []
+        
+        for cliente in clientes:
+            data.append({
+                "id": cliente.id,
+                "nombre": cliente.nombre,
+                "apellido": cliente.apellido,
+                "negocio": cliente.negocio,
+                "ci": cliente.ci,
+                "direccion": cliente.direccion,
+                "telefono": cliente.telefono,
+                "email": cliente.email,
+            })
         return JsonResponse(data, safe=False)
 
 
