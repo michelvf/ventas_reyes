@@ -270,7 +270,7 @@ class DetalleFactura(models.Model):
     Modeo para Detalle de la Factura
     """
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
-    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='facturas_usado')
     # cantidad = models.PositiveIntegerField(default=1)
     cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
     # precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico

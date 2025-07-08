@@ -1,5 +1,5 @@
 from django import forms
-from .models import fileUpdate, Departamentos, Contador_billete, Lacteos
+from .models import fileUpdate, Departamentos, Contador_billete, Lacteos, Cuenta
 from django.core.validators import MinValueValidator
 
 
@@ -109,13 +109,56 @@ class CalculadoraBilletesForm(forms.ModelForm):
         self.fields['mil_pesos'].required = False
         # self.fields['comentario'].widget = forms.Textarea(attrs={'class': 'form-control col-9', 'row': 4, 'cols': 100})
         
-    # total = forms.IntegerField(
-    #     widget=forms.HiddenInput(
-    #         attrs={
-    #             'class': 'disable',
-    #         }
-    #     )
-    # )
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo_cuenta = cleaned_data.get("tipo_cuenta")
+        un_peso = cleaned_data.get("un_peso")
+        tres_pesos = cleaned_data.get("tres_pesos")
+        cinco_pesos = cleaned_data.get("cinco_pesos")
+        diez_pesos = cleaned_data.get("diez_pesos")
+        veinte_pesos = cleaned_data.get("veinte_pesos")
+        cincuenta_pesos = cleaned_data.get("cincuenta_peszos")
+        cien_pesos = cleaned_data.get("dicie_pesos")
+        doscientos_pesos = cleaned_data.get("doscientos_pesos")
+        quinientos_pesos = cleaned_data.get("quinientos_pesos")
+        mil_pesos = cleaned_data.get("mil_pesos")
+
+        print("----- En el forms.py, tratando de validar")
+        
+        # Obtener el último histórico, por ejemplo
+        try:
+            cuenta = Cuenta.objects.get(cuenta='Efectivo')
+        except Cuenta.DoesNotExist:
+            return cleaned_data  # Si no hay histórico, no se puede comparar
+
+        errores = []
+
+        if tipo_cuenta == 2:
+            if un_peso is not None and uno_peso  > cuenta.uno_peso :
+                errores.append("No tienes tantos billetes de: uno peso, para dar.")
+            if tres_pesos is not None and tres_pesos > historico.tres_pesos:
+                errores.append("No tienes tantos billetes de: tres pesos, para dar.")
+            if cinco_pesos is not None and cinco_pesos > historico.cinco_pesos:
+                errores.append("No tienes tantos billetes de: cinco pesos, para dar.")
+            if diez_pesos is not None and diez_pesos > historico.diez_pesos:
+                errores.append("No tienes tantos billetes de: diez pesos, para dar.")
+            if veinte_pesos is not None and veinte_pesos > historico.veinte_pesos:
+                errores.append("No tienes tantos billetes de: veinte pesos, para dar.")
+            if cincuenta_pesos is not None and cincuenta_pesos > historico.cincuenta_pesos:
+                errores.append("No tienes tantos billetes de: cincuenta pesos, para dar.")
+            if cien_pesos is not None and cien_pesos > historico.cien_pesos:
+                errores.append("No tienes tantos billetes de: cien pesos, para dar.")
+            if doscientos_pesos is not None and doscientos_pesos > historico.doscientos_pesos:
+                errores.append("No tienes tantos billetes de: doscientos pesos, para dar.")
+            if quinientos_pesos is not None and  quinientos_pesos > historico.quinientos_pesos:
+                errores.append("No tienes tantos billetes de: quinientos pesos, para dar.")
+            if mil_pesos is not None and mil_pesos > historico.mil_pesos:
+                errores.append("No tienes tantos billetes de: mil pesos, para dar.")
+                
+        if errores:
+            raise forms.ValidationError(errores)
+
+        return cleaned_data
 
 
 class LacteosForm(forms.ModelForm):
