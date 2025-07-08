@@ -568,4 +568,17 @@ class DestinoListView(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Destino.objects.all()
     serializer_class = DestinoSerializer
+
+
+class ProductoEnFactura(view.ReadOnlyModelViewSet):
+    """
+    En cuantas facturas aparece el producto
+    """
+    # Obtener producto específico
+    producto = Producto.objects.get(id=1)
+
+    # Obtener facturas donde se usó ese producto
+    facturas = Factura.objects.filter(detalles__producto=producto).distinct()
     
+    for f in facturas:
+        print(Count(f.id))
