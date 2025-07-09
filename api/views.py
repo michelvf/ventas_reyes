@@ -522,11 +522,12 @@ class ContadorBilleteView(ViewSet):
         serializer = CuentaBilletesSerializer(registro)
         return Response(serializer.data)
 
+
 class ContadorBilleteListView(viewsets.ReadOnlyModelViewSet):
     """
     Listado de Contador de Billetes View
     """
-    queryset = Contador_billete.objects.all()
+    queryset = Contador_billete.objects.filter(historia=False)
     serializer_class = ContadorBilleteListSerializer
 
 # App Produccion
@@ -570,15 +571,15 @@ class DestinoListView(viewsets.ReadOnlyModelViewSet):
     serializer_class = DestinoSerializer
 
 
-class ProductoEnFactura(view.ReadOnlyModelViewSet):
+# class ProductoEnFactura(viewsets.ReadOnlyModelViewSet):
     """
     En cuantas facturas aparece el producto
     """
     # Obtener producto específico
-    producto = Producto.objects.get(id=1)
+#    producto = Producto.objects.get(id=1)
 
     # Obtener facturas donde se usó ese producto
-    facturas = Factura.objects.filter(detalles__producto=producto).distinct()
+#    facturas = Factura.objects.filter(detalles__producto=producto).distinct()
     
-    for f in facturas:
-        print(Count(f.id))
+#    for f in facturas:
+#        print(Count(f.id))

@@ -502,7 +502,7 @@ class CalculadoraBilletes(View):
 
             # Guardar los datos del formulario
             form.save()
-            print(f"Lo que se guardó del formulario: {form}")
+            # print(f"Lo que se guardó del formulario: {form}")
             
             # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
@@ -519,10 +519,10 @@ class CalculadoraBilletes(View):
             # print(f"Registro: {registro}")
             # print(f"Saldo de Efectivo: {saldo.saldo}")
             # print(f"lo que llega del formulario: {form}")
-            print(f"Lo que llega del formulario, en tipo_cuenta es: {tipo}")
+            # print(f"Lo que llega del formulario, en tipo_cuenta es: {tipo}")
 
             if tipo == 1:
-                print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
+                # print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
                 saldo.saldo += registro
                 # saldo.sub_cuenta += form.total
                 saldo.un_peso += un if un is not None else 0
@@ -536,7 +536,7 @@ class CalculadoraBilletes(View):
                 saldo.quinientos_pesos += quinientos if quinientos is not None else 0
                 saldo.mil_pesos += mil if mil is not None else 0
             else:
-                print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
+                # print(f"Es de tipo {type(tipo)}, es un Débito se resta: {registro}")
                 saldo.saldo -= registro
                 # saldo.sub_cuenta -= form.total
                 saldo.un_peso -= un if un is not None else 0
@@ -550,6 +550,26 @@ class CalculadoraBilletes(View):
                 saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
                 saldo.mil_pesos -= mil if mil is not None else 0
 
+            # historial = Contador_billete(
+            #     tipo_cuenta = 3,
+            #     un_peso = saldo.un_peso,
+            #     tres_pesos = saldo.tres_pesos,
+            #     cinco_pesos = saldo.cinco_pesos,
+            #     diez_pesos = saldo.diez_pesos,
+            #     veinte_pesos = saldo.veinte_pesos,
+            #     cincuenta_pesos = saldo.cincuenta_pesos,
+            #     cien_pesos = saldo.cien_pesos,
+            #     doscientos_pesos = saldo.doscientos_pesos,
+            #     quinientos_pesos = saldo.quinientos_pesos,
+            #     mil_pesos = saldo.mil_pesos,
+            #     sub_total = saldo.saldo,
+            #     total = 0,
+            #     historia = True
+            # )
+            
+            # historial.save()
+            
+            
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta
             saldo.save()
@@ -642,16 +662,34 @@ class EditarCalculadoraBilletes(UpdateView):
                     cuenta.mil_pesos += difference
         
         # Update saldo based on changes
-        cuenta.saldo = (cuenta.un_peso * 1 +
-                       cuenta.tres_pesos * 3 +
-                       cuenta.cinco_pesos * 5 +
-                       cuenta.diez_pesos * 10 +
-                       cuenta.veinte_pesos * 20 +
-                       cuenta.cincuenta_pesos * 50 +
-                       cuenta.cien_pesos * 100 +
-                       cuenta.doscientos_pesos * 200 +
-                       cuenta.quinientos_pesos * 500 +
-                       cuenta.mil_pesos * 1000)
+        cuenta.saldo = (
+            cuenta.un_peso * 1 +
+            cuenta.tres_pesos * 3 +
+            cuenta.cinco_pesos * 5 +
+            cuenta.diez_pesos * 10 +
+            cuenta.veinte_pesos * 20 +
+            cuenta.cincuenta_pesos * 50 +
+            cuenta.cien_pesos * 100 +
+            cuenta.doscientos_pesos * 200 +
+            cuenta.quinientos_pesos * 500 +
+            cuenta.mil_pesos * 1000
+        )
+        
+        # historial = Contador_billete(
+        #     tipo_cuenta = 3,
+        #     un_peso = cuenta.un_peso,
+        #     tres_pesos = cuenta.tres_pesos,
+        #     cinco_pesos = cuenta.cinco_pesos,
+        #     diez_pesos = cuenta.diez_pesos,
+        #     veinte_pesos = cuenta.veinte_pesos,
+        #     cincuenta_pesos = cuenta.cincuenta_pesos,
+        #     cien_pesos = cuenta.cien_pesos,
+        #     doscientos_pesos = cuenta.doscientos_pesos,
+        #     quinientos_pesos = cuenta.quinientos_pesos,
+        #     sub_total = cuenta.saldo,
+        #     total = 0,
+        #     historia = True,
+        # )
         
         # Save the Cuenta instance
         cuenta.save()
@@ -703,7 +741,25 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.saldo += self.object.total
         
         efectivo.save()
-
+        
+        # historial = Contador_billete(
+        #     tipo_cuenta = 3,
+        #     un_peso = efectivo.un_peso,
+        #     tres_pesos = efectivo.tres_pesos,
+        #     cinco_pesos = efectivo.cinco_pesos,
+        #     diez_pesos = efectivo.diez_pesos,
+        #     veinte_pesos = efectivo.veinte_pesos,
+        #     cincuenta_pesos = efectivo.cincuenta_pesos,
+        #     cien_pesos = efectivo.cien_pesos,
+        #     doscientos_pesos = efectivo.doscientos_pesos,
+        #     quinientos_pesos = efectivo.quinientos_pesos,
+        #     sub_total = efectivo.total,
+        #     total = 0,
+        #     historia = True,
+        # )
+        
+        # historial.save()
+        
         # print(f"Registro eliminado id: {self.object.id}")
         # print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
         # comprobar = str(tipo_cuenta) == 'Entrada'
