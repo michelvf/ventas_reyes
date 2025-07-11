@@ -189,6 +189,25 @@ class Cuenta(models.Model):
             models.Index(fields=["update_at"])
         ]
 
+    def save(self, *args, **kwargs):
+        previo = Cuenta.objects.get(cuenta="Efectivo")
+        registro = Contador_billete(
+            historia=bool(True),
+            un_peso=getattr(self, 'un_peso'),
+            tres_pesos=getattr(self, 'tres_pesos'),
+            cinco_pesos=getattr(self, 'cinco_pesos'),
+            diez_pesos=getattr(self, 'diez_pesos'),
+            veinte_pesos=getattr(self, 'veinte_pesos'),
+            cincuenta_pesos=getattr(self, 'cincuenta_pesos'),
+            cien_pesos=getattr(self, 'cien_pesos'),
+            doscientos_pesos=getattr(self, 'doscientos_pesos'),
+            quinientos_pesos=getattr(self, 'quinientos_pesos'),
+            mil_pesos=getattr(self, 'mil_pesos'),
+            total=0,
+            sub_total=getattr(self, 'saldo'),
+        )
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.cuenta
 
@@ -235,6 +254,15 @@ class Contador_billete(models.Model):
 
     def __str__(self):
         return f"{self.fecha.strftime('%d-%m-%Y')} - {self.comentario[:10]}"
+
+
+# class RegistroLog(models.Model):
+#     registro       = models.ForeignKey(Cuenta, on_delete=models.CASCADE, related_name='logs')
+#     campo          = models.CharField(max_length=50)
+#     valor_antiguo  = models.TextField()
+#     valor_nuevo    = models.TextField()
+#     fecha          = models.DateTimeField()
+
 
 """
 Notas:
