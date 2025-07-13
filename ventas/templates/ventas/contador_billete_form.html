@@ -23,35 +23,6 @@
   
   <form id="formulario" method="post">
     {% csrf_token %}
-
-    {% if error_message %}
-      <p>
-        <strong>{{ error_message }}</strong>
-      </p>
-    {% endif %}
-    {{ field.errors }}
-    <div class="row">
-      <div class="col">
-        {% if error %}
-          <p style="color: red">{{ error }}</p>
-        {% endif %}
-        {% if form.non_field_errors %}
-          <ul> 
-            {% for error in form.non_field_errors %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          </ul> 
-        {% endif %}
-        {% for message in messages %}
-          <div>{{ message }}</div>
-        {% endfor %}
-        <div id="errorContainer" class="text-danger font-weight-bold"></div> <!-- Contenedor para mostrar errores -->
-          {% if form.errors %}
-            <p>{{ form.errors }}.</p>
-          {% endif %}
-        </div>
-      </div>
-
       <div class="mb-3 tx-30">
         <strong>Total: <span id="grandTotal"></span></strong>
           <!-- input type="hidden" name="total" value="" id="id_total" required / -->
@@ -80,8 +51,8 @@
                   <!-- input id="tres_pesos" name="tres_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $3" -->
                    {{ form.tres_pesos }}
                   <span id="subtotal-3" class="form-control text-end"></span>
-                  {{ form.tres_pesos.errors }}
                 </div>
+                {{ form.tres_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -89,8 +60,8 @@
                   <!-- input id="cinco_pesos" name="cinco_pesos" type="number" class="form-control entrada" aria-label="pesos" placeholder="Billetes de $5" -->
                    {{ form.cinco_pesos }}
                   <span id="subtotal-5" class="form-control text-end"></span>
-                  {{ form.cinco_pesos.errors }}
                 </div>
+                {{ form.cinco_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -99,6 +70,7 @@
                   {{ form.diez_pesos }}
                   <span id="subtotal-10" class="form-control text-end"></span>
                 </div>
+                {{ form.diez_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -107,6 +79,7 @@
                   {{ form.veinte_pesos }}
                   <span id="subtotal-20" class="form-control text-end"></span>
                 </div>
+                {{ form.veinte_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -115,6 +88,7 @@
                   {{ form.cincuenta_pesos }}
                   <span id="subtotal-50" class="form-control text-end"></span>
                 </div>
+                {{ form.cincuenta_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -123,6 +97,7 @@
                   {{ form.cien_pesos }}
                   <span id="subtotal-100" class="form-control text-end"></span>
                 </div>
+                {{ form.cien_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -131,6 +106,7 @@
                   {{ form.doscientos_pesos }}
                   <span id="subtotal-200" class="form-control text-end"></span>
                 </div>
+                {{ form.doscientos_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -139,6 +115,7 @@
                   {{ form.quinientos_pesos }}
                   <span id="subtotal-500" class="form-control text-end"></span>
                 </div>
+                {{ form.quinientos_pesos.errors }}
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
@@ -148,6 +125,7 @@
                   <!-- span id="resultado_mil_pesos" class="form-control text-end"></span -->
                   <span id="subtotal-1000" class="form-control text-end"></span>
                 </div>
+                {{ form.mil_pesos.errors }}
             </div>
         </div>
         <div>
