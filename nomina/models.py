@@ -55,14 +55,16 @@ class Trabajador(models.Model):
         related_name="productos",
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     cargo = models.ForeignKey(
         Cargo,
         related_name="cargos",
         on_delete=models.CASCADE,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     fecha = models.DateField()
     activo = models.BooleanField(default=True)
@@ -92,7 +94,8 @@ class Nomina(models.Model):
         related_name="trabajdores",
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     salario = models.FloatField(blank=False, null=False)
     fecha = models.DateField()
@@ -149,7 +152,8 @@ class Nomina2(models.Model):
         related_name="trabajdores",
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     # salario = models.FloatField(blank=False, null=False)
     fecha = models.DateField()

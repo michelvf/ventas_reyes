@@ -81,7 +81,8 @@ class Productos(models.Model):
         related_name="productos",
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
@@ -110,7 +111,8 @@ class Ventas(models.Model):
         related_name='productos',
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     cantidad = models.FloatField(null=False)
     venta = models.FloatField(null=False)
@@ -189,24 +191,25 @@ class Cuenta(models.Model):
             models.Index(fields=["update_at"])
         ]
 
-    def save(self, *args, **kwargs):
-        previo = Cuenta.objects.get(cuenta="Efectivo")
-        registro = Contador_billete(
-            historia=bool(True),
-            un_peso=getattr(self, 'un_peso'),
-            tres_pesos=getattr(self, 'tres_pesos'),
-            cinco_pesos=getattr(self, 'cinco_pesos'),
-            diez_pesos=getattr(self, 'diez_pesos'),
-            veinte_pesos=getattr(self, 'veinte_pesos'),
-            cincuenta_pesos=getattr(self, 'cincuenta_pesos'),
-            cien_pesos=getattr(self, 'cien_pesos'),
-            doscientos_pesos=getattr(self, 'doscientos_pesos'),
-            quinientos_pesos=getattr(self, 'quinientos_pesos'),
-            mil_pesos=getattr(self, 'mil_pesos'),
-            total=0,
-            sub_total=getattr(self, 'saldo'),
-        )
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     previo = Cuenta.objects.get(cuenta="Efectivo")
+    #     registro = Contador_billete(
+    #         historia=1,
+    #         un_peso=getattr(self, 'un_peso'),
+    #         tres_pesos=getattr(self, 'tres_pesos'),
+    #         cinco_pesos=getattr(self, 'cinco_pesos'),
+    #         diez_pesos=getattr(self, 'diez_pesos'),
+    #         veinte_pesos=getattr(self, 'veinte_pesos'),
+    #         cincuenta_pesos=getattr(self, 'cincuenta_pesos'),
+    #         cien_pesos=getattr(self, 'cien_pesos'),
+    #         doscientos_pesos=getattr(self, 'doscientos_pesos'),
+    #         quinientos_pesos=getattr(self, 'quinientos_pesos'),
+    #         mil_pesos=getattr(self, 'mil_pesos'),
+    #         total=0,
+    #         sub_total=getattr(self, 'saldo'),
+    #         comentario="Historial",
+    #     )
+    #     super().save(*args, **kwargs)
     
     def __str__(self):
         return self.cuenta
@@ -214,7 +217,7 @@ class Cuenta(models.Model):
 
 class Contador_billete(models.Model):
     """
-    Modelo para registrara los conteos de billetes
+    Modelo para registrar los conteos de billetes
     """
     comentario = models.TextField(null=False, blank=False)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -223,7 +226,8 @@ class Contador_billete(models.Model):
         related_name="tipos_cuentas",
         on_delete=models.PROTECT,
         blank=False,
-        null=False
+        null=False,
+        db_index=True
     )
     un_peso = models.IntegerField(default=0, null=True, blank=True)
     tres_pesos = models.IntegerField(default=0, null=True, blank=True)
@@ -255,6 +259,39 @@ class Contador_billete(models.Model):
     def __str__(self):
         return f"{self.fecha.strftime('%d-%m-%Y')} - {self.comentario[:10]}"
 
+
+class Cuenta_historico(models.Model):
+    """
+    Modelo para registrar lo que se guarda en Cuentas
+    """
+    un_peso = models.IntegerField(default=0, null=True, blank=True)
+    tres_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cinco_pesos = models.IntegerField(default=0, null=True, blank=True)
+    diez_pesos = models.IntegerField(default=0, null=True, blank=True)
+    veinte_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cincuenta_pesos = models.IntegerField(default=0, null=True, blank=True)
+    cien_pesos = models.IntegerField(default=0, null=True, blank=True)
+    doscientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
+    mil_pesos = models.IntegerField(default=0, null=True, blank=True)
+    # saldo = models.IntegerField(null=False, blank=False)
+    saldo = models.FloatField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-fecha"] # ["-fecha"] ascending
+        verbose_name = "cuenta_historico"
+        verbose_name_plural = "cuentas_historico"
+        indexes = [
+            models.Index(fields=["id"]),
+            models.Index(fields=["fecha"]),
+            models.Index(fields=["saldo"]),
+        ]
+
+    def __str__(self):
+        return f"{self.fecha.strftime('%d-%m-%Y')}"
 
 # class RegistroLog(models.Model):
 #     registro       = models.ForeignKey(Cuenta, on_delete=models.CASCADE, related_name='logs')

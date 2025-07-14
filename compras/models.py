@@ -144,7 +144,7 @@ class Producto(models.Model):
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
     precio = models.FloatField()
-    unidadmedida = models.ForeignKey(UnidadMedida, on_delete=models.PROTECT)
+    unidadmedida = models.ForeignKey(UnidadMedida, on_delete=models.PROTECT, db_index=True)
     stock = models.PositiveIntegerField(default=0)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -188,7 +188,10 @@ class Factura(models.Model):
     )
     
     numero = models.CharField(max_length=20, unique=True, editable=False)
-    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
+    cliente = models.ForeignKey(Cliente,
+                                on_delete=models.PROTECT,
+                                related_name='facturas',
+                                db_index=True)
     fecha_emision = models.DateTimeField(default=timezone.now)
     tipo = models.CharField(max_length=1,choices=TIPO_FACTURA, default='c')
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
@@ -269,8 +272,8 @@ class DetalleFactura(models.Model):
     """
     Modeo para Detalle de la Factura
     """
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
-    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='facturas_usado')
+    factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles', db_index=True)
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='facturas_usado', db_index=True)
     # cantidad = models.PositiveIntegerField(default=1)
     cantidad = models.FloatField(validators=[MinValueValidator(0.0)])
     # precio_unitario = models.DecimalField(max_digits=10, decimal_places=4)  # Precio histórico
