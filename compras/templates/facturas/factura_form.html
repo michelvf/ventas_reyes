@@ -350,13 +350,19 @@
         // Inicializar eventos
         bindEvents();
         updateTotals();
-
         
-        $('select[id^="id_detalles-"][id$="-producto"]').each(function() {
-            // Aplica Select2 al primero dentro de su fila (por si hay más de un select por fila)
-            $(this).select2({
-                //width: 'resolve'  // adapta el ancho si es necesario
+        function aplicarSelect2() {
+            $('select[id^="id_detalles-"][id$="-producto"]').select2({
+                //width: 'resolve'
             });
+        }
+        
+        aplicarSelect2();
+
+        // Llamar cada vez que se agregue un nuevo formulario
+        $('#add-detalle').on('click', function() {
+            // Suponiendo que esto añade un nuevo formulario
+            setTimeout(aplicarSelect2, 50);  // pequeño delay para asegurar que el nuevo select esté en el DOM
         });
 
         // Imagina que tienes un botón para añadir filas
