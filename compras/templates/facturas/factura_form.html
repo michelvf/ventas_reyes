@@ -34,7 +34,10 @@
                     {% endif %}
                 </div>
                 <div class="col-md-6">
-                    <label for="{{ form.tipo.id_for_label }}" class="form-label">Tipo de Recepción <span class="text-danger">*</span></label>
+                    <label for="{{ form.tipo.id_for_label }}" class="form-label">Tipo de Proceso <span class="text-danger">*</span>
+                        {% if 'editar' in request.path %}
+                            <span id="noEditar" class="text-danger invisible">Si desea cambiar el tipo de Documento, anule este y cree otro.</span></label>
+                        {% endif %}
                     {{ form.tipo }}
                     {% if form.tipo.errors %}
                     <div class="invalid-feedback d-block">
@@ -376,6 +379,29 @@
         $('#id_cliente').each(function() {
             $(this).select2();
         });
+
+        if (window.location.href.includes('editar')) {
+            const select = document.getElementById('id_tipo');
+            const spanNoEditar = document.getElementById('noEditar');
+            console.log(`tengo el span: noEditar: ${spanNoEditar}`)
+            if (select) {
+              select.setAttribute('disabled', 'disabled');
+            }
+
+            spanNoEditar.addEventListener('mouseover', () => {
+                console.log(`mouse Over`)
+                span.classList.remove('invisible');
+                span.classList.add('visible');
+            });
+            
+            spanNoEditar.addEventListener('mouseout', () => {
+                console.log(`mouse Over`)
+                span.classList.remove('visible');
+                span.classList.add('invisible');
+            });
+        }
+
+        
         
     });
 </script>

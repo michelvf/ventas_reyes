@@ -704,8 +704,13 @@ def eliminar_factura(request, pk):
     factura = get_object_or_404(Factura, pk=pk)
     
     if request.method == 'POST':
-        factura.delete()
-        messages.success(request, "Factura eliminada exitosamente.")
+        # factura.delete()
+        estado = 'anulada'
+        factura.estado = estado
+        factura.save()
+        # messages.success(request, "Factura eliminada exitosamente.")
+        messages.success(request, "Factura anulada exitosamente.")
+        
         return redirect('factura_list')
     
     return render(request, 'facturas/factura_confirm_delete.html', {
@@ -929,3 +934,29 @@ class LeerExcel(View):
             # return redirect('excel_procces')
             return render(request, 'compras/excel_processed.html')
         return render(request, self.template_name, {'form': form})
+
+
+class ProductosConFacturasJSON(View):
+   def get(self, request):
+       data = []
+       productos = Producto.objects.prefetch_related('facturas_usado__factura')
+
+       for prod in productos:
+           facturas = []
+           for detalle in prod.facturas_usado.all():
+               facturas.append({
+                   'numero': detalle.factura.numero,
+                   'fecha': detalle.factura.fecha_emision.strftime('%Y-%m-%d'),
+                   'cliente': detalle.factura.cliente.nombre
+               })
+           data.append({
+               'producto': prod.nombre,
+               'codigo': prod.codigo,
+               'precio': prod.precio,
+               'unidadmedida': prod.unidadmedida.nombre,
+               'fecha': prod.fecha_registro,
+               'facturas': facturas
+           })
+
+       return JsonResponse(data, safe=False)
+

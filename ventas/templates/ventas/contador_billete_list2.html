@@ -367,9 +367,7 @@
   <script>
     // Cuando se le da click a borrar, comprobar si el tipo es un Crédito,
     // y ver si aún billetes para devolver lo recogico.
-    document
-    .querySelectorAll('[id^="comprobarDisponibilidad_"]')
-    .forEach(btn => {
+    document.querySelectorAll('[id^="comprobarDisponibilidad_"]').forEach(btn => {
       btn.addEventListener('click', async function(event) {
         event.preventDefault();
 
@@ -431,11 +429,12 @@
       });
     });
 
-    function antes_de_borrar_modal(id) {
-            document.getElementById('validarAccion').addEventListener('click', async function(e) {
-              e.preventDefault();
+    {% comment %} function antes_de_borrar_modal(id) {
+        document.getElementById('validarAccion')
+        .addEventListener('click', async function(e) {
+            e.preventDefault();
             
-              try {
+            try {
                 const [resLista, resSaldo] = await Promise.all([
                   fetch('/api/lista/'),
                   fetch('/api/saldo/')
@@ -465,41 +464,42 @@
                   // aquí puedes seguir con tu acción normal
                 }
             
-              } catch (error) {
+            } catch (error) {
                 alert("❌ Error al validar datos: " + error.message);
-              }
-            });
-            
-            function mostrarModal(lista) {
-              const modal = document.getElementById('modal');
-              const detalles = document.getElementById('detallesNegativos');
-              detalles.innerHTML = '';
-            
-              lista.forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = `• ${item.campo}: requiere ${item.requerido}, disponible ${item.disponible}, diferencia ${item.diferencia}`;
-                detalles.appendChild(div);
-              });
-            
-              modal.style.display = 'block';
-            
-              document.getElementById('cerrarModal').onclick = () => modal.style.display = 'none';
-              document.getElementById('cancelarBtn').onclick = () => modal.style.display = 'none';
-              document.getElementById('continuarBtn').onclick = () => {
-                modal.style.display = 'none';
-                alert("🚀 ¡Continuamos con la operación!");
-                // Aquí puedes activar la siguiente acción o redirigir
-              };
             }
-            
-            // Cierre si se hace clic fuera del modal
-            window.onclick = function(event) {
-              const modal = document.getElementById('modal');
-              if (event.target === modal) {
-                modal.style.display = "none";
-              }
-            };            
+        });
     }
+            
+    function mostrarModal(lista) {
+        const modal = document.getElementById('modal');
+        const detalles = document.getElementById('detallesNegativos');
+        detalles.innerHTML = '';
+            
+        lista.forEach(item => {
+            const div = document.createElement('div');
+            div.textContent = `• ${item.campo}: requiere ${item.requerido}, disponible ${item.disponible}, diferencia ${item.diferencia}`;
+            detalles.appendChild(div);
+        });
+            
+        modal.style.display = 'block';
+            
+        document.getElementById('cerrarModal').onclick = () => modal.style.display = 'none';
+        document.getElementById('cancelarBtn').onclick = () => modal.style.display = 'none';
+        document.getElementById('continuarBtn').onclick = () => {
+            modal.style.display = 'none';
+            alert("🚀 ¡Continuamos con la operación!");
+            // Aquí puedes activar la siguiente acción o redirigir
+        };
+    }
+            
+    // Cierre si se hace clic fuera del modal
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal');
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };             {% endcomment %}
+    
 
     
   </script>

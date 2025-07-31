@@ -9,7 +9,7 @@ from .views import ResumeSemanalView, ResumenProductoSemanalView, ResumenSemanal
 from .views import ClienteListView, ClienteCreateView, ClienteUpdateView, ClienteDetailView, ClienteDeleteView
 from .views import ProductoCreateView, ProductoDeleteView, ProductoDetailView, ProductoListView, ProductosListView, ProductoUpdateView, get_producto_info
 from .views import FacturaListView, FacturaDetailView, crear_factura, editar_factura, eliminar_factura, cambiar_estado_factura
-from .views import VerFactura, PruebaBT, APIProductos, APIClientes, LeerExcel
+from .views import VerFactura, PruebaBT, APIProductos, APIClientes, LeerExcel, ProductosConFacturasJSON
 from .excel_processor import ExcelProcessor
 from api.views import UltimoPrecio, CompraLecheSemana
 from . import views
@@ -65,6 +65,7 @@ urlpatterns = [
     path('productos/<int:pk>/editar/', ProductoUpdateView.as_view(), name='producto_update'),
     path('productos/<int:pk>/eliminar/', ProductoDeleteView.as_view(), name='producto_delete'),
     path('productos/info/', get_producto_info, name='producto_info'),
+    path('productos/info-facturas/', ProductosConFacturasJSON.as_view(), name='productos-facturas-json'),
     
     # Facturas
     path('facturas/', FacturaListView.as_view(), name='factura_list'),
