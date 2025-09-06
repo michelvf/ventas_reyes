@@ -955,7 +955,8 @@ class ProductosConFacturasJSON(View):
                'precio': prod.precio,
                'unidadmedida': prod.unidadmedida.nombre,
                'fecha': prod.fecha_registro,
-               'facturas': facturas
+               'facturas': facturas,
+               'cant_fac': len(facturas)
            })
 
        return JsonResponse(data, safe=False)
