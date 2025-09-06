@@ -16,9 +16,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from api.urls import router
 from ventas.views import IndexView
+from ventas import consumers
+
+websocket_urlpatterns = [
+    re_path(r'ws/datos/$', consumers.DatosConsumer.as_asgi()),
+]
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,3 +38,4 @@ urlpatterns = [
     path("produccion/", include('produccion.urls')),
     path("produc_proceso/", include('produc_proceso.urls')),
 ]
+

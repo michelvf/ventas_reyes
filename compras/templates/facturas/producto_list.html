@@ -42,6 +42,7 @@
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Unidad de Medida</th>
+                        <th>Cant. Fact/Recep</th>
                         <th>Última actualización</th>
                         <th>Acciones</th>
                     </tr>
@@ -53,6 +54,7 @@
                         <td>{{ producto.nombre|upper }}</td>
                         <td>${{ producto.precio|upper }}</td>
                         <td class="text-center">{{ producto.unidadmedida.sigla }}</td>
+                        <td>{{ producto.total_facturado }}</td>
                         <td>{{ producto.fecha_actualizacion|date:"d/m/Y H:i" }}</td>
                         <td>
                             <div class="btn-group" role="group">

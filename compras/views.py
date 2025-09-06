@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.views import View
 from django.utils import timezone
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
 from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy, reverse
 from datetime import timedelta
@@ -534,6 +534,14 @@ class ProductoListView(ListView):
     template_name = 'facturas/producto_list.html'
     context_object_name = 'productos'
 
+    def get_queryset(self):
+        """
+        Anota el total facturado para cada cliente.
+        """
+        return Producto.objects.annotate(
+            total_facturado=Count('detallefactura__factura__id', distinct=True)
+        )
+
 
 class ProductoDetailView(DetailView):
     """
@@ -542,6 +550,17 @@ class ProductoDetailView(DetailView):
     model = Producto
     template_name = 'facturas/producto_detail.html'
     context_object_name = 'producto'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        producto = self.object
+        # Optimizar la consulta de facturas para evitar múltiples consultas en la plantilla
+        # context['facturas'] = self.object.detallefactura.all().select_related('producto').order_by('-fecha_emision')
+        # Obtener facturas únicas donde aparece el producto
+        facturas = Factura.objects.filter(detalles__producto=producto).distinct()
+
+        context['facturas'] = facturas
+        return context
 
 
 class ProductoCreateView(CreateView):
@@ -790,8 +809,62 @@ def get_facturas_json(request):
 
 # API para obtener facturas de un cliente específico
 def get_facturas_cliente_json(request, cliente_id):
+    """
+    Mostrar las Facturas que tiene el Cliente
+    """
     cliente = get_object_or_404(Cliente, pk=cliente_id)
     facturas = cliente.facturas.all().order_by('-fecha_emision')
+    
+    data = []
+    for factura in facturas:
+        # Determinar el HTML del estado
+        if factura.estado == 'pendiente':
+            estado_html = '<span class="badge bg-warning">Pendiente</span>'
+        elif factura.estado == 'pagada':
+            estado_html = '<span class="badge bg-info">Pagada</span>'
+        elif factura.estado == 'pagada-eleventa':
+            estado_html = '<span class="badge bg-success">Pagada en Eleventa</span>'
+        else:
+            estado_html = '<span class="badge bg-danger">Anulada</span>'
+        
+        data.append({
+            'DT_RowId': f'factura-cliente-{factura.id}',
+            'numero': factura.numero,
+            'fecha': {
+                'display': factura.fecha_emision.strftime("%d/%m/%Y"),
+                'timestamp': factura.fecha_emision.timestamp()
+            },
+            'cantidad_producto': {
+                'display': factura.cantidad_producto,
+                'value': factura.cantidad_producto,
+            },
+            'total': {
+                'display': f"$ {factura.total}",
+                'value': float(factura.total)
+            },
+            'estado': {
+                'display': estado_html,
+                'value': factura.estado
+            },
+            'acciones': f'''
+            <a href="{reverse('ver_factura', args=[factura.id])}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+            '''
+        })
+    
+    return JsonResponse({'data': data})
+
+
+def get_facturas_productos_json(request, producto_id):
+    """
+    Mostrar las Facturas donde aparece el producto
+    """
+    print(f"buscar producto: {producto_id}")
+
+    producto = get_object_or_404(Producto, pk=producto_id)
+    facturas = Factura.objects.filter(detalles__producto_id=producto_id).distinct().order_by('fecha_emision')
+    # facturas = producto.detalles.facturas.all().order_by('-fecha_emision')
     
     data = []
     for factura in facturas:

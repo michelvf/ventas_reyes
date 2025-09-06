@@ -17,15 +17,44 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <table id="table">
-        
-         </table>
+        <table
+          id="table"
+          data-locale="es-ES"
+          data-search="true"
+          data-show-refresh="true"
+          data-show-toggle="true"
+          data-show-button-text="true"
+          data-show-export="true"
+          data-click-to-select="true"
+          data-pagination="true"
+          data-id-field="id"
+          data-page-list="[10, 25, 50, 100, all]"
+          data-show-print="true"
+        >
+        <thead>
+          <tr>
+            <th data-field="id">
+              ID
+            </th>
+            <th data-field="producto">
+              Producto
+            </th>
+            <th data-field="codigo">
+              Código
+            </th>
+          </tr>
+        </thead>
+        </table>
     </div>
 </div>
 {% endblock content %}
 
 {% block js %}
+  < script type="text/javascript" src="{% static 'assets/lib/bootstrap/js/popper.min.js' %}"></>
     <script type="text/javascript" src="{% static 'assets/lib/bt/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/bt/locale/bootstrap-table-es-ES.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/bt/extensions/print/bootstrap-table-print.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/lib/bt/extensions/export/bootstrap-table-export.min.js' %}"></script>
    
 <script>
     $(document).ready(function() {

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static  %}
 
 {% block title %}Producto: {{ producto.nombre }} - Sistema de Facturación{% endblock %}
 
@@ -16,7 +17,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-3">
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">Información del Producto</h5>
@@ -31,5 +32,167 @@
             </div>
         </div>
     </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="card-title mb-0">Facturas del Cliente</h5>
+                <a href="{% url 'factura_create' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus-circle me-1"></i> Nueva Factura
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="facturas-producto-table" class="table table-striped table-hover display responsive nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Prod.</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
+{% block js %}
+    <!-- script type="text/javascript" src="{% static 'js/datatables-somethink.min.js' %}"></script -->
+    <script type="text/javascript" src="{% static 'assets/lib/datatables/full/datatables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/language-dataTables.js' %}"></script>
+    <!-- script type="text/javascript" src="{% static 'js/dataTables_listado.js' %}"></script -->
+    <script>
+        $(document).ready(function() {
+            // Inicializar DataTable
+            const table = $('#facturas-producto-table').DataTable({
+                ajax: '{% url 'api_facturas_producto' producto.id %}',
+                responsive: true,
+                language: language,
+                /* {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                }, */
+                order: [[1, 'desc']], // Ordenar por fecha (columna 1) descendente por defecto
+                columns: [
+                    { data: 'numero' },
+                    { data: 'fecha.display' },
+                    { data: 'cantidad_producto.display' },
+                    
+                    { data: 'total.display',
+                    
+                        //render: function( data, type, row ) {
+                        //    render: $.fn.dataTable.render.number( ',', '.', 2).display(data)
+                        //}
+                    },
+                    
+                    { data: 'estado.display' },
+                    { data: 'acciones' },
+                ],
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 }, // Número de factura
+                    { responsivePriority: 2, targets: 2 }, // Estado
+                    { responsivePriority: 3, targets: 3 }, // Acciones
+                    { orderable: false, targets: 3 }, // No ordenar la columna de acciones
+                    {   
+                        targets: 1, // Columna de fecha
+                        render: function(data, type, row) {
+                            if (type === 'sort') {
+                                return data //.timestamp || data;
+                            }
+                            return data //.display || data;
+                        }
+                    },
+                    { 
+                        targets: 2, // Columna de total
+                        render: function(data, type, row) {
+                            if (type === 'sort') {
+                                return data.value || data;
+                            }
+                            return data //.display || data;
+                        }
+                    },
+                    { 
+                        targets: 3, // Columna de estado
+                        render: function(data, type, row) {
+                            if (type === 'sort') {
+                                return data.value || data;
+                            }
+                            return data //.display || data;
+                        }
+                    }
+                ],
+                rowCallback: function(row, data) {
+                    if (data.estado.display === '<span class="badge bg-danger">Anulada</span>') {
+                        $(row).addClass('line-through-row');
+                    }
+                }
+            });
+            
+            // Toast para notificaciones
+            const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
+            
+            // Variable para controlar el intervalo de actualización
+            let refreshInterval;
+            
+            // Función para actualizar la tabla
+            function refreshTable() {
+                $.ajax({
+                    url: "{% url 'api_facturas_producto' producto.id %}",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(response) {
+                        // Verificar si hay cambios comparando los datos
+                        const currentData = table.data().toArray();
+                        //console.log('lo que tiene la tabla: ' + currentData)
+                        const newData = response.data;
+                        //console.log('lo que llega del ajax: ' + JSON.stringify(newData))
+                        
+                        // Si hay diferencias, actualizar la tabla
+                        if (JSON.stringify(currentData) !== JSON.stringify(newData)) {
+                            //table.clear();
+                            //table.rows.add(newData);
+                            //table.draw(false); // false para mantener la página actual
+                            table.ajax.reload();
+                            console.log("se regera la tabla")
+                            
+                            // Mostrar notificación
+                            updateToast.show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al actualizar datos:", error);
+                    }
+                });
+            }
+            
+            // Iniciar actualización automática
+            function startAutoRefresh() {
+                refreshInterval = setInterval(refreshTable, 10000); // Actualizar cada 10 segundos
+            }
+            
+            // Detener actualización automática
+            function stopAutoRefresh() {
+                clearInterval(refreshInterval);
+            }
+            
+            // Control de switch de actualización automática
+            $('#autoRefreshSwitch').change(function() {
+                if ($(this).is(':checked')) {
+                    startAutoRefresh();
+                } else {
+                    stopAutoRefresh();
+                }
+            });
+            
+            // Iniciar actualización automática por defecto
+            startAutoRefresh();
+        });
+    </script>
+    
+{% endblock js %}

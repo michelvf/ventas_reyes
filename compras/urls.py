@@ -79,6 +79,7 @@ urlpatterns = [
     path('api/facturas/', views.get_facturas_json, name='api_facturas'),
     path('api/productos/', APIProductos.as_view(), name='api_productos'),
     path('api/clientes/<int:cliente_id>/facturas/', views.get_facturas_cliente_json, name='api_facturas_cliente'),
+    path('api/productos/<int:producto_id>/facturas/', views.get_facturas_productos_json, name='api_facturas_producto'),
 
     # Pruebas
     path('pruebaBT/', PruebaBT.as_view(), name="pruebaBT"),
