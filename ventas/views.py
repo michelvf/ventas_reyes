@@ -12,7 +12,7 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.dates import MonthArchiveView, YearArchiveView, WeekArchiveView, DayArchiveView
 from .models import Departamentos, Productos, Ventas, fileUpdate, Contador_billete
-from .models import Lacteos, Cuenta, Tipo_cuenta
+from .models import Lacteos, Cuenta, Tipo_cuenta, Cuenta_historico
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -499,12 +499,9 @@ class CalculadoraBilletes(View):
             else:
                 form.instance.sub_total = saldo.saldo - registro
             
-
             # Guardar los datos del formulario
             form.save()
-            print(f"Lo que se guardó del formulario: {form}")
             
-            # print(f"tipo_cuenta llega como: {tipo1}")
             # tipo = request.POST.get('tipo_cuenta')
             un = int(request.POST.get('un_peso'))
             tres = int(request.POST.get('tres_pesos'))
@@ -516,14 +513,10 @@ class CalculadoraBilletes(View):
             doscientos = int(request.POST.get('doscientos_pesos'))
             quinientos = int(request.POST.get('quinientos_pesos'))
             mil = int(request.POST.get('mil_pesos'))
-            # print(f"Registro: {registro}")
-            # print(f"Saldo de Efectivo: {saldo.saldo}")
-            # print(f"lo que llega del formulario: {form}")
-            print(f"Lo que llega del formulario, en tipo_cuenta es: {tipo}")
-
+            
             if tipo == 1:
-                print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
-                saldo.saldo += registro
+                # print(f"Es de tipo {type(tipo)}, es un Crédito se suman: {registro}")
+                saldo.saldo += int(registro)
                 # saldo.sub_cuenta += form.total
                 saldo.un_peso += un if un is not None else 0
                 saldo.tres_pesos += tres if tres is not None else 0
@@ -536,8 +529,8 @@ class CalculadoraBilletes(View):
                 saldo.quinientos_pesos += quinientos if quinientos is not None else 0
                 saldo.mil_pesos += mil if mil is not None else 0
             else:
-                print(f"Es de tipo {type(tipo)  }, es un Débito se resta: {registro}")
-                saldo.saldo -= registro
+                # print(f"Es de tipo {type(tipo)}, es un Débito se resta: {registro}")
+                saldo.saldo -= int(registro)
                 # saldo.sub_cuenta -= form.total
                 saldo.un_peso -= un if un is not None else 0
                 saldo.tres_pesos -= tres if tres is not None else 0
@@ -549,7 +542,7 @@ class CalculadoraBilletes(View):
                 saldo.doscientos_pesos -= doscientos if doscientos is not None else 0
                 saldo.quinientos_pesos -= quinientos if quinientos is not None else 0
                 saldo.mil_pesos -= mil if mil is not None else 0
-
+            
             # print(f"Saldo actualizado: {saldo.saldo}")
             # Guardar los datos actualizados en la Cuenta
             saldo.save()
@@ -642,16 +635,18 @@ class EditarCalculadoraBilletes(UpdateView):
                     cuenta.mil_pesos += difference
         
         # Update saldo based on changes
-        cuenta.saldo = (cuenta.un_peso * 1 +
-                       cuenta.tres_pesos * 3 +
-                       cuenta.cinco_pesos * 5 +
-                       cuenta.diez_pesos * 10 +
-                       cuenta.veinte_pesos * 20 +
-                       cuenta.cincuenta_pesos * 50 +
-                       cuenta.cien_pesos * 100 +
-                       cuenta.doscientos_pesos * 200 +
-                       cuenta.quinientos_pesos * 500 +
-                       cuenta.mil_pesos * 1000)
+        cuenta.saldo = (
+            cuenta.un_peso * 1 +
+            cuenta.tres_pesos * 3 +
+            cuenta.cinco_pesos * 5 +
+            cuenta.diez_pesos * 10 +
+            cuenta.veinte_pesos * 20 +
+            cuenta.cincuenta_pesos * 50 +
+            cuenta.cien_pesos * 100 +
+            cuenta.doscientos_pesos * 200 +
+            cuenta.quinientos_pesos * 500 +
+            cuenta.mil_pesos * 1000
+        )
         
         # Save the Cuenta instance
         cuenta.save()
@@ -703,7 +698,7 @@ class BorrarCalculadoraBilletes(DeleteView):
             efectivo.saldo += self.object.total
         
         efectivo.save()
-
+    
         # print(f"Registro eliminado id: {self.object.id}")
         # print(f"Registro eliminado tipo_cuenta: º{tipo_cuenta}º")
         # comprobar = str(tipo_cuenta) == 'Entrada'

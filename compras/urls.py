@@ -9,7 +9,8 @@ from .views import ResumeSemanalView, ResumenProductoSemanalView, ResumenSemanal
 from .views import ClienteListView, ClienteCreateView, ClienteUpdateView, ClienteDetailView, ClienteDeleteView
 from .views import ProductoCreateView, ProductoDeleteView, ProductoDetailView, ProductoListView, ProductosListView, ProductoUpdateView, get_producto_info
 from .views import FacturaListView, FacturaDetailView, crear_factura, editar_factura, eliminar_factura, cambiar_estado_factura
-from .views import VerFactura, PruebaBT, APIProductos
+from .views import VerFactura, PruebaBT, APIProductos, APIClientes, LeerExcel, ProductosConFacturasJSON
+from .excel_processor import ExcelProcessor
 from api.views import UltimoPrecio, CompraLecheSemana
 from . import views
 
@@ -40,6 +41,8 @@ urlpatterns = [
     # API
     path('api_ultimoprecio/', UltimoPrecio.as_view(), name='ultimoprecio'),
     path('api_compralechesemana/', CompraLecheSemana.as_view(), name='api_compralechesemana'),
+    path('excel_procces/', ExcelProcessor, name='excel_procces'),
+    path('excel_upload/', LeerExcel.as_view(), name='excel_leer'),
 
     # Unidad de Medida
     path('unidadmedida/', UnidadMedidaListView.as_view(), name='unidadmedida_list'),
@@ -62,6 +65,7 @@ urlpatterns = [
     path('productos/<int:pk>/editar/', ProductoUpdateView.as_view(), name='producto_update'),
     path('productos/<int:pk>/eliminar/', ProductoDeleteView.as_view(), name='producto_delete'),
     path('productos/info/', get_producto_info, name='producto_info'),
+    path('productos/info-facturas/', ProductosConFacturasJSON.as_view(), name='productos-facturas-json'),
     
     # Facturas
     path('facturas/', FacturaListView.as_view(), name='factura_list'),
@@ -78,8 +82,10 @@ urlpatterns = [
     # API para actualización en tiempo real
     path('api/facturas/', views.get_facturas_json, name='api_facturas'),
     path('api/productos/', APIProductos.as_view(), name='api_productos'),
+    path('api/clientes/', APIClientes.as_view(), name='api_clientes'),
     path('api/clientes/<int:cliente_id>/facturas/', views.get_facturas_cliente_json, name='api_facturas_cliente'),
     path('api/productos/<int:producto_id>/facturas/', views.get_facturas_productos_json, name='api_facturas_producto'),
+    path('api/productos_facturas/', APIProductos.as_view(), name='api_productos_facturas'),
 
     # Pruebas
     path('pruebaBT/', PruebaBT.as_view(), name="pruebaBT"),

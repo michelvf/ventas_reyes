@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.views import View
+from .excel_processor import ExcelProcessor
 
 # Create your views here.
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -13,7 +14,7 @@ from django.db.models import Sum, F, Count
 from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy, reverse
 from datetime import timedelta
-from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida
+from .models import Almacen, Producto, Compra, PrecioProducto, UnidadMedida, Cliente
 from .forms import CompraForm, AlmacenForm, ProductoForm, PrecioProductoForm
 from .forms import ResumenSemanal
 from rest_framework import authentication
@@ -30,7 +31,7 @@ from django.http import HttpResponse, JsonResponse
 import json
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .forms import ClienteForm, ProductoForm, FacturaForm, DetalleFacturaFormSet
-from .forms import UnidadMedidaForm
+from .forms import UnidadMedidaForm, ExcelUploadForm
 
 def factura_pdf(request, pk):
     """Generate PDF for a specific invoice"""
@@ -722,8 +723,13 @@ def eliminar_factura(request, pk):
     factura = get_object_or_404(Factura, pk=pk)
     
     if request.method == 'POST':
-        factura.delete()
-        messages.success(request, "Factura eliminada exitosamente.")
+        # factura.delete()
+        estado = 'anulada'
+        factura.estado = estado
+        factura.save()
+        # messages.success(request, "Factura eliminada exitosamente.")
+        messages.success(request, "Factura anulada exitosamente.")
+        
         return redirect('factura_list')
     
     return render(request, 'facturas/factura_confirm_delete.html', {
@@ -917,11 +923,18 @@ class VerFactura(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.object.cantidad_producto < 8:
-            columnas = 13 - self.object.cantidad_producto
-            context["columnas"] = range(columnas)
+        if self.object.observaciones:
+            if self.object.cantidad_producto < 11:
+                columnas = 11 - self.object.cantidad_producto
+                context["columnas"] = range(columnas)
+            else:
+                context["columnas"] = None
         else:
-            context["columnas"] = None
+            if self.object.cantidad_producto < 13:
+                columnas = 13 - self.object.cantidad_producto
+                context["columnas"] = range(columnas)
+            else:
+                context["columnas"] = None
         
         return context
 
@@ -949,6 +962,75 @@ class APIProductos(View):
         return JsonResponse(data, safe=False)
 
 
+class APIClientes(View):
+    """
+    API Clientes para la Factura
+    """
+    def get(self, request):
+        clientes = Cliente.objects.all()
+        data = []
+        
+        for cliente in clientes:
+            data.append({
+                "id": cliente.id,
+                "nombre": cliente.nombre,
+                "apellido": cliente.apellido,
+                "negocio": cliente.negocio,
+                "ci": cliente.ci,
+                "direccion": cliente.direccion,
+                "telefono": cliente.telefono,
+                "email": cliente.email,
+            })
+        return JsonResponse(data, safe=False)
+
+
 class PruebaBT(TemplateView):
     """Probando Bootstrap Table View"""
     template_name = "compras/bt.html"
+
+
+class LeerExcel(View):
+    """
+    Para subir el Excel
+    """
+    form_class = ExcelUploadForm
+    template_name = "compras/excel_upload.html"
+    
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            a = ExcelUploadForm(request.FILES['excel_file'])
+            # return redirect('excel_procces')
+            return render(request, 'compras/excel_processed.html')
+        return render(request, self.template_name, {'form': form})
+
+
+class ProductosConFacturasJSON(View):
+   def get(self, request):
+       data = []
+       productos = Producto.objects.prefetch_related('facturas_usado__factura')
+
+       for prod in productos:
+           facturas = []
+           for detalle in prod.facturas_usado.all():
+               facturas.append({
+                   'numero': detalle.factura.numero,
+                   'fecha': detalle.factura.fecha_emision.strftime('%Y-%m-%d'),
+                   'cliente': detalle.factura.cliente.nombre
+               })
+           data.append({
+               'producto': prod.nombre,
+               'codigo': prod.codigo,
+               'precio': prod.precio,
+               'unidadmedida': prod.unidadmedida.nombre,
+               'fecha': prod.fecha_registro,
+               'facturas': facturas,
+               'cant_fac': len(facturas)
+           })
+
+       return JsonResponse(data, safe=False)
+

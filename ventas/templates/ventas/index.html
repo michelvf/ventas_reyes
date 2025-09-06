@@ -341,7 +341,7 @@
     fetch('/api/ficherosubidos/')
     .then(res => res.json())
     .then(da => {
-      document.getElementById('actualizado').innerHTML = moment(da[da.length - 1].fecha).format('D/M/Y')
+      document.getElementById('actualizado').innerHTML = moment(da[0].fecha).format('DD/MM/YYYY', moment.ISO_8601)
     })
 
     // Mostrar Efectivo

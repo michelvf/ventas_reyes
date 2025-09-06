@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta
-from compras.models import Almacen, Producto, PrecioProducto, Compra
+from compras.models import Almacen, Producto, PrecioProducto, Compra, Producto
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from produccion.models import Categoria, Producto, Produccion, Salida, Destino
 from django.db.models import Count
@@ -405,6 +405,3 @@ class SalidaSerializer(serializers.ModelSerializer):
         model = Salida
         fields = ['id', 'producto', 'cantidad', 'fecha_hora', 'destino']
 
-
-
-    

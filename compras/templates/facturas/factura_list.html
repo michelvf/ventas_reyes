@@ -55,7 +55,7 @@
                         {% endif %}
                     >
                         <td>{{ factura.numero }}</td>
-                        <td>{{ factura.cliente.nombre|upper }} {{ factura.cliente.apellido|upper }}</td>
+			<td>{{ factura.cliente.nombre|upper }} {% if factura.cliente.apellido %} {{ factura.cliente.apellido|upper }} {% endif %}</td>
                         <td>
                             {% if factura.tipo == 'c' %}
                                 <span class=""><i class="fa fa-sign-in" aria-hidden="true"></i></i>COMPRA</span>

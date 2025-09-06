@@ -164,4 +164,5 @@ cython_debug/
 .idea/
 
 .DB_Store
+.DS_Store
 .qodo
