@@ -537,10 +537,10 @@ class ProductoListView(ListView):
 
     def get_queryset(self):
         """
-        Anota el total facturado para cada cliente.
+        Anota el total facturado para cada producto.
         """
         return Producto.objects.annotate(
-            total_facturado=Count('detallefactura__factura__id', distinct=True)
+            total_facturado=Count('facturas_usado__factura__id', distinct=True)
         )
 
 

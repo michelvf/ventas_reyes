@@ -527,7 +527,8 @@ class ContadorBilleteListView(viewsets.ReadOnlyModelViewSet):
     """
     Listado de Contador de Billetes View
     """
-    queryset = Contador_billete.objects.filter(historia=False)
+    # queryset = Contador_billete.objects.filter(historia=False)
+    queryset = Contador_billete.objects.all()
     serializer_class = ContadorBilleteListSerializer
 
 # App Produccion

@@ -45,27 +45,27 @@ urlpatterns = [
     path('excel_upload/', LeerExcel.as_view(), name='excel_leer'),
 
     # Unidad de Medida
-    path('unidadmedida/', UnidadMedidaListView.as_view(), name='unidadmedida_list'),
-    path('unidadmedida/<int:pk>/', UnidadMedidaDetailView.as_view(), name='unidadmedida_detail'),
-    path('unidadmedida/nuevo/', UnidadMedidaCreateView.as_view(), name='unidadmedida_create'),
-    path('unidadmedida/<int:pk>/editar/', UnidadMedidaUpdateView.as_view(), name='unidadmedida_update'),
-    path('unidadmedida/<int:pk>/eliminar/', UnidadMedidaDeleteView.as_view(), name='unidadmedida_delete'),
+    path('facturas/unidadmedida/', UnidadMedidaListView.as_view(), name='unidadmedida_list'),
+    path('facturas/unidadmedida/<int:pk>/', UnidadMedidaDetailView.as_view(), name='unidadmedida_detail'),
+    path('facturas/unidadmedida/nuevo/', UnidadMedidaCreateView.as_view(), name='unidadmedida_create'),
+    path('facturas/unidadmedida/<int:pk>/editar/', UnidadMedidaUpdateView.as_view(), name='unidadmedida_update'),
+    path('facturas/unidadmedida/<int:pk>/eliminar/', UnidadMedidaDeleteView.as_view(), name='unidadmedida_delete'),
     
     # Clientes
-    path('clientes/', ClienteListView.as_view(), name='cliente_list'),
-    path('clientes/<int:pk>/', ClienteDetailView.as_view(), name='cliente_detail'),
-    path('clientes/nuevo/', ClienteCreateView.as_view(), name='cliente_create'),
-    path('clientes/<int:pk>/editar/', ClienteUpdateView.as_view(), name='cliente_update'),
-    path('clientes/<int:pk>/eliminar/', ClienteDeleteView.as_view(), name='cliente_delete'),
+    path('facturas/clientes/', ClienteListView.as_view(), name='cliente_list'),
+    path('facturas/clientes/<int:pk>/', ClienteDetailView.as_view(), name='cliente_detail'),
+    path('facturas/clientes/nuevo/', ClienteCreateView.as_view(), name='cliente_create'),
+    path('facturas/clientes/<int:pk>/editar/', ClienteUpdateView.as_view(), name='cliente_update'),
+    path('facturas/clientes/<int:pk>/eliminar/', ClienteDeleteView.as_view(), name='cliente_delete'),
     
     # Productos
-    path('productos/', ProductoListView.as_view(), name='producto_list'),
-    path('productos/<int:pk>/', ProductoDetailView.as_view(), name='producto_detail'),
-    path('productos/nuevo/', ProductoCreateView.as_view(), name='producto_create'),
-    path('productos/<int:pk>/editar/', ProductoUpdateView.as_view(), name='producto_update'),
-    path('productos/<int:pk>/eliminar/', ProductoDeleteView.as_view(), name='producto_delete'),
-    path('productos/info/', get_producto_info, name='producto_info'),
-    path('productos/info-facturas/', ProductosConFacturasJSON.as_view(), name='productos-facturas-json'),
+    path('facturas/productos/', ProductoListView.as_view(), name='producto_list'),
+    path('facturas/productos/<int:pk>/', ProductoDetailView.as_view(), name='producto_detail'),
+    path('facturas/productos/nuevo/', ProductoCreateView.as_view(), name='producto_create'),
+    path('facturas/productos/<int:pk>/editar/', ProductoUpdateView.as_view(), name='producto_update'),
+    path('facturas/productos/<int:pk>/eliminar/', ProductoDeleteView.as_view(), name='producto_delete'),
+    path('facturas/productos/info/', get_producto_info, name='producto_info'),
+    path('facturas/productos/info-facturas/', ProductosConFacturasJSON.as_view(), name='productos-facturas-json'),
     
     # Facturas
     path('facturas/', FacturaListView.as_view(), name='factura_list'),

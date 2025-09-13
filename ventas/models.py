@@ -136,26 +136,26 @@ class Ventas(models.Model):
         return self.id_producto.producto
 
 
-class Moneda(models.Model):
-    """
-    Modelo Monedas
-    """
-    nombre = models.CharField(max_length=100, blank=False, null=False)
-    sigla = models.CharField(max_length=3, blank=False, null=False)
-    comentario = models.TextField(null=True, blank=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+# class Moneda(models.Model):
+#     """
+#     Modelo Monedas
+#     """
+#     nombre = models.CharField(max_length=100, blank=False, null=False)
+#     sigla = models.CharField(max_length=3, blank=False, null=False)
+#     comentario = models.TextField(null=True, blank=True)
+#     create_at = models.DateTimeField(auto_now_add=True)
+#     update_at = models.DateTimeField(auto_now=True)
     
-    class Meta:
-        ordering = ['sigla']
-        verbose_name = 'moneda'
-        verbose_name_plural = 'monedas'
-        indexes = [
-            models.Index(fields=["sigla"]),
-        ]
+#     class Meta:
+#         ordering = ['sigla']
+#         verbose_name = 'moneda'
+#         verbose_name_plural = 'monedas'
+#         indexes = [
+#             models.Index(fields=["sigla"]),
+#         ]
     
-    def __str__(self):
-        return self.sigla
+#     def __str__(self):
+#         return self.sigla
 
 
 class Tipo_cuenta(models.Model):
@@ -199,11 +199,11 @@ class Cuenta(models.Model):
     quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     comentario = models.TextField(null=True, blank=True)
-    moneda = models.ForeignKey(
-        Moneda,
-        on_delete=models.CASCADE,
-        default=1
-    )
+    # moneda = models.ForeignKey(
+    #     Moneda,
+    #     on_delete=models.CASCADE,
+    #     # default=1
+    # )
     # moneda = models.ForeignKey(Moneda, on_delete=models.PROTECT)
     #    related_name='monedas',    
     #    blank=False,
@@ -340,4 +340,8 @@ Notas:
 El agregar el id_departamento al modelo Producto, hace que no haga falta en
 modelo Ventas, y toda la relación se hace a través de producto, esto cambia
 las consultas en las vistas, tantos en la app Ventas como en la API.
+
+ALTER TABLE ventas_cuenta ADD COLUMN moneda_id INTEGER REFERENCES moneda(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+ALTER TABLE ventas_contador_billete ADD COLUMN historia TEXT;
 """

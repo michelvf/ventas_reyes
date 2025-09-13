@@ -1,4 +1,5 @@
 {% load static %}
+
 <div class="az-header">
   <div class="container">
     <div class="az-header-left">
@@ -12,15 +13,15 @@
         <a href="" class="close">&times;</a>
       </div><!-- az-header-menu-header -->
       <ul class="nav">
-        <li class="nav-item active show">
+        <li class="nav-item" id="menu-tablero">
           <a href="{% url 'index' %}" class="nav-link"><i class="typcn typcn-chart-area-outline"></i> Tablero</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="menu-importar">
           <a href="{% url 'upload' %}" class="nav-link">
             <i class="typcn typcn-document-add"></i> Importar Fichero
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="menu-gestion">
           <a href="" class="nav-link with-sub"><i class="typcn typcn-document"></i>Gestión</a>
           <div class="az-menu-sub">
               <div>
@@ -46,8 +47,8 @@
             </div>
           </div>
         </li>
-        <li class="nav-item">
-          <a href="" class="nav-link with-sub">Compras</a>
+        <li class="nav-item" id="menu-compras">
+          <a href="" class="nav-link with-sub"><i class="fa fa-shopping-cart mr-1"></i>Compras</a>
           <nav class="az-menu-sub">
             {% comment %} <a href="{% url 'list_almacen' %}" class="nav-link">Almacén</a> {% endcomment %}
             {% comment %} <a href="{% url 'list_productos' %}" class="nav-link">Productos</a> {% endcomment %}
@@ -57,8 +58,8 @@
             <a href="{% url 'resumen_productosemanal' %}" class="nav-link">Resumen Productos Semanal</a>
           </nav>
         </li>
-        <li class="nav-item">
-          <a href="" class="nav-link with-sub">Nómina</a>
+        <li class="nav-item" id="menu-nomina">
+          <a href="" class="nav-link with-sub"><i class="typcn typcn-document-text mr-1"></i>Nómina</a>
           <nav class="az-menu-sub">
             <a href="{% url 'nomina_cargos' %}" class="nav-link">Cargos</a>
             <a href="{% url 'nomina_departamentos' %}" class="nav-link">Departamento</a>
@@ -68,8 +69,8 @@
             <a href="{% url 'pago2' %}" class="nav-link">Nomina de pago</a>
           </nav>
         </li>
-        <li class="nav-item">
-          <a href="" class="nav-link with-sub">Recepciones</a>
+        <li class="nav-item" id="menu-fact">
+          <a href="" class="nav-link with-sub"><i class="typcn typcn-dropbox mr-1"></i>Fact/Recep</a>
           <nav class="az-menu-sub">
             <a href="{% url 'unidadmedida_list' %}" class="nav-link"><i class="fas fa-ruler-combined me-1"></i>&nbsp;Unidad de Medida</a>
             <a href="{% url 'cliente_list' %}" class="nav-link"><i class="far fa-address-card me-1"></i>&nbsp;Clientes</a>
@@ -77,8 +78,8 @@
             <a href="{% url 'factura_list' %}" class="nav-link"><i class="fas fa-marker me-1"></i>&nbsp;Recepción</a>
           </nav>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link with-sub">Producción</a>
+        <li class="nav-item" id="menu-produccion">
+          <a href="#" class="nav-link with-sub"><i class="typcn typcn-export-outline mr-1"></i>Producción</a>
           <div class="az-menu-sub">
             <div>
               <nav class="nav">
@@ -200,3 +201,5 @@
     </div><!-- az-header-right -->
   </div><!-- container -->
 </div><!-- az-header -->
+
+<script type='javascript'></script>
