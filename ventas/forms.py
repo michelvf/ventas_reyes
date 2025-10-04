@@ -77,7 +77,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
     """
     class Meta:
         model = Contador_billete
-        fields = ['total', 'tipo_cuenta', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario']
+        fields = ['total', 'tipo_cuenta', 'un_peso', 'tres_pesos', 'cinco_pesos', 'diez_pesos', 'veinte_pesos', 'cincuenta_pesos', 'cien_pesos', 'doscientos_pesos', 'quinientos_pesos', 'mil_pesos', 'comentario', 'moneda']
         widgets = {
            "comentario": forms.Textarea(attrs={"class": "form-control col-9", "cols": 100, "rows": 4}),
            "total": forms.HiddenInput(attrs={"class": "disable"}),
@@ -87,6 +87,7 @@ class CalculadoraBilletesForm(forms.ModelForm):
         super(CalculadoraBilletesForm, self).__init__(*args, **kwargs)
         # self.fields['total'].widget = forms.HiddenInput()
         self.fields['tipo_cuenta'].widget.attrs.update({'class': 'form-control col-9 entrada'})
+        self.fields['moneda'].widget.attrs.update({'class': 'form-control col-9 entrada'})
         self.fields['un_peso'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 1, 'value': 0, 'min': 0})
         self.fields['un_peso'].required = False
         self.fields['tres_pesos'].widget.attrs.update({'class': 'form-control col-9 entrada bill-input', 'data-denomination': 3, 'value': 0, 'min': 0})
@@ -250,6 +251,19 @@ class CalculadoraBilletesForm(forms.ModelForm):
 
         if str(tipo_cuenta) == 'Salida' and cuenta and valor > cuenta.mil_pesos:
             raise forms.ValidationError("❌ No tienes tantos billetes de $1000 pesos para dar.")
+
+        return valor
+    
+    def clean_moneda(self):
+        """
+        Validador si se solicita más de $1 del que hay
+        """
+        valor = self.cleaned_data.get("moneda")
+        # cuenta = self._get_cuenta()
+        # tipo_cuenta = self.cleaned_data.get("tipo_cuenta")
+
+        # if str(tipo_cuenta) == "Salida" and cuenta and valor > cuenta.un_peso:
+        #     raise forms.ValidationError("❌ No tienes tantos billetes de $1 peso para dar.")
 
         return valor
     

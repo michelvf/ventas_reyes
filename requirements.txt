@@ -4,7 +4,7 @@ asgiref==3.8.1
 asn1crypto==1.5.1
 asttokens==3.0.0
 billiard==4.2.1
-#camelot-py==1.0.0
+camelot-py==1.0.0
 celery==5.4.0
 certifi==2024.12.14
 cffi==1.17.1

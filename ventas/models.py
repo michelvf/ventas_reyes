@@ -136,26 +136,26 @@ class Ventas(models.Model):
         return self.id_producto.producto
 
 
-# class Moneda(models.Model):
-#     """
-#     Modelo Monedas
-#     """
-#     nombre = models.CharField(max_length=100, blank=False, null=False)
-#     sigla = models.CharField(max_length=3, blank=False, null=False)
-#     comentario = models.TextField(null=True, blank=True)
-#     create_at = models.DateTimeField(auto_now_add=True)
-#     update_at = models.DateTimeField(auto_now=True)
+class Moneda(models.Model):
+    """
+    Modelo Monedas
+    """
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    sigla = models.CharField(max_length=3, blank=False, null=False)
+    comentario = models.TextField(null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
     
-#     class Meta:
-#         ordering = ['sigla']
-#         verbose_name = 'moneda'
-#         verbose_name_plural = 'monedas'
-#         indexes = [
-#             models.Index(fields=["sigla"]),
-#         ]
+    class Meta:
+        ordering = ['sigla']
+        verbose_name = 'moneda'
+        verbose_name_plural = 'monedas'
+        indexes = [
+            models.Index(fields=["sigla"]),
+        ]
     
-#     def __str__(self):
-#         return self.sigla
+    def __str__(self):
+        return self.sigla
 
 
 class Tipo_cuenta(models.Model):
@@ -275,6 +275,13 @@ class Contador_billete(models.Model):
     total = models.IntegerField(null=False, blank=False)
     sub_total = models.IntegerField(null=False, blank=False)
     historia = models.BooleanField(default=False)
+    moneda = models.ForeignKey(Moneda, on_delete=models.PROTECT,
+       related_name='monedas',    
+       blank=False,
+       null=False,
+       db_index=True,
+       default=1
+    )
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
@@ -344,4 +351,14 @@ las consultas en las vistas, tantos en la app Ventas como en la API.
 ALTER TABLE ventas_cuenta ADD COLUMN moneda_id INTEGER REFERENCES moneda(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE ventas_contador_billete ADD COLUMN historia TEXT;
+
+crear campo moneda:
+ALTER TABLE ventas_contador_billete  ADD COLUMN moneda_id INTEGER DEFAULT 1 REFERENCES venta_moneda(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+eliminar campo moneda
+ALTER TABLE ventas_contador_billete DROP moneda_id;  
+
+eliminar llave foránea
+ALTER TABLE ventas_contador_billete DROP FOREIGN KEY moneda_id; 
+
 """

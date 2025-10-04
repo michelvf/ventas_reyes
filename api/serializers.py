@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta
+from ventas.models import Departamentos, Productos, Ventas, fileUpdate, Cuenta, Contador_billete, Tipo_cuenta, Moneda
 from compras.models import Almacen, Producto, PrecioProducto, Compra, Producto
 from nomina.models import DepartamentoNom, Trabajador, Nomina, Cargo
 from produccion.models import Categoria, Producto, Produccion, Salida, Destino
@@ -337,6 +337,15 @@ class TipoCuentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tipo_cuenta
         fields = ['id', 'tipo', 'siglas']
+        
+
+class TipoMonedaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Tipos de Moneds Serializer
+    """
+    class Meta:
+        model = Moneda
+        fields = ['id', 'nombre', 'sigla']
 
 
 class ContadorBilleteListSerializer(serializers.ModelSerializer):
@@ -344,6 +353,7 @@ class ContadorBilleteListSerializer(serializers.ModelSerializer):
     Listado de Contador de Billetes Serializer
     """
     tipo_cuenta = TipoCuentaSerializer(read_only=True)
+    moneda = TipoMonedaSerializer(read_only=True)
 
     class Meta:
         model = Contador_billete
@@ -352,7 +362,8 @@ class ContadorBilleteListSerializer(serializers.ModelSerializer):
                 'sub_total',
                 'comentario',
                 'tipo_cuenta',
-                'fecha'
+                'fecha',
+                'moneda',
                 ]
 
 

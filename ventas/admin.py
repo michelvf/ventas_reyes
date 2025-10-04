@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import Productos, Ventas, Departamentos, fileUpdate, Contador_billete
-from .models import Lacteos, Tipo_cuenta, Cuenta, Cuenta_historico
+from .models import Lacteos, Tipo_cuenta, Cuenta, Cuenta_historico, Moneda
 
 
 class LacteosAdmin(admin.ModelAdmin):
@@ -36,15 +36,19 @@ class Tipo_cuentaAdmin(admin.ModelAdmin):
 class CuentaAdmin(admin.ModelAdmin):
     list_display = ["id", "cuenta", "saldo", "comentario"]
     
+
 class Contador_billeteAdmin(admin.ModelAdmin):
-    list_display = ["id", "total", "sub_total", "tipo_cuenta", "comentario", "historia"]
+    list_display = ["id", "total", "sub_total", "tipo_cuenta", "comentario", "historia", "moneda"]
+
 
 class Cuenta_historicoAdmin(admin.ModelAdmin):
     list_display = ["id", "saldo", "fecha"]
 
-# class MonedaAdmin(admin.ModelAdmin):
-#     list_display = ["id", "sigla"]
-    
+
+class MonedaAdmin(admin.ModelAdmin):
+    list_display = ["id", "sigla"]
+
+
 admin.site.register(Productos, ProductAdmin)
 admin.site.register(Departamentos, DepatoAdmin)
 admin.site.register(Ventas, VentasAdmin)
@@ -54,4 +58,4 @@ admin.site.register(Lacteos, LacteosAdmin)
 admin.site.register(Tipo_cuenta, Tipo_cuentaAdmin)
 admin.site.register(Cuenta, CuentaAdmin)
 admin.site.register(Cuenta_historico, Cuenta_historicoAdmin)
-# admin.site.register(Moneda, MonedaAdmin)
+admin.site.register(Moneda, MonedaAdmin)

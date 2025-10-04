@@ -63,6 +63,7 @@
                 <th>Hora</th>
                 <th>Comentario</th>
                 <th>Tipo</th>
+                <th>Moneda</th>
                 <th>Monto</th>
                 <th>Sub Total</th>
                 <th>Acción</th>
@@ -218,6 +219,12 @@
                         return `<span class="negativo">${data}</span>`
                     }
                 }
+            },
+            { data: 'moneda.sigla',
+                render: function(data) {
+                    return data
+                }
+
             },
             { data: 'total',
                 render: function(data, type, row) {
@@ -498,7 +505,9 @@
         if (event.target === modal) {
             modal.style.display = "none";
         }
-    };             {% endcomment %}
+    };             
+    
+    {% endcomment %}
     
 
     
