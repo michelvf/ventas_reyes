@@ -199,18 +199,13 @@ class Cuenta(models.Model):
     quinientos_pesos = models.IntegerField(default=0, null=True, blank=True)
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     comentario = models.TextField(null=True, blank=True)
-    # moneda = models.ForeignKey(
-    #     Moneda,
-    #     on_delete=models.CASCADE,
-    #     # default=1
-    # )
-    # moneda = models.ForeignKey(Moneda, on_delete=models.PROTECT)
-    #    related_name='monedas',    
-    #    blank=False,
-    #    null=False,
-    #    db_index=True,
-    #    default='CUP'
-    #)
+    moneda = models.ForeignKey(Moneda, on_delete=models.PROTECT,
+       related_name='monedass',    
+       blank=False,
+       null=False,
+       db_index=True,
+       default=1
+    )
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     
@@ -274,7 +269,6 @@ class Contador_billete(models.Model):
     mil_pesos = models.IntegerField(default=0, null=True, blank=True)
     total = models.IntegerField(null=False, blank=False)
     sub_total = models.IntegerField(null=False, blank=False)
-    historia = models.BooleanField(default=False)
     moneda = models.ForeignKey(Moneda, on_delete=models.PROTECT,
        related_name='monedas',    
        blank=False,

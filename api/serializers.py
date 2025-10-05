@@ -233,6 +233,24 @@ class NominaCargoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cargo
         fields = ('id', 'cargo', 'comentario')
+
+        
+class TipoMonedaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Tipos de Moneds Serializer
+    """
+    class Meta:
+        model = Moneda
+        fields = ['id', 'nombre', 'sigla']
+
+
+class TipoCuentaSerializer(serializers.ModelSerializer):
+    """
+    Listado de Tipos de Cuentas Serializer
+    """
+    class Meta:
+        model = Tipo_cuenta
+        fields = ['id', 'tipo', 'siglas']
         
 
 class DiaQueMasVendeSerializar(serializers.Serializer):
@@ -288,6 +306,8 @@ class SaldoEfectivoSerializer(serializers.ModelSerializer):
     """
     Saldo de Efectivo Serializer
     """
+    moneda = TipoMonedaSerializer(read_only=True)
+    
     # saldo = serializers.DecimalField(max_digits=10, decimal_places=2)
     class Meta:
         model = Cuenta
@@ -303,7 +323,8 @@ class SaldoEfectivoSerializer(serializers.ModelSerializer):
                 'cien_pesos',
                 'doscientos_pesos',
                 'quinientos_pesos',
-                'mil_pesos'
+                'mil_pesos',
+                'moneda',
                 ]
 
 
@@ -328,24 +349,6 @@ class CuentaBilletesSerializer(serializers.ModelSerializer):
                 'quinientos_pesos',
                 'mil_pesos'
                 ]
-
-
-class TipoCuentaSerializer(serializers.ModelSerializer):
-    """
-    Listado de Tipos de Cuentas Serializer
-    """
-    class Meta:
-        model = Tipo_cuenta
-        fields = ['id', 'tipo', 'siglas']
-        
-
-class TipoMonedaSerializer(serializers.ModelSerializer):
-    """
-    Listado de Tipos de Moneds Serializer
-    """
-    class Meta:
-        model = Moneda
-        fields = ['id', 'nombre', 'sigla']
 
 
 class ContadorBilleteListSerializer(serializers.ModelSerializer):

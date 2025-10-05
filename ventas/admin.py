@@ -38,7 +38,7 @@ class CuentaAdmin(admin.ModelAdmin):
     
 
 class Contador_billeteAdmin(admin.ModelAdmin):
-    list_display = ["id", "total", "sub_total", "tipo_cuenta", "comentario", "historia", "moneda"]
+    list_display = ["id", "total", "sub_total", "tipo_cuenta", "comentario", "moneda"]
 
 
 class Cuenta_historicoAdmin(admin.ModelAdmin):
