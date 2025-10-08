@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style>
+    @media print {
+      header, footer {
+        display: none;
+      }
+      .botones {
+        display: none !important;
+      }
+    }
+  table {
+    border-collapse: collapse; /* Para que los bordes no se dupliquen */
+    font-family: "Courier New", Courier, monospace;
+    font-size: 19px;
+  }
+
+  tr {
+    border-bottom: 1px solid #ccc; /* Borde delgado gris */
+  }
+</style>
+  </style>
+</head>
+<body link='blue' vlink='purple' bgcolor='white'>
+    <h4>Desglose de Billetes</h4>
+
+    <table>
+        <thead>
+            <tr style="text-align: center;">
+                <th>Billete</th>
+                <th>Cantid.</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>$1000</td>
+                <td id='1000' style="text-align: center;"></td>
+                <td id='monto-mil' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$500</td>
+                <td id='500' style="text-align: center;"></td>
+                <td id='monto-quinientos' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$200</td>
+                <td id='200' style="text-align: center;"></td>
+                <td id='monto-doscientos' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$100</td>
+                <td id='100' style="text-align: center;"></td>
+                <td id='monto-cien' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$50</td>
+                <td id='50' style="text-align: center;"></td>
+                <td id='monto-cincuenta' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$20</td>
+                <td id='20' style="text-align: center;"></td>
+                <td id='monto-veinte' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$10</td>
+                <td id='10' style="text-align: center;"></td>
+                <td id='monto-diez' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$5</td>
+                <td id='5' style="text-align: center;"></td>
+                <td id='monto-cinco' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$3</td>
+                <td id='3' style="text-align: center;"></td>
+                <td id='monto-tres' style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>$1</td>
+                <td id='1' style="text-align: center;"></td>
+                <td id='monto-uno' style="text-align: right;"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <th>Total:</th>
+                <th id='total' style="text-align: right;"></th>
+            </tr>
+        </tfoot>
+    </table>
+
+<div class="botones" style="display: flex;justify-content: flex-end;unicode-bidi: isolate;">
+    <a href="/ventas/mostrar_conteo_billetes/" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
+      vertical-align: middle;user-select: none;background-color: transparent;border: 1px solid transparent;
+      padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 3px;transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;color: #fff;
+      background-color: #7987a1;border-color: #7987a1;text-decoration: none;margin-top: 1.5rem">
+    <i class="fas fa-print me-1"></i> Volver
+  </a>
+    <a href="#" style="display: inline-block;font-weight: 400;color: #031b4e;text-align: center;
+      vertical-align: middle;user-select: none;background-color: transparent;border: 1px solid transparent;
+      padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 3px;transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;color: #fff;
+      background-color: #3366ff;border-color: #3366ff;text-decoration: none;margin-top: 1.5rem" onclick="imprimirPagina()">
+    <i class="fas fa-print me-1"></i> Imprimir
+  </a>
+  </div>
+<script>
+    // Obtiene la URL completa de la página actual
+    // const url_full = window.location.href;
+
+    // Extrae el último segmento del path
+    const id = window.location.pathname.split("/").filter(Boolean).pop();
+    let url = '/api/contador_billetes/' + id;
+
+        // let comentario = document.getElementById('comentario')
+        let total = document.getElementById('total')
+        let uno = document.getElementById('1')
+        let tres = document.getElementById('3')
+        let cinco = document.getElementById('5')
+        let diez = document.getElementById('10')
+        let veinte = document.getElementById('20')
+        let cincuenta = document.getElementById('50')
+        let cien = document.getElementById('100')
+        let doscientos = document.getElementById('200')
+        let quinientos = document.getElementById('500')
+        let mil = document.getElementById('1000')
+        let imprimir = document.getElementById('imprimir-desglose')
+        let montoMil = document.getElementById('monto-mil')
+        let montoQuinientos = document.getElementById('monto-quinientos')
+        let montoDoscientos = document.getElementById('monto-doscientos')
+        let montoCien = document.getElementById('monto-cien')
+        let montoCincuenta = document.getElementById('monto-cincuenta')
+        let montoVeinte = document.getElementById('monto-veinte')
+        let montoDiez = document.getElementById('monto-diez')
+        let montoCinco = document.getElementById('monto-cinco')
+        let montoTres = document.getElementById('monto-tres')
+        let montoUno = document.getElementById('monto-uno')
+        //imprimir.href = '/ventas/imprimir-desglose/' + id
+
+        fetch(url)
+        .then(res => res.json())
+        .then(dat => {
+            total.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.total)
+            // comentario.innerHTML = dat.comentario
+            uno.innerHTML = dat.un_peso
+            montoUno.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.un_peso * 1)
+            tres.innerHTML = dat.tres_pesos
+            montoTres.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.tres_pesos * 3)
+            cinco.innerHTML = dat.cinco_pesos
+            montoCinco.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.cinco_pesos * 5)
+            diez.innerHTML = dat.diez_pesos
+            montoDiez.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.diez_pesos * 10)
+            veinte.innerHTML = dat.veinte_pesos
+            montoVeinte.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.veinte_pesos * 20)
+            cincuenta.innerHTML = dat.cincuenta_pesos
+            montoCincuenta.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.cincuenta_pesos * 50)
+            cien.innerHTML = dat.cien_pesos
+            montoCien.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.cien_pesos * 100)
+            doscientos.innerHTML = dat.doscientos_pesos
+            montoDoscientos.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.doscientos_pesos * 200)
+            quinientos.innerHTML = dat.quinientos_pesos
+            montoQuinientos.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.quinientos_pesos * 500)
+            mil.innerHTML = dat.mil_pesos
+            montoMil.innerHTML = '$ ' + new Intl.NumberFormat().format(dat.mil_pesos * 1000)
+    })
+
+    function imprimirPagina() {
+      window.print();
+    }
+</script>

@@ -713,6 +713,11 @@ class BorrarCalculadoraBilletes(DeleteView):
         return response
 
 
+
+class ImprimirDesglose(TemplateView):
+    """Imprimir Desglose"""
+    template_name = 'ventas/imprimir_desglose.html'
+    
 class VentasAnualesView(YearArchiveView):
     """
     Ventas Anuales

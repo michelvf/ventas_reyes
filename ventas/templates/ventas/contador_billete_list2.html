@@ -119,7 +119,8 @@
                 </table>
             </div><!-- modal-body -->
             <div class="modal-footer">
-                <button type="button" data-bs-dismiss="modal" class="btn btn-solid-light">Close</button>
+                <a id="imprimir-desglose" href="#" type="button" class="btn btn-light">Imprimir</button></a>
+                <button type="button" data-bs-dismiss="modal" class="btn btn-light">Close</button>
             </div>
         </div>
     </div><!-- modal-dialog -->
@@ -320,6 +321,8 @@
         let doscientos = document.getElementById('200')
         let quinientos = document.getElementById('500')
         let mil = document.getElementById('1000')
+        let imprimir = document.getElementById('imprimir-desglose')
+        imprimir.href = '/ventas/imprimir-desglose/' + id
 
         fetch(url)
         .then(res => res.json())

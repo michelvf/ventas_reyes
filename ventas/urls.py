@@ -7,7 +7,7 @@ from .views import VentasAnualesView, VentasMensualesView, VentasSemanalesView
 from .views import ShowContadorBilletes, EditarCalculadoraBilletes, DondeSeVendeMas
 from .views import DiaQueVendeMas, LacteosListView, LacteosCreate, LacteosUpdate
 from .views import CalculoPorcientoPrecio, BorrarCalculadoraBilletes, CalculadoraBilletes2
-from .views import PruebaView
+from .views import PruebaView, ImprimirDesglose
 from api.views import VentasPorFechas, SumaPorFechasAPI, ProductXDeptoListView
 from api.views import ProductMasVendidoAPI, LacteosAPI, FicherosSubidosApiView
 from api.views import VentaSemanalAPI, LacteosSemanaAPI, DondeSeVendeMasAPI
@@ -36,6 +36,7 @@ urlpatterns = [
     path('reporte-venta-mensual/', DiaQueVendeMas.as_view(), name='reporte_venta_mensual'),
     path('porciento-precio/', CalculoPorcientoPrecio.as_view(), name='porciento_precio'),
     path('probar/', PruebaView.as_view(), name='probar'),
+    path('imprimir-desglose/<int:pk>', ImprimirDesglose.as_view(), name='imprimir-desglose'),
     # path('estudio-inventario/', EstudioInventario.as_view(), name='estudio_inventario'),
     
     path('listado_lacteos/', LacteosListView.as_view(), name='listado_lacteos'),
